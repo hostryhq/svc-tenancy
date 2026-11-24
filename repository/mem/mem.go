@@ -178,7 +178,7 @@ func (s *Store) RecordInTx(_ context.Context, _ tenancy.Execer, e auth.VendorAcc
 		return errAuditDown
 	}
 	tid := ids.ID(e.TenantID)
-	s.pending.vlog = append(s.pending.vlog, VendorLogEntry{e})
+	s.pending.vlog = append(s.pending.vlog, VendorLogEntry{keyed(e)})
 	return s.pending.publish(tid, tev.VendorAccessRecorded(e.ID, e.Time, tid, vendorData(e)))
 }
 
@@ -190,8 +190,18 @@ func (s *Store) RecordRefused(_ context.Context, e auth.VendorAccessEntry) error
 		return nil // no organisation to attach the row to
 	}
 	e.Outcome = auth.OutcomeRefused
-	s.st.vlog = append(s.st.vlog, VendorLogEntry{e})
+	s.st.vlog = append(s.st.vlog, VendorLogEntry{keyed(e)})
 	return s.st.publish(ids.ID(e.TenantID), tev.VendorAccessRecorded(e.ID, e.Time, ids.ID(e.TenantID), vendorData(e)))
+}
+
+// keyed stores the stable action key, as the Postgres sink does, instead of the raw operation id.
+func keyed(e auth.VendorAccessEntry) auth.VendorAccessEntry {
+	tt := "vendor"
+	if e.TokenType == auth.TypeSupport {
+		tt = "support"
+	}
+	e.ActionKey = auditsink.ActionKey(e.ActionKey, tt)
+	return e
 }
 
 func vendorData(e auth.VendorAccessEntry) tev.VendorAccess {

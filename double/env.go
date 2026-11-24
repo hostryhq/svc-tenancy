@@ -21,7 +21,7 @@ type Tokens struct {
 func NewTokens(extraServices ...string) *Tokens {
 	clk := clock.System
 	return &Tokens{TenantIssuer: authtest.NewTenantIssuer(clk), VendorIssuer: authtest.NewVendorIssuer(clk),
-		Registry: authtest.NewServiceRegistry(clk, append([]string{"identity", "admin", "tenancy"}, extraServices...)...)}
+		Registry: authtest.NewServiceRegistry(clk, append([]string{"identity", "admin", "tenancy", "billing", "sync", "orders"}, extraServices...)...)}
 }
 
 // Env is a double together with the tokens its verifiers trust.
@@ -32,9 +32,12 @@ type Env struct {
 
 // NewEnv builds a double that trusts fresh test issuers and a service registry containing the given
 // services (identity and admin are always present).
-func NewEnv(extraServices ...string) (*Env, error) {
+func NewEnv(extraServices ...string) (*Env, error) { return NewEnvLinks(true, extraServices...) }
+
+// NewEnvLinks is NewEnv with the link routes switched on or off (LINKS_ENABLED).
+func NewEnvLinks(links bool, extraServices ...string) (*Env, error) {
 	tk := NewTokens(extraServices...)
-	d, err := New(Config{Tenant: tk.TenantIssuer.Verifier(), Vendor: tk.VendorIssuer.Verifier(), Services: tk.Registry.Verifier("tenancy")})
+	d, err := New(Config{Tenant: tk.TenantIssuer.Verifier(), Vendor: tk.VendorIssuer.Verifier(), Services: tk.Registry.Verifier("tenancy"), LinksOff: !links})
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +77,7 @@ func (e *Tokens) VendorHeaders(perms ...string) http.Header {
 // SupportHeaders returns a support-session token (view mode) for tenant plus the admin service token.
 func (e *Tokens) SupportHeaders(tenant ids.ID) http.Header {
 	h := http.Header{}
-	h.Set("Authorization", "Bearer "+e.TenantIssuer.Mint(authtest.Spec{Type: auth.TypeSupport, Tenant: tenant, Grants: authtest.OwnerGrants()}))
+	h.Set("Authorization", "Bearer "+e.TenantIssuer.Mint(authtest.Spec{Type: auth.TypeSupport, Tenant: tenant, Grants: authtest.Grants(nil, "organisation.read", "brand.read", "outlet.read", "tax_registration.read", "settings.read", "series.read", "organisation.manage", "brand.manage")}))
 	tok, err := e.Registry.Signer("admin").Sign("tenancy", tenant.String())
 	if err != nil {
 		panic(err)

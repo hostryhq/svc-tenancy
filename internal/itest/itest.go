@@ -33,7 +33,10 @@ type Stack struct {
 }
 
 // New starts a stack with the link routes on.
-func New(t testing.TB) *Stack {
+func New(t testing.TB) *Stack { return NewWith(t, true) }
+
+// NewWith starts a stack with the link routes on or off.
+func NewWith(t testing.TB, links bool) *Stack {
 	t.Helper()
 	db := pgtest.New(t)
 	clk := testkit.NewClock()
@@ -42,7 +45,7 @@ func New(t testing.TB) *Stack {
 	a, err := app.Build(app.Options{
 		AppDB: db.App, VendorDB: db.Vendor,
 		Tenant: tk.TenantIssuer.Verifier(), Vendor: tk.VendorIssuer.Verifier(), Services: tk.Registry.Verifier("tenancy"),
-		Clock: clk, AuthClock: clock.System, IDs: ids.NewGenerator(clk.Now, nil), Log: slog.New(slog.DiscardHandler), LinksEnabled: true,
+		Clock: clk, AuthClock: clock.System, IDs: ids.NewGenerator(clk.Now, nil), Log: slog.New(slog.DiscardHandler), LinksEnabled: links,
 	})
 	if err != nil {
 		t.Fatal(err)

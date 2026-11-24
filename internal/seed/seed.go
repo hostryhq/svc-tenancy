@@ -63,7 +63,9 @@ var Third = World{
 }
 
 // ExampleWorld stores the example organisation.
-func ExampleWorld(ctx context.Context, repo repository.Repository) error { return Example.Apply(ctx, repo) }
+func ExampleWorld(ctx context.Context, repo repository.Repository) error {
+	return Example.Apply(ctx, repo)
+}
 
 // Apply stores the world through the repository, as that organisation.
 func (w World) Apply(ctx context.Context, repo repository.Repository) error {
