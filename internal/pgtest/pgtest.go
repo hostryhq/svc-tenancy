@@ -22,6 +22,7 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 
 	"github.com/hostryhq/svc-tenancy/repository/migrations"
+	"github.com/hostryhq/svc-tenancy/repository/pg"
 )
 
 const (
@@ -79,7 +80,7 @@ func New(t testing.TB) *DB {
 		t.Fatal(err)
 	}
 	if err := admin.PingContext(ctx); err != nil {
-		admin.Close()
+		_ = admin.Close()
 		t.Skipf("no Postgres for integration tests (%v); start infra/dev compose or set TENANCY_TEST_PG_ADMIN_DSN", err)
 	}
 	if err := provisionRoles(ctx, admin); err != nil {
@@ -92,11 +93,10 @@ func New(t testing.TB) *DB {
 	d := &DB{Name: name}
 	d.dsn = func(user string) string { return withUser(adminDSN(), name, user, devPassword) }
 	open := func(user string, max int) *sql.DB {
-		db, err := sql.Open("pgx", d.dsn(user))
+		db, err := pg.Open(d.dsn(user), max)
 		if err != nil {
 			t.Fatal(err)
 		}
-		db.SetMaxOpenConns(max)
 		return db
 	}
 	d.Migrator, d.App, d.Vendor, d.Relay = open(Migrator, 2), open(App, 20), open(Vendor, 4), open(Relay, 2)
@@ -110,10 +110,10 @@ func New(t testing.TB) *DB {
 	}
 	t.Cleanup(func() {
 		for _, db := range []*sql.DB{d.Migrator, d.App, d.Vendor, d.Relay, d.Admin} {
-			db.Close()
+			_ = db.Close()
 		}
 		_, _ = admin.ExecContext(context.Background(), fmt.Sprintf(`DROP DATABASE IF EXISTS %s WITH (FORCE)`, name))
-		admin.Close()
+		_ = admin.Close()
 	})
 	return d
 }
@@ -124,7 +124,7 @@ func provisionRoles(ctx context.Context, admin *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 	if _, err := conn.ExecContext(ctx, `SELECT pg_advisory_lock(7464011002)`); err != nil {
 		return err
 	}

@@ -48,7 +48,7 @@ func (d dirRepo) List(ctx context.Context, f repository.DirectoryFilter) ([]mode
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	var out []model.DirOrg
 	for rows.Next() {
 		var o model.DirOrg
@@ -77,7 +77,7 @@ func (d dirRepo) Holders(ctx context.Context, g string) ([]model.DirHolder, erro
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	var out []model.DirHolder
 	for rows.Next() {
 		var h model.DirHolder
@@ -94,7 +94,7 @@ func (d dirRepo) TenantIDs(ctx context.Context, after ids.ID, limit int) ([]ids.
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	var out []ids.ID
 	for rows.Next() {
 		var id ids.ID

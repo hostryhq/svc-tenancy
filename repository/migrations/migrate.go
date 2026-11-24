@@ -22,7 +22,7 @@ func Apply(ctx context.Context, db *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 	const lockKey = 7_464_011_001
 	if _, err := conn.ExecContext(ctx, `SELECT pg_advisory_lock($1)`, lockKey); err != nil {
 		return err

@@ -320,7 +320,7 @@ func TestAmendmentsNeedTheOtherParty(t *testing.T) {
 		t.Fatalf("a declined amendment adds nothing: %+v", got)
 	}
 	// An amendment only exists on an active link.
-	f.svc.SuspendLink(f.as(orgA), l.ID, "pause")
+	_, _ = f.svc.SuspendLink(f.as(orgA), l.ID, "pause")
 	if _, err := f.svc.ProposeAmendment(f.as(orgA), l.ID, f.newID(), []service.GrantIn{{Scope: "test.echo.post", Direction: "outbound"}}); err == nil {
 		t.Fatal("no amendment on a suspended link")
 	}
@@ -358,9 +358,9 @@ func TestProposalValidation(t *testing.T) {
 func TestEveryStateChangeWritesOneActivityRowReadableByBothParties(t *testing.T) {
 	f := newFixture(t)
 	l := f.active()
-	f.svc.SuspendLink(f.as(orgA), l.ID, "pause")
-	f.svc.ResumeLink(f.as(orgA), l.ID)
-	f.svc.RevokeLink(f.as(orgB), l.ID, "contract ended")
+	_, _ = f.svc.SuspendLink(f.as(orgA), l.ID, "pause")
+	_, _ = f.svc.ResumeLink(f.as(orgA), l.ID)
+	_, _ = f.svc.RevokeLink(f.as(orgB), l.ID, "contract ended")
 	want := []string{"link.proposed", "link.accepted", "link.confirmed", "link.suspended", "link.resumed", "link.revoked"}
 	for _, who := range []ids.ID{orgA, orgB} {
 		pg, err := f.svc.ListActivity(f.as(who), l.ID, "", 50)
@@ -387,7 +387,7 @@ func TestEveryStateChangeWritesOneActivityRowReadableByBothParties(t *testing.T)
 func TestLinkEventsAreAddressedToTheCounterparty(t *testing.T) {
 	f := newFixture(t)
 	l := f.active()
-	f.svc.SuspendLink(f.as(orgB), l.ID, "pause")
+	_, _ = f.svc.SuspendLink(f.as(orgB), l.ID, "pause")
 	var proposed, suspended bool
 	for _, e := range f.store.Events() {
 		switch e.Type {

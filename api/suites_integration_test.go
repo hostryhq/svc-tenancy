@@ -41,7 +41,7 @@ func pgFactory(t *testing.T, links bool) *httpsuite.Target {
 			if err != nil {
 				t.Fatal(err)
 			}
-			defer rows.Close()
+			defer func() { _ = rows.Close() }()
 			var out []events.Envelope
 			for rows.Next() {
 				var b []byte
@@ -61,7 +61,7 @@ func pgFactory(t *testing.T, links bool) *httpsuite.Target {
 			if err != nil {
 				t.Fatal(err)
 			}
-			defer rows.Close()
+			defer func() { _ = rows.Close() }()
 			var out []httpsuite.AuditRow
 			for rows.Next() {
 				var r httpsuite.AuditRow

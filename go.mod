@@ -3,6 +3,7 @@ module github.com/hostryhq/svc-tenancy
 go 1.27
 
 require (
+	github.com/getkin/kin-openapi v0.153.0
 	github.com/hostryhq/api-specs v0.0.0-20261124223103-2ce939061013
 	github.com/hostryhq/go-auth v0.0.0-20261124222707-cf136d8f9167
 	github.com/hostryhq/go-common v0.0.0-20261124215603-ad5f1e546d2e
@@ -13,7 +14,6 @@ require (
 
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
-	github.com/getkin/kin-openapi v0.153.0 // indirect
 	github.com/go-openapi/jsonpointer v0.22.5 // indirect
 	github.com/go-openapi/swag/jsonname v0.25.5 // indirect
 	github.com/google/uuid v1.6.0 // indirect

@@ -9,10 +9,10 @@ import (
 	"github.com/hostryhq/go-auth"
 	"github.com/hostryhq/go-auth/scopetest"
 	"github.com/hostryhq/go-common/idempotency"
-	"github.com/hostryhq/go-common/ids"
 	"github.com/hostryhq/go-common/testkit"
 
 	"github.com/hostryhq/svc-tenancy/internal/gen"
+	"github.com/hostryhq/svc-tenancy/internal/scopecheck"
 	"github.com/hostryhq/svc-tenancy/internal/seed"
 	"github.com/hostryhq/svc-tenancy/repository/mem"
 	"github.com/hostryhq/svc-tenancy/service"
@@ -148,7 +148,7 @@ func TestOutletRules(t *testing.T) {
 		t.Fatalf("an in-house restaurant inside the organisation's own property: %v", err)
 	}
 	host := f.newID()
-	f.svc.CreateOutlet(ctx, service.OutletInput{ID: host, Name: "Host", Kind: "property", StateCode: "33", TaxRegistrationID: seed.Registration, LocatedInOutletID: seed.Outlet})
+	_, _ = f.svc.CreateOutlet(ctx, service.OutletInput{ID: host, Name: "Host", Kind: "property", StateCode: "33", TaxRegistrationID: seed.Registration, LocatedInOutletID: seed.Outlet})
 	wantField(t, in(func(o *service.OutletInput) { o.LocatedInOutletID = host }), "located_in_outlet_id", "too_deep")
 	// Creating an outlet takes an organisation-wide grant, even for a member who holds the permission at one outlet.
 	scoped := f.asGrants(seed.Example.Org, []auth.Grant{{Outlets: []string{seed.Outlet.String()}, Perms: []string{"outlet.create"}}})
@@ -168,51 +168,10 @@ func TestOutletScopingT14(t *testing.T) {
 	gens := clk.IDs()
 	store := mem.New(gens)
 	svc := service.New(store, service.Options{Clock: clk, IDs: gens, Log: slog.New(slog.DiscardHandler)})
-	world := seed.World{Org: testkit.TenantA, Outlet: scopetest.OutletX, OutletY: scopetest.OutletY,
-		DefaultBrand: "018f0000-0000-7000-8000-0000000000e1", Brand: "018f0000-0000-7000-8000-0000000000e2",
-		Registration: "018f0000-0000-7000-8000-0000000000e3", Series: "018f0000-0000-7000-8000-0000000000e4",
-		Device: "018f0000-0000-7000-8000-0000000000e5", Name: "Scope Test", GSTIN: seed.ExampleGSTIN}
-	if err := world.Apply(context.Background(), store); err != nil {
+	if err := scopecheck.World.Apply(context.Background(), store); err != nil {
 		t.Fatal(err)
 	}
-	idsOf := func(n int, f func(i int) string) []string {
-		out := make([]string, n)
-		for i := range out {
-			out[i] = f(i)
-		}
-		return out
-	}
-	resources := []scopetest.Resource{
-		{
-			Name: "outlets", Permission: "outlet.read",
-			Seed: func(ctx context.Context, x, y string) (string, string, error) { return x, y, nil }, // both outlets exist in the world
-			List: func(ctx context.Context) ([]string, error) {
-				pg, err := svc.ListOutlets(ctx, "", "", 200)
-				return idsOf(len(pg.Items), func(i int) string { return pg.Items[i].ID.String() }), err
-			},
-			Get: func(ctx context.Context, id string) error { _, err := svc.GetOutlet(ctx, ids.ID(id)); return err },
-		},
-		{
-			Name: "document series", Permission: "series.read",
-			Seed: func(ctx context.Context, x, y string) (string, string, error) {
-				rows, err := svc.IssueSeries(system(testkit.TenantA), service.IssueInput{OutletID: ids.ID(y), DeviceID: "018f0000-0000-7000-8000-0000000000e6", DocTypes: []string{"tax_invoice"}, State: "active"})
-				if err != nil {
-					return "", "", err
-				}
-				return world.Series.String(), rows[0].ID.String(), nil
-			},
-			List: func(ctx context.Context) ([]string, error) {
-				pg, err := svc.ListSeries(ctx, "", "", "", 200)
-				return idsOf(len(pg.Items), func(i int) string { return pg.Items[i].ID.String() }), err
-			},
-			ListFiltered: func(ctx context.Context, outlets []string) ([]string, error) {
-				pg, err := svc.ListSeries(ctx, ids.ID(outlets[0]), "", "", 200)
-				return idsOf(len(pg.Items), func(i int) string { return pg.Items[i].ID.String() }), err
-			},
-			Get: func(ctx context.Context, id string) error { _, err := svc.GetSeries(ctx, ids.ID(id)); return err },
-		},
-	}
-	for _, r := range resources {
+	for _, r := range scopecheck.Resources(svc) {
 		t.Run(r.Name, func(t *testing.T) {
 			if bad := scopetest.Check(context.Background(), cat, r); len(bad) > 0 {
 				t.Fatalf("T14 failed:\n%s", strings.Join(bad, "\n"))

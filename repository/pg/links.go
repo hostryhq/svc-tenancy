@@ -43,7 +43,7 @@ func (x *pgTx) loadGrants(ctx context.Context, l *model.Link) error {
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	l.Grants = nil
 	for rows.Next() {
 		g := model.Grant{LinkID: l.ID}
@@ -84,11 +84,13 @@ func (x *pgTx) InsertLink(ctx context.Context, l model.Link, hash []byte, expire
 }
 
 func (x *pgTx) GetLink(ctx context.Context, id ids.ID, forUpdate bool) (model.Link, error) {
-	q := `SELECT ` + linkCols + ` FROM links WHERE id = $1 AND (party_a_tenant_id = $2 OR party_b_tenant_id = $2 OR id = $3::uuid)`
+	var row *sql.Row
 	if forUpdate {
-		q += ` FOR UPDATE`
+		row = x.tx.QueryRowContext(ctx, `SELECT `+linkCols+` FROM links WHERE id = $1 AND (party_a_tenant_id = $2 OR party_b_tenant_id = $2 OR id = $3::uuid) FOR UPDATE`, id, x.t, x.visibleLinkID())
+	} else {
+		row = x.tx.QueryRowContext(ctx, `SELECT `+linkCols+` FROM links WHERE id = $1 AND (party_a_tenant_id = $2 OR party_b_tenant_id = $2 OR id = $3::uuid)`, id, x.t, x.visibleLinkID())
 	}
-	l, err := scanLink(x.tx.QueryRowContext(ctx, q, id, x.t, x.visibleLinkID()))
+	l, err := scanLink(row)
 	if err != nil {
 		return l, notFound(err)
 	}
@@ -128,12 +130,12 @@ func (x *pgTx) ListLinks(ctx context.Context, status string, after ids.ID, limit
 	for rows.Next() {
 		l, err := scanLink(rows)
 		if err != nil {
-			rows.Close()
+			_ = rows.Close()
 			return nil, err
 		}
 		out = append(out, l)
 	}
-	rows.Close()
+	_ = rows.Close()
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
@@ -211,7 +213,7 @@ func (x *pgTx) ListActivity(ctx context.Context, linkID, after ids.ID, limit int
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	var out []model.Activity
 	for rows.Next() {
 		var a model.Activity
@@ -235,12 +237,12 @@ func (x *pgTx) ExpireDueLinks(ctx context.Context, now time.Time) ([]model.Link,
 	for rows.Next() {
 		var id ids.ID
 		if err := rows.Scan(&id); err != nil {
-			rows.Close()
+			_ = rows.Close()
 			return nil, err
 		}
 		due = append(due, id)
 	}
-	rows.Close()
+	_ = rows.Close()
 	var out []model.Link
 	for _, id := range due {
 		l, err := x.GetLink(ctx, id, false)

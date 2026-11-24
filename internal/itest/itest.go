@@ -55,12 +55,25 @@ func NewWith(t testing.TB, links bool) *Stack {
 	return s
 }
 
-// Seed stores the example world (internal/seed).
-func (s *Stack) Seed(t testing.TB) {
+// Seed stores fixture organisations (the example world when none is named).
+func (s *Stack) Seed(t testing.TB, worlds ...seed.World) {
 	t.Helper()
-	if err := seed.ExampleWorld(context.Background(), s.App.Repo); err != nil {
-		t.Fatal(err)
+	if len(worlds) == 0 {
+		worlds = []seed.World{seed.Example}
 	}
+	for _, w := range worlds {
+		if err := w.Apply(context.Background(), s.App.Repo); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
+// Vendor returns the vendor user's credentials: by default every admin permission tenancy uses.
+func (s *Stack) Vendor(perms ...string) http.Header {
+	if len(perms) == 0 {
+		perms = []string{"admin.org.read", "admin.org.create", "admin.registration.verify"}
+	}
+	return s.VendorHeaders(perms...)
 }
 
 // Response is a decoded HTTP answer.
@@ -128,7 +141,7 @@ func Do(t testing.TB, base, method, path string, headers http.Header, body any) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	b, _ := io.ReadAll(resp.Body)
 	return Response{Status: resp.StatusCode, Body: b, Header: resp.Header}
 }

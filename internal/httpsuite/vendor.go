@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"regexp"
 	"strings"
 	"sync"
 	"testing"
@@ -112,7 +111,7 @@ func Vendor(t *testing.T, mk Factory) {
 		wg.Wait()
 		var org string
 		for _, r := range results {
-			if r.Status != 201 && !(r.Status == 409 && r.Code() == "idempotency.in_progress") {
+			if r.Status != 201 && (r.Status != 409 || r.Code() != "idempotency.in_progress") {
 				t.Fatalf("%d %s", r.Status, r.Body)
 			}
 			if r.Status == 201 {
@@ -260,5 +259,3 @@ func Vendor(t *testing.T, mk Factory) {
 		}
 	})
 }
-
-var uuidRe = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`)

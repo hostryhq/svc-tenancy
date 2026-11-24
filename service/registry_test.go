@@ -259,8 +259,8 @@ func TestCloseSeriesUnreconciledNeedsReasonAndKeepsRecord(t *testing.T) {
 	}
 	// Even a series closed by a revocation can be marked unreconciled afterwards.
 	d := f.newID()
-	issue(f, seed.Example.Org, seed.Outlet, d, "active")
-	f.svc.CloseDeviceSeries(system(seed.Example.Org), d, "revoked")
+	_, _ = issue(f, seed.Example.Org, seed.Outlet, d, "active")
+	_, _ = f.svc.CloseDeviceSeries(system(seed.Example.Org), d, "revoked")
 	rows, _ := f.svc.ListSeries(ctx, "", "closed", "", 50)
 	if len(rows.Items) != 1 {
 		t.Fatalf("closed series: %v", rows.Items)
@@ -274,7 +274,7 @@ func TestCloseSeriesUnreconciledNeedsReasonAndKeepsRecord(t *testing.T) {
 func TestRestoreJumpMovesEveryAllocatorBeyondForgottenCodes(t *testing.T) {
 	f := newFixture(t)
 	for i := 0; i < 5; i++ {
-		issue(f, seed.Example.Org, seed.Outlet, f.newID(), "active")
+		_, _ = issue(f, seed.Example.Org, seed.Outlet, f.newID(), "active")
 	}
 	last, _ := issue(f, seed.Example.Org, seed.Outlet, f.newID(), "active")
 	forgotten := model.IndexOf(last[0].Code)

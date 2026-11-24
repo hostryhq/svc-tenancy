@@ -1,0 +1,73 @@
+name: ci
+
+on:
+  pull_request:
+    paths-ignore: ["**.md", "docs/**"]
+  push:
+    branches: [main]
+    paths-ignore: ["**.md", "docs/**"]
+
+# Cancel superseded runs to save Actions minutes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    uses: hostryhq/.github/.github/workflows/go-ci.yml@main
+    # This repo imports private hostryhq modules (go-common, go-auth, api-specs).
+    secrets:
+      private-modules-token: ${{ secrets.GO_PRIVATE_MODULES_TOKEN }}
+
+  # Integration tests: real Postgres, real service, the shared contract suite and the isolation suites.
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          # Throw-away credential of a service container that lives for this job only.
+          POSTGRES_USER: hostry
+          POSTGRES_PASSWORD: hostry-dev-only
+          POSTGRES_DB: hostry
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U hostry -d hostry" --health-interval 2s --health-timeout 2s --health-retries 30
+    env:
+      GOPRIVATE: github.com/hostryhq/*
+      PRIVATE_MODULES_TOKEN: ${{ secrets.GO_PRIVATE_MODULES_TOKEN }}
+      TENANCY_TEST_PG_ADMIN_DSN: postgres://hostry:hostry-dev-only@127.0.0.1:5432/hostry?sslmode=disable
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
+        with:
+          go-version-file: go.mod
+      - name: Allow private hostryhq modules (only when token supplied)
+        if: env.PRIVATE_MODULES_TOKEN != ''
+        run: |
+          git config --global url."https://x-access-token:${PRIVATE_MODULES_TOKEN}@github.com/hostryhq/".insteadOf "https://github.com/hostryhq/"
+      - name: Integration tests
+        run: go test -tags integration -race -count=1 ./...
+
+  gitleaks:
+    uses: hostryhq/.github/.github/workflows/gitleaks.yml@main
+
+  # Single status check for the ruleset: "ci / required".
+  required:
+    if: always()
+    needs: [go, integration, gitleaks]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: All required jobs passed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "results: $RESULTS"
+          for r in $RESULTS; do [ "$r" = success ] || exit 1; done

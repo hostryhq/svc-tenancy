@@ -72,7 +72,7 @@ func migrate(ctx context.Context, cfg config.Config) error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 	return migrations.Apply(ctx, db)
 }
 
@@ -91,7 +91,7 @@ func (k keyLoader) Load(ctx context.Context) (auth.KeyDoc, error) {
 		if err != nil {
 			return auth.KeyDoc{}, err
 		}
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 		if b, err = io.ReadAll(io.LimitReader(resp.Body, 1<<20)); err != nil {
 			return auth.KeyDoc{}, err
 		}
@@ -110,12 +110,12 @@ func serve(ctx context.Context, cfg config.Config, log *slog.Logger) error {
 	if err != nil {
 		return err
 	}
-	defer appDB.Close()
+	defer func() { _ = appDB.Close() }()
 	vendorDB, err := pg.Open(cfg.VendorDSN, 4)
 	if err != nil {
 		return err
 	}
-	defer vendorDB.Close()
+	defer func() { _ = vendorDB.Close() }()
 	// TC-01: refuse to run as a superuser, a BYPASSRLS role or a table owner.
 	for name, db := range map[string]*sql.DB{"app": appDB, "vendor": vendorDB} {
 		if err := pg.VerifyRuntimeRole(ctx, db); err != nil {
@@ -176,7 +176,7 @@ func relay(ctx context.Context, cfg config.Config, log *slog.Logger) {
 		log.Error("relay: open database", "error", err)
 		return
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 	if err := pg.VerifyRuntimeRole(ctx, db); err != nil {
 		log.Error("relay: refusing to start", "error", err)
 		return

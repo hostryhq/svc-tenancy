@@ -1,6 +1,6 @@
 // Package pg is the Postgres implementation of repository.Repository. Every transaction is opened through
-// go-auth's audited transaction (which uses go-common's tenancy helper), so the tenant context is set with
-// set_config('app.tenant_id', $1, true) before any statement, and a vendor-authority request writes its
+// go-auth's audited transaction (which uses go-common's tenancy helper), so the tenant context is applied
+// to the transaction, and only to it, before any statement, and a vendor-authority request writes its
 // vendor_access_log row in the same transaction. Every statement also carries an explicit tenant predicate.
 // SQL is parameterised; nothing is built from request data.
 package pg
@@ -17,8 +17,9 @@ import (
 	"github.com/hostryhq/go-common/ids"
 	"github.com/hostryhq/go-common/outbox"
 	"github.com/hostryhq/go-common/tenancy"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
-	_ "github.com/jackc/pgx/v5/stdlib" // database/sql driver "pgx"
+	"github.com/jackc/pgx/v5/stdlib"
 
 	"github.com/hostryhq/svc-tenancy/internal/model"
 	"github.com/hostryhq/svc-tenancy/repository"
@@ -35,12 +36,18 @@ type Repo struct {
 // New wraps the two pools. Both must have passed VerifyRuntimeRole.
 func New(app, vendor *sql.DB) *Repo { return &Repo{app: app, vendor: vendor} }
 
-// Open opens a pgx-backed pool with conservative limits.
+// Open opens a pgx-backed pool with conservative limits. Every connection is reset (RESET ALL) when it
+// goes back to the pool, so a session-level setting such as app.tenant_id can never leak to the next
+// request (ADR-0003 T4, TC-05 defence in depth); the tenant context is only ever set per transaction.
 func Open(dsn string, maxConns int) (*sql.DB, error) {
-	db, err := sql.Open("pgx", dsn)
+	cfg, err := pgx.ParseConfig(dsn)
 	if err != nil {
 		return nil, err
 	}
+	db := stdlib.OpenDB(*cfg, stdlib.OptionResetSession(func(ctx context.Context, c *pgx.Conn) error {
+		_, err := c.Exec(ctx, "RESET ALL")
+		return err
+	}))
 	db.SetMaxOpenConns(maxConns)
 	db.SetMaxIdleConns(maxConns)
 	db.SetConnMaxLifetime(30 * time.Minute)
@@ -230,7 +237,7 @@ func (x *pgTx) ListBrands(ctx context.Context, after ids.ID, limit int) ([]model
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	var out []model.Brand
 	for rows.Next() {
 		b, err := scanBrand(rows)
@@ -288,7 +295,7 @@ func (x *pgTx) ListOutlets(ctx context.Context, scope auth.OutletScope, kind str
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	var out []model.Outlet
 	for rows.Next() {
 		o, err := scanOutlet(rows)
@@ -366,7 +373,7 @@ func (x *pgTx) ListRegistrations(ctx context.Context, after ids.ID, limit int) (
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	var out []model.Registration
 	for rows.Next() {
 		r, err := scanReg(rows)
@@ -404,12 +411,11 @@ func scanSeries(row interface{ Scan(...any) error }) (model.Series, error) {
 	return s, err
 }
 
-func (x *pgTx) querySeries(ctx context.Context, q string, args ...any) ([]model.Series, error) {
-	rows, err := x.tx.QueryContext(ctx, q, args...)
+func scanSeriesRows(rows *sql.Rows, err error) ([]model.Series, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	var out []model.Series
 	for rows.Next() {
 		s, err := scanSeries(rows)
@@ -422,14 +428,14 @@ func (x *pgTx) querySeries(ctx context.Context, q string, args ...any) ([]model.
 }
 
 func (x *pgTx) SeriesForDevice(ctx context.Context, outletID, deviceID ids.ID) ([]model.Series, error) {
-	return x.querySeries(ctx, `SELECT `+seriesCols+` FROM document_series WHERE tenant_id = $1 AND outlet_id = $2 AND device_id = $3 ORDER BY id`, x.t, outletID, deviceID)
+	return scanSeriesRows(x.tx.QueryContext(ctx, `SELECT `+seriesCols+` FROM document_series WHERE tenant_id = $1 AND outlet_id = $2 AND device_id = $3 ORDER BY id`, x.t, outletID, deviceID))
 }
 
 func (x *pgTx) ListSeries(ctx context.Context, scope auth.OutletScope, status string, after ids.ID, limit int) ([]model.Series, error) {
-	return x.querySeries(ctx, `SELECT `+seriesCols+` FROM document_series
+	return scanSeriesRows(x.tx.QueryContext(ctx, `SELECT `+seriesCols+` FROM document_series
 		WHERE tenant_id = $1 AND id > $2::uuid AND ($3::text = '' OR status = $3)
 		  AND ($4::jsonb IS NULL OR outlet_id IN (SELECT jsonb_array_elements_text($4::jsonb)::uuid))
-		ORDER BY id LIMIT $5`, x.t, afterID(after), status, scopeJSON(scope), limit)
+		ORDER BY id LIMIT $5`, x.t, afterID(after), status, scopeJSON(scope), limit))
 }
 
 func (x *pgTx) GetSeries(ctx context.Context, id ids.ID) (model.Series, error) {
@@ -459,6 +465,7 @@ func (x *pgTx) InsertSeries(ctx context.Context, s model.Series) error {
 }
 
 func (x *pgTx) UpdateSeries(ctx context.Context, s model.Series) error {
+	//scopelint:internal the service read the row and checked its outlet (requireOutlet) or acts as the registry for identity
 	_, err := x.tx.ExecContext(ctx, `UPDATE document_series SET status = $3, closed_at = $4, closed_reason = $5 WHERE tenant_id = $1 AND id = $2`,
 		x.t, s.ID, s.Status, s.ClosedAt, nullStr(s.ClosedReason))
 	return err
