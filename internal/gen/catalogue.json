@@ -595,6 +595,16 @@
     "sensitive": true
   },
   {
+    "name": "sync.quarantine.read",
+    "owner": "sync",
+    "support_viewable": true
+  },
+  {
+    "name": "sync.quarantine.confirm",
+    "owner": "sync",
+    "support_actable": true
+  },
+  {
     "name": "sync.exceptions.read",
     "owner": "sync"
   },
