@@ -28,6 +28,16 @@ const (
 	WorldLinkActive                  = "link-active"
 	WorldLinkSuspended               = "link-suspended"
 	WorldLinkAmendmentPending        = "link-amendment-pending"
+	WorldLinkAcceptedChanged         = "link-accepted-changed"
+	WorldLinkProposed                = "link-proposed"
+	WorldPlanSeeded                  = "plan-seeded"
+	WorldPlanActive                  = "plan-active"
+	WorldSubscribed                  = "subscribed"
+	WorldChargeOverdue               = "charge-overdue"
+	WorldPaymentRecorded             = "payment-recorded"
+	WorldOrgActive                   = "org-active"
+	WorldOrgSuspended                = "org-suspended"
+	WorldBookRegistered              = "book-registered"
 	invitationCode                   = "7QK3M9XD7QK3M9XD"
 	spareRegistration         ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a93"
 	CreditNoteSeries          ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a95"
@@ -52,7 +62,7 @@ const (
 // the caller is the invited party differs from the example organisation.
 func WorldCaller(world string) ids.ID {
 	switch world {
-	case WorldLinkProposedToCaller, WorldLinkAmendmentPending:
+	case WorldLinkProposedToCaller, WorldLinkAmendmentPending, WorldLinkAcceptedChanged:
 		return Restaurants
 	}
 	return Org
@@ -62,7 +72,8 @@ func WorldCaller(world string) ids.ID {
 func KnownWorld(world string) bool {
 	switch world {
 	case WorldBase, WorldEmpty, WorldRegistrationVerified, WorldSeriesIssued, WorldRegistrationSpare, WorldLinkNone,
-		WorldLinkProposedToCaller, WorldLinkAccepted, WorldLinkActive, WorldLinkSuspended, WorldLinkAmendmentPending:
+		WorldLinkProposedToCaller, WorldLinkAccepted, WorldLinkActive, WorldLinkSuspended, WorldLinkAmendmentPending, WorldLinkAcceptedChanged, WorldLinkProposed,
+		WorldPlanSeeded, WorldPlanActive, WorldSubscribed, WorldChargeOverdue, WorldPaymentRecorded, WorldOrgActive, WorldOrgSuspended, WorldBookRegistered:
 		return true
 	}
 	return false
@@ -74,6 +85,7 @@ type worldSpec struct {
 	spare    bool // a second, verified, unreferenced registration
 	others   bool // the second organisation exists
 	link     string
+	phase2   p2Spec
 }
 
 var worldSpecs = map[string]worldSpec{
@@ -88,6 +100,16 @@ var worldSpecs = map[string]worldSpec{
 	WorldLinkActive:           {verified: true, others: true, link: "active"},
 	WorldLinkSuspended:        {verified: true, others: true, link: "suspended"},
 	WorldLinkAmendmentPending: {verified: true, others: true, link: "amendment"},
+	WorldLinkAcceptedChanged:  {verified: true, others: true, link: "accepted-changed"},
+	WorldLinkProposed:         {verified: true, others: true, link: "proposed"},
+	WorldPlanSeeded:           {phase2: p2Spec{plans: true}},
+	WorldPlanActive:           {phase2: p2Spec{plans: true, activePlan: true}},
+	WorldSubscribed:           {phase2: p2Spec{plans: true, activePlan: true, subscribed: true}},
+	WorldChargeOverdue:        {phase2: p2Spec{plans: true, activePlan: true, subscribed: true}},
+	WorldPaymentRecorded:      {phase2: p2Spec{plans: true, activePlan: true, subscribed: true, payment: true}},
+	WorldOrgActive:            {phase2: p2Spec{status: model.OrgActive}},
+	WorldOrgSuspended:         {phase2: p2Spec{status: model.OrgSuspended}},
+	WorldBookRegistered:       {verified: true, phase2: p2Spec{book: true}},
 }
 
 func asTenant(ctx context.Context, t ids.ID) context.Context {
@@ -113,9 +135,11 @@ func ApplyWorld(ctx context.Context, repo repository.Repository, world string) e
 		return err
 	}
 	if spec.link != "" {
-		return applyLink(ctx, repo, spec.link)
+		if err := applyLink(ctx, repo, spec.link); err != nil {
+			return err
+		}
 	}
-	return nil
+	return applyPhase2(ctx, repo, spec.phase2)
 }
 
 // applyHospitality stores organisation 4a60: trial, default brand 4a6a, outlet 4a61 and registration 4a6b.
@@ -192,6 +216,10 @@ func applyRestaurants(ctx context.Context, repo repository.Repository) error {
 // applyLink stores link 4a62 from the proposer 4a60 to the acceptor 4a63 in the named state: proposed
 // (invitation unused), accepted, active, suspended (by the proposer) or active with a pending amendment.
 func applyLink(ctx context.Context, repo repository.Repository, state string) error {
+	changed := state == "accepted-changed" // the acceptor changed its registration details after accepting
+	if changed {
+		state = "accepted"
+	}
 	accepted, confirmed := At.Add(5*time.Minute), At.Add(15*time.Minute)
 	l := model.Link{ID: LinkID, Template: "on_premises_outlet", Status: model.LinkProposed, ProposerID: Org, ProposerOutlets: []ids.ID{Outlet},
 		ProposerParty: model.Party{DisplayName: exampleOrgName, Registrations: []model.PartyRegistration{{LegalName: exampleOrgName + " Pvt Ltd", GSTIN: ExampleGSTIN, StateCode: "33", GSTINVerified: true}}},
@@ -214,6 +242,23 @@ func applyLink(ctx context.Context, repo repository.Repository, state string) er
 		l.Status, l.SuspendedBy = model.LinkSuspended, Org
 		acts = append(acts, model.Activity{ID: activitySuspended, LinkID: LinkID, OccurredAt: confirmed.Add(10 * time.Minute), Side: model.SideProposer, ActorID: Owner, Action: "link.suspended", Outcome: "succeeded"})
 	}
+	if err := applyLinkRows(ctx, repo, l, hash, accepted, acts, state); err != nil {
+		return err
+	}
+	if !changed {
+		return nil
+	}
+	return repo.InTx(asTenant(ctx, Restaurants), func(c context.Context, tx repository.Tx) error {
+		r, err := tx.GetRegistration(c, restaurantsReg)
+		if err != nil {
+			return err
+		}
+		r.LegalName = "Example Restaurants Group LLP"
+		return tx.UpdateRegistration(c, r)
+	})
+}
+
+func applyLinkRows(ctx context.Context, repo repository.Repository, l model.Link, hash []byte, accepted time.Time, acts []model.Activity, state string) error {
 	return repo.InTx(asTenant(ctx, Org), func(c context.Context, tx repository.Tx) error {
 		if err := tx.InsertLink(c, l, hash, l.ExpiresAt); err != nil {
 			return err

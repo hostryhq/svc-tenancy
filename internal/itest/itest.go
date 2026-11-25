@@ -44,7 +44,7 @@ func NewWith(t testing.TB, links bool) *Stack {
 	tk := double.NewTokens()
 	a, err := app.Build(app.Options{
 		AppDB: db.App, VendorDB: db.Vendor,
-		Tenant: tk.TenantIssuer.Verifier(), Vendor: tk.VendorIssuer.Verifier(), Services: tk.Registry.Verifier("tenancy"),
+		Tenant: tk.TenantIssuer.Verifier(), Vendor: tk.VendorIssuer.Verifier(), Services: tk.Registry.Verifier("tenancy"), Grants: tk.GrantVerifier(clock.System),
 		Clock: clk, AuthClock: clock.System, IDs: ids.NewGenerator(clk.Now, nil), Log: slog.New(slog.DiscardHandler), LinksEnabled: links,
 	})
 	if err != nil {
@@ -74,13 +74,14 @@ func (s *Stack) SeedWorld(ctx context.Context, world string) error {
 	if err := s.DB.Truncate(ctx); err != nil {
 		return err
 	}
+	s.Clock.Set(seed.WorldInstant(world))
 	return seed.ApplyWorld(ctx, s.App.Repo, world)
 }
 
 // Vendor returns the vendor user's credentials: by default every admin permission tenancy uses.
 func (s *Stack) Vendor(perms ...string) http.Header {
 	if len(perms) == 0 {
-		perms = []string{"admin.org.read", "admin.org.create", "admin.registration.verify"}
+		perms = double.AllVendorPerms
 	}
 	return s.VendorHeaders(perms...)
 }
