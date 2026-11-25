@@ -8,5 +8,13 @@
   "series_allocators": "tenant_wide",
   "idempotency_records": "tenant_wide",
   "event_keys": "tenant_wide",
-  "vendor_access_log": "tenant_wide"
+  "vendor_access_log": "tenant_wide",
+  "manual_book_series": "tenant_wide",
+  "outlet_trading_state": "outlet_scoped",
+  "approval_grant_used": "tenant_wide",
+  "organisation_lifecycle_log": "tenant_wide",
+  "subscriptions": "tenant_wide",
+  "entitlements": "tenant_wide",
+  "charges": "tenant_wide",
+  "charge_payments": "tenant_wide"
 }

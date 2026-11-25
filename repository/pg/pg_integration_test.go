@@ -39,6 +39,11 @@ func stack(t *testing.T) *itest.Stack {
 	s := itest.New(t)
 	s.Seed(t, seed.Example, seed.Other, seed.Third)
 	for _, w := range []seed.World{seed.Example, seed.Other} {
+		if err := seed.Phase2Fixture(ctx, s.App.Repo, w); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, w := range []seed.World{seed.Example, seed.Other} {
 		own := itest.Bearer(s.TenantToken(w.Org))
 		if r := itest.Do(t, s.Srv.URL, "PUT", "/v1/organisation-settings", own, obj{"offline_window_days": 10, "idle_lock_minutes": 8}); r.Status != 200 {
 			t.Fatalf("settings: %d %s", r.Status, r.Body)
@@ -95,7 +100,9 @@ func tablesWithColumn(t *testing.T, db *sql.DB, col string) []string {
 }
 
 var tenantTables = []string{"document_series", "event_keys", "idempotency_records", "organisation_settings", "organisations", "outbox", "outlets",
-	"series_allocators", "tax_registrations", "vendor_access_log", "brands"}
+	"series_allocators", "tax_registrations", "vendor_access_log", "brands",
+	// Phase 2: the commercial ledger, bill books, trading state, grant records and the lifecycle audit.
+	"approval_grant_used", "charge_payments", "charges", "entitlements", "manual_book_series", "organisation_lifecycle_log", "outlet_trading_state", "subscriptions"}
 
 // T1 / TST-01: for every tenant-owned table, as the application role: no context sees nothing; context A
 // never sees B's rows; writing a row of B or moving a row to B is refused.
@@ -222,6 +229,11 @@ func TestSchemaAndRoleLint(t *testing.T) {
 		"links": "two-party", "link_grants": "two-party", "link_amendments": "two-party", "link_activity": "two-party", "link_invitations": "two-party",
 		// vendor realm (directory tables; two policies)
 		"directory_organisations": "vendor-realm", "directory_registrations": "vendor-realm",
+		"directory_subscriptions": "vendor-realm", "directory_charges": "vendor-realm",
+		// platform reference data (ADR-0008 S2): plans, versions and Hostry's GST configuration belong to no
+		// organisation, carry no tenant column and no row-level security; vendor routes that name no organisation
+		// write them. The event inbox and its parked events are service-internal and tenant-less as well.
+		"plans": "platform", "plan_versions": "platform", "billing_configurations": "platform", "inbox": "platform", "event_parked": "platform",
 		// platform class: vendor actions that concern no organisation (ADR-0013 V5 item 3). No tenant column and
 		// no row-level security by design; checked below for append-only grants and for holding no tenant data.
 		"platform_vendor_access_log": "platform",
@@ -269,7 +281,7 @@ func TestSchemaAndRoleLint(t *testing.T) {
 		}
 	}
 	// The directory tables carry exactly their two policies.
-	for _, d := range []string{"directory_organisations", "directory_registrations"} {
+	for _, d := range []string{"directory_organisations", "directory_registrations", "directory_subscriptions", "directory_charges"} {
 		var names string
 		if err := db.QueryRowContext(ctx, `SELECT string_agg(policyname || ':' || roles::text, ',' ORDER BY policyname) FROM pg_policies WHERE tablename = $1`, d).Scan(&names); err != nil {
 			t.Fatal(err)
@@ -311,16 +323,16 @@ func TestSchemaAndRoleLint(t *testing.T) {
 		}
 		return strings.Join(out, ",")
 	}
-	if got := grants(pgtest.Vendor); got != "directory_organisations:SELECT,directory_registrations:SELECT" {
+	if got := grants(pgtest.Vendor); got != "billing_configurations:SELECT,directory_charges:SELECT,directory_organisations:SELECT,directory_registrations:SELECT,directory_subscriptions:SELECT,plan_versions:SELECT,plans:SELECT" {
 		t.Errorf("tenancy_vendor grants: %s", got)
 	}
-	if got := grants(pgtest.Relay); got != "idempotency_records:DELETE,idempotency_records:SELECT,outbox:DELETE,outbox:SELECT,outbox:UPDATE" {
+	if got := grants(pgtest.Relay); got != "idempotency_records:DELETE,idempotency_records:SELECT,inbox:DELETE,inbox:SELECT,outbox:DELETE,outbox:SELECT,outbox:UPDATE" {
 		t.Errorf("tenancy_relay grants: %s", got)
 	}
 	if g := grants(pgtest.App); strings.Contains(g, "DELETE") || strings.Contains(g, "TRUNCATE") {
 		t.Errorf("tenancy_app must have no DELETE: %s", g)
 	}
-	for _, appendOnly := range []string{"link_activity", "vendor_access_log", "outbox", "platform_vendor_access_log"} {
+	for _, appendOnly := range []string{"link_activity", "vendor_access_log", "outbox", "platform_vendor_access_log", "charge_payments", "approval_grant_used", "organisation_lifecycle_log", "billing_configurations"} {
 		for _, p := range []string{"UPDATE", "DELETE"} {
 			if strings.Contains(grants(pgtest.App), appendOnly+":"+p) {
 				t.Errorf("tenancy_app can %s %s, which is append-only for it", p, appendOnly)

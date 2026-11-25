@@ -11,7 +11,10 @@ import (
 
 // Organisation, outlet, registration and series states.
 const (
-	OrgTrial = "trial"
+	OrgTrial     = "trial"
+	OrgActive    = "active"
+	OrgSuspended = "suspended"
+	OrgClosed    = "closed"
 
 	OutletActive   = "active"
 	OutletInactive = "inactive"
@@ -134,6 +137,10 @@ type Series struct {
 	IssuedAt          time.Time
 	ClosedAt          *time.Time
 	ClosedReason      string
+	// TailConfirmedAt and LastNumber are filled from billing.series.reconciled (ADR-0014 A2.5 item 2): empty
+	// at closure, so a closed series without them reads "closed, awaiting device".
+	TailConfirmedAt *time.Time
+	LastNumber      *int
 }
 
 // Grant is one directional scope of a link. GrantorSide is the side that owns the data.

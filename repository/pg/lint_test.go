@@ -48,15 +48,31 @@ func TestTenantContextIsNeverSetOutsideTheHelper(t *testing.T) {
 }
 
 // TC-05: SQL is never built from data. Every statement passed to the database is a string literal, or a
-// concatenation of literals and the *Cols column-list constants.
+// concatenation of literals, the *Cols column-list constants and package-level string constants.
 func TestSQLIsNeverBuiltFromData(t *testing.T) {
 	fset := token.NewFileSet()
 	var bad []string
-	for _, f := range goFiles(t, ".") {
+	files := goFiles(t, ".")
+	consts := map[string]bool{}
+	parsed := map[string]*ast.File{}
+	for _, f := range files {
 		file, err := parser.ParseFile(fset, f, nil, 0)
 		if err != nil {
 			t.Fatal(err)
 		}
+		parsed[f] = file
+		for _, d := range file.Decls {
+			if g, ok := d.(*ast.GenDecl); ok && g.Tok == token.CONST {
+				for _, sp := range g.Specs {
+					for _, n := range sp.(*ast.ValueSpec).Names {
+						consts[n.Name] = true
+					}
+				}
+			}
+		}
+	}
+	for _, f := range files {
+		file := parsed[f]
 		ast.Inspect(file, func(n ast.Node) bool {
 			call, ok := n.(*ast.CallExpr)
 			if !ok {
@@ -71,7 +87,7 @@ func TestSQLIsNeverBuiltFromData(t *testing.T) {
 			default:
 				return true
 			}
-			if !constantSQL(call.Args[1]) {
+			if !constantSQL(call.Args[1], consts) {
 				bad = append(bad, fset.Position(call.Pos()).String())
 			}
 			return true
@@ -82,14 +98,14 @@ func TestSQLIsNeverBuiltFromData(t *testing.T) {
 	}
 }
 
-func constantSQL(e ast.Expr) bool {
+func constantSQL(e ast.Expr, consts map[string]bool) bool {
 	switch x := e.(type) {
 	case *ast.BasicLit:
 		return x.Kind == token.STRING
 	case *ast.BinaryExpr:
-		return x.Op == token.ADD && constantSQL(x.X) && constantSQL(x.Y)
+		return x.Op == token.ADD && constantSQL(x.X, consts) && constantSQL(x.Y, consts)
 	case *ast.Ident:
-		return strings.HasSuffix(x.Name, "Cols")
+		return strings.HasSuffix(x.Name, "Cols") || consts[x.Name]
 	}
 	return false
 }
