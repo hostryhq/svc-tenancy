@@ -108,6 +108,10 @@ func badParam(w http.ResponseWriter, r *http.Request, err error) {
 		apperr.WriteProblem(w, r, idempotency.ErrKeyInvalid)
 		return
 	}
+	if errors.As(err, &req) && strings.EqualFold(req.ParamName, "Hostry-Vendor-Approval") {
+		apperr.WriteProblem(w, r, apperr.New(apperr.Forbidden, auth.CodeGrantRequired, "a vendor approval grant is required"))
+		return
+	}
 	var f apperr.FieldError
 	var inv *gen.InvalidParamFormatError
 	if errors.As(err, &inv) {

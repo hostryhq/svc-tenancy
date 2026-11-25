@@ -38,6 +38,9 @@ type Service struct {
 	// linkScopes is the platform catalogue of link scopes (tenants cannot invent scopes).
 	linkScopes map[string]bool
 	limiter    *limiter
+	// grants verifies the vendor approval grant of suspend, reinstate and close (ADR-0014 A2.6); nil refuses
+	// every lifecycle action (fail closed).
+	grants *auth.GrantVerifier
 }
 
 // Options configure a Service. Zero values pick production defaults.
@@ -47,11 +50,14 @@ type Options struct {
 	Log        *slog.Logger
 	Rand       io.Reader // invitation codes; crypto/rand by default
 	LinkScopes []string  // defaults to the Phase 1 test-only pair
+	// Grants verifies vendor approval grants. The service consumes the grant id itself, in the action's
+	// transaction, so the verifier's own Used hook must be nil.
+	Grants *auth.GrantVerifier
 }
 
 // New builds a Service over repo.
 func New(repo repository.Repository, o Options) *Service {
-	s := &Service{repo: repo, clock: o.Clock, gen: o.IDs, log: o.Log, rnd: o.Rand, linkScopes: map[string]bool{}}
+	s := &Service{repo: repo, clock: o.Clock, gen: o.IDs, log: o.Log, rnd: o.Rand, linkScopes: map[string]bool{}, grants: o.Grants}
 	if s.clock == nil {
 		s.clock = clock.System
 	}
@@ -105,38 +111,43 @@ func clientAddr(ctx context.Context) string { a, _ := ctx.Value(clientAddrKey{})
 func run[T any](ctx context.Context, s *Service, fn func(ctx context.Context, tx repository.Tx) (T, error)) (T, error) {
 	var out T
 	err := s.repo.InTx(ctx, func(ctx context.Context, tx repository.Tx) error {
-		im, ok := idemFrom(ctx)
-		if !ok {
-			v, err := fn(ctx, tx)
-			out = v
-			return err
-		}
-		fp, stored, found, err := tx.IdemGet(ctx, im.Op, im.Key)
-		if err != nil {
-			return err
-		}
-		if found {
-			if fp != im.Fingerprint {
-				return idempotency.ErrMismatch
-			}
-			return json.Unmarshal(stored, &out)
-		}
-		v, err := fn(ctx, tx)
-		if err != nil {
-			return err
-		}
-		b, err := json.Marshal(v)
-		if err != nil {
-			return err
-		}
+		v, err := claimed(ctx, s, tx, fn)
 		out = v
-		return tx.IdemPut(ctx, im.Op, im.Key, im.Fingerprint, b, s.clock.Now())
+		return err
 	})
 	var zero T
 	if err != nil {
 		return zero, err
 	}
 	return out, nil
+}
+
+// claimed runs fn inside tx, claiming the request's Idempotency-Key first when it has one.
+func claimed[T any](ctx context.Context, s *Service, tx repository.Tx, fn func(ctx context.Context, tx repository.Tx) (T, error)) (T, error) {
+	var out T
+	im, ok := idemFrom(ctx)
+	if !ok {
+		return fn(ctx, tx)
+	}
+	fp, stored, found, err := tx.IdemGet(ctx, im.Op, im.Key)
+	if err != nil {
+		return out, err
+	}
+	if found {
+		if fp != im.Fingerprint {
+			return out, idempotency.ErrMismatch
+		}
+		return out, json.Unmarshal(stored, &out)
+	}
+	v, err := fn(ctx, tx)
+	if err != nil {
+		return out, err
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		return out, err
+	}
+	return v, tx.IdemPut(ctx, im.Op, im.Key, im.Fingerprint, b, s.clock.Now())
 }
 
 // actor is the member, device or service performing the action (audit).
@@ -262,7 +273,33 @@ func apperrDenied() error {
 	return apperr.New(apperr.Forbidden, auth.CodePermissionDenied, "permission denied")
 }
 
-func outletEvent(s *Service, typ string, ctx context.Context, tenant ids.ID, o model.Outlet) events.Envelope {
-	return tev.OutletEvent(s.newID(), typ, s.clock.Now(), actor(ctx), tenant, tev.OutletData{
-		OutletID: o.ID, BrandID: o.BrandID, Kind: o.Kind, Status: o.Status, TaxRegistrationID: o.TaxRegistrationID})
+// publishOutlet writes tenancy.outlet.created or .updated with the regime of the outlet's registration and the
+// ids of its open series, so a consumer knows which codes to expect (ids only).
+func (s *Service) publishOutlet(ctx context.Context, tx repository.Tx, typ string, tenant ids.ID, o model.Outlet) error {
+	d := tev.OutletData{OutletID: o.ID, BrandID: o.BrandID, Kind: o.Kind, Status: o.Status, TaxRegistrationID: o.TaxRegistrationID}
+	if reg, err := tx.GetRegistration(ctx, o.TaxRegistrationID); err == nil {
+		d.TaxRegime = reg.Regime
+	}
+	sids, err := tx.OpenSeriesIDs(ctx, o.ID)
+	if err != nil {
+		return err
+	}
+	d.SeriesIDs = sids
+	return s.publish(ctx, tx, tev.OutletEvent(s.newID(), typ, s.clock.Now(), actor(ctx), tenant, d))
+}
+
+// run executes fn for platform data of vendor routes that name no organisation (plans, GST configuration,
+// the ledger export): one platform-audited transaction, with the Idempotency-Key claimed in it.
+func runPlatform[T any](ctx context.Context, s *Service, fn func(ctx context.Context, tx repository.Tx) (T, error)) (T, error) {
+	var out T
+	err := s.repo.InPlatformOnlyTx(ctx, func(ctx context.Context, tx repository.Tx) error {
+		v, err := claimed(ctx, s, tx, fn)
+		out = v
+		return err
+	})
+	var zero T
+	if err != nil {
+		return zero, err
+	}
+	return out, nil
 }

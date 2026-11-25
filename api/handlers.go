@@ -328,7 +328,7 @@ func (s *Server) ProposeLink(w http.ResponseWriter, r *http.Request, _ gen.Propo
 		return
 	}
 	p, err := s.svc.ProposeLink(ctx, service.ProposeInput{ID: ids.ID(in.Id), Template: string(in.Template), Grants: grantsIn(in.Grants), OutletIDs: toIDs(in.OutletIds)})
-	s.reply(w, r, http.StatusCreated, gen.LinkProposal{Link: linkDTO(p.Link, viewer(r), s.clk.Now()), InvitationCode: p.Code}, err)
+	s.reply(w, r, http.StatusCreated, proposalDTO(p, viewer(r), s.clk.Now()), err)
 }
 
 func (s *Server) GetLink(w http.ResponseWriter, r *http.Request, linkID gen.Id) {

@@ -20,7 +20,9 @@ import (
 
 	"github.com/hostryhq/go-auth"
 	"github.com/hostryhq/go-common/bus"
+	"github.com/hostryhq/go-common/events"
 	"github.com/hostryhq/go-common/idempotency"
+	"github.com/hostryhq/go-common/inbox"
 	"github.com/hostryhq/go-common/logx"
 	"github.com/hostryhq/go-common/outbox"
 
@@ -142,6 +144,9 @@ func serve(ctx context.Context, cfg config.Config, log *slog.Logger) error {
 		Tenant:   &auth.Verifier{Keys: tenantKeys, Issuer: cfg.TenantIssuer, Audience: cfg.TenantAudience, Realm: auth.RealmTenant},
 		Vendor:   &auth.Verifier{Keys: vendorKeys, Issuer: cfg.VendorIssuer, Audience: cfg.VendorAudience, Realm: auth.RealmVendor},
 		Services: &auth.ServiceVerifier{Registry: auth.NewStaticKeySet(svcDoc), Self: cfg.SelfName},
+		// Vendor approval grants are signed with identity's vendor-realm key (ADR-0014 A2.6): the same key set
+		// and issuer as vendor tokens; the audience is this service. The service consumes the grant id itself.
+		Grants: &auth.GrantVerifier{Keys: vendorKeys, Issuer: cfg.VendorIssuer, Audience: cfg.SelfName},
 	})
 	if err != nil {
 		return err
@@ -154,6 +159,11 @@ func serve(ctx context.Context, cfg config.Config, log *slog.Logger) error {
 	}
 	if cfg.LinksEnabled {
 		go expireLoop(ctx, a, log)
+	}
+	if cfg.NatsURL != "" {
+		go consume(ctx, cfg, a, appDB, log)
+	} else {
+		log.Warn("event consumer disabled: NATS_URL not set; the open-trading-day guard sees no trading state and series tails are not confirmed")
 	}
 
 	srv := &http.Server{Addr: cfg.Addr, Handler: a.Handler, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 30 * time.Second,
@@ -189,6 +199,7 @@ func relay(ctx context.Context, cfg config.Config, log *slog.Logger) {
 	}
 	defer nc.Close()
 	go idempotencySweepLoop(ctx, db, log)
+	go inboxSweepLoop(ctx, db, log)
 	pub, err := bus.NewPublisher(nc)
 	if err != nil {
 		log.Error("relay: publisher", "error", err)
@@ -197,6 +208,38 @@ func relay(ctx context.Context, cfg config.Config, log *slog.Logger) {
 	r := &outbox.Relay{DB: db, Sink: pub, LockKey: 7_464_011_003, Log: log}
 	if err := r.Run(ctx); err != nil && !errors.Is(err, context.Canceled) {
 		log.Error("relay stopped", "error", err)
+	}
+}
+
+// consume reads billing's events (billing.trading_day.changed, billing.series.reconciled) from the bus. Each is
+// applied in one transaction with its inbox row, acknowledged after commit, redelivered on failure and parked
+// after the last attempt (ADR-0011 B5).
+func consume(ctx context.Context, cfg config.Config, a *app.App, db *sql.DB, log *slog.Logger) {
+	repo, ok := a.Repo.(*pg.Repo)
+	if !ok {
+		log.Error("event consumer: repository is not Postgres")
+		return
+	}
+	nc, err := bus.Connect(cfg.NatsURL, "tenancy", cfg.NatsSeedFile)
+	if err != nil {
+		log.Error("event consumer: connect to the bus", "error", err)
+		return
+	}
+	defer nc.Close()
+	c, err := bus.BindConsumer(ctx, nc, "billing", "tenancy")
+	if err != nil {
+		log.Error("event consumer: bind", "error", err)
+		return
+	}
+	sub := &inbox.Subscriber{DB: db, Consumer: "billing", Log: log, Handle: func(ctx context.Context, tx *sql.Tx, e events.Envelope) error {
+		rtx, err := repo.Adopt(ctx, tx, e.TenantID)
+		if err != nil {
+			return err
+		}
+		return a.Service.ApplyEvent(ctx, rtx, e)
+	}}
+	if err := sub.Run(ctx, c.Source(5*time.Second)); err != nil && !errors.Is(err, context.Canceled) {
+		log.Error("event consumer stopped", "error", err)
 	}
 }
 
@@ -230,6 +273,24 @@ func idempotencySweepLoop(ctx context.Context, db *sql.DB, log *slog.Logger) {
 				log.Error("idempotency sweep failed", "error", err)
 			} else if n > 0 {
 				log.Info("idempotency records expired", "count", n)
+			}
+		}
+	}
+}
+
+// inboxSweepLoop removes inbox rows older than their retention (8 days) once an hour, as the relay role, the
+// only role that may delete them.
+func inboxSweepLoop(ctx context.Context, db *sql.DB, log *slog.Logger) {
+	t := time.NewTicker(time.Hour)
+	defer t.Stop()
+	sub := &inbox.Subscriber{DB: db}
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-t.C:
+			if err := sub.Cleanup(ctx); err != nil {
+				log.Error("inbox sweep failed", "error", err)
 			}
 		}
 	}

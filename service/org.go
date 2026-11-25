@@ -229,7 +229,7 @@ func (s *Service) CreateOutlet(ctx context.Context, in OutletInput) (model.Outle
 			return o, err
 		}
 		tid, _ := tenantOf(ctx)
-		return o, s.publish(ctx, tx, outletEvent(s, "tenancy.outlet.created", ctx, tid, o))
+		return o, s.publishOutlet(ctx, tx, "tenancy.outlet.created", tid, o)
 	})
 }
 
@@ -270,6 +270,6 @@ func (s *Service) UpdateOutlet(ctx context.Context, id ids.ID, name, status *str
 			return o, err
 		}
 		tid, _ := tenantOf(ctx)
-		return o, s.publish(ctx, tx, outletEvent(s, "tenancy.outlet.updated", ctx, tid, o))
+		return o, s.publishOutlet(ctx, tx, "tenancy.outlet.updated", tid, o)
 	})
 }
