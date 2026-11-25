@@ -96,5 +96,6 @@ func TestDoubleCommercial(t *testing.T)        { httpsuite.Commercial(t, factory
 func TestDoubleLifecycle(t *testing.T)         { httpsuite.Lifecycle(t, factory) }
 func TestDoubleSeriesTail(t *testing.T)        { httpsuite.SeriesTail(t, factory) }
 func TestDoubleBooks(t *testing.T)             { httpsuite.Books(t, factory) }
+func TestDoubleGateway(t *testing.T)           { httpsuite.Gateway(t, factory) }
 func TestDoubleLinksP2(t *testing.T)           { httpsuite.LinksP2(t, factory) }
 func TestDoublePhaseTwoIsolation(t *testing.T) { httpsuite.PhaseTwoIsolation(t, factory) }

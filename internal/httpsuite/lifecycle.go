@@ -122,6 +122,25 @@ func Lifecycle(t *testing.T, mk Factory) {
 		do("org_suspend", o.Org, grant, req(), approver, 403, "grant.used") // another request with a used grant
 		do("org_reinstate", o.Org, mint("org_reinstate", o.Org), req(), approver, 200, "")
 
+		// An approval executes once, whichever grant arrives (ADR-0005 A3.4 items 1 and 2), and the vendor-access event
+		// names the approval and the grant that executed it.
+		once := orgIn(t, g, "Approval Once", "33", 40)
+		approval, jti := ids.New().String(), ids.New().String()
+		do("org_suspend", once.Org, mint("org_suspend", once.Org, func(s *double.GrantSpec) { s.ApprovalID, s.JTI = approval, jti }), req(), approver, 200, "")
+		do("org_reinstate", once.Org, mint("org_reinstate", once.Org, func(s *double.GrantSpec) { s.ApprovalID = approval }), req(), approver, 403, "grant.used")
+		found := 0
+		for _, e := range eventsOf(t, g, "tenancy.vendor_access.recorded") {
+			if d := dataOf(t, e); d["approval_id"] == approval {
+				found++
+				if d["grant_jti"] != jti || d["outcome"] != "succeeded" {
+					t.Fatalf("the event names the executing grant: %v", d)
+				}
+			}
+		}
+		if found != 1 {
+			t.Fatalf("one succeeded vendor-access event carries the approval, got %d", found)
+		}
+
 		// The open-trading-day guard: in progress means open, dated today or yesterday in IST (today is 2026-11-24).
 		g2 := orgIn(t, g, "Busy Outlet", "33", 4)
 		tradingDay(t, g, g2.Org, g2.Outlet, "2026-11-20", "open", 1) // a day left open for days protects nothing

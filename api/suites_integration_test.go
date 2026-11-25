@@ -125,5 +125,6 @@ func TestPostgresCommercial(t *testing.T)        { httpsuite.Commercial(t, pgFac
 func TestPostgresLifecycle(t *testing.T)         { httpsuite.Lifecycle(t, pgFactory) }
 func TestPostgresSeriesTail(t *testing.T)        { httpsuite.SeriesTail(t, pgFactory) }
 func TestPostgresBooks(t *testing.T)             { httpsuite.Books(t, pgFactory) }
+func TestPostgresGateway(t *testing.T)           { httpsuite.Gateway(t, pgFactory) }
 func TestPostgresLinksP2(t *testing.T)           { httpsuite.LinksP2(t, pgFactory) }
 func TestPostgresPhaseTwoIsolation(t *testing.T) { httpsuite.PhaseTwoIsolation(t, pgFactory) }
