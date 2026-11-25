@@ -33,13 +33,14 @@ type commercial struct {
 	configs   []model.BillingConfig
 	subs      map[ids.ID][]model.Subscription // per tenant, oldest first
 	ents      map[ids.ID][]string
+	entBumps  map[ids.ID]int // plan and status changes per tenant
 	charges   map[key]model.Charge
 	pays      map[ids.ID][]model.Payment // per tenant, oldest first
 }
 
 func newCommercial() *commercial {
 	return &commercial{books: map[key]model.ManualBook{}, trading: map[tradingKey]model.TradingState{}, grants: map[key]string{},
-		plans: map[string]model.Plan{}, subs: map[ids.ID][]model.Subscription{}, ents: map[ids.ID][]string{},
+		plans: map[string]model.Plan{}, subs: map[ids.ID][]model.Subscription{}, ents: map[ids.ID][]string{}, entBumps: map[ids.ID]int{},
 		charges: map[key]model.Charge{}, pays: map[ids.ID][]model.Payment{}}
 }
 
@@ -66,6 +67,9 @@ func (c *commercial) clone() *commercial {
 	}
 	for k, v := range c.ents {
 		n.ents[k] = append([]string(nil), v...)
+	}
+	for k, v := range c.entBumps {
+		n.entBumps[k] = v
 	}
 	for k, v := range c.charges {
 		n.charges[k] = v
@@ -110,6 +114,7 @@ func (x *tx) SetOrgStatus(_ context.Context, status string, now time.Time) error
 	}
 	o.Status, o.UpdatedAt = status, now
 	x.st.orgs[x.t] = o
+	x.st.com.entBumps[x.t]++
 	return nil
 }
 
@@ -400,7 +405,15 @@ func (x *tx) ReplaceEntitlements(_ context.Context, _ ids.ID, keys []string, _ t
 	out := append([]string(nil), keys...)
 	sort.Strings(out)
 	x.st.com.ents[x.t] = out
+	x.st.com.entBumps[x.t]++
 	return nil
+}
+
+func (x *tx) EntitlementVersion(_ context.Context) (int, error) {
+	if _, ok := x.st.orgs[x.t]; !ok {
+		return 0, model.ErrNotFound
+	}
+	return 1 + x.st.com.entBumps[x.t], nil
 }
 
 func (x *tx) Entitlements(_ context.Context) ([]string, error) {

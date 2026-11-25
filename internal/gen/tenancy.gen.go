@@ -212,6 +212,30 @@ func (e DocumentSeriesStatus) Valid() bool {
 	}
 }
 
+// Defines values for EntitlementSnapshotOrganisationStatus.
+const (
+	EntitlementSnapshotOrganisationStatusActive    EntitlementSnapshotOrganisationStatus = "active"
+	EntitlementSnapshotOrganisationStatusClosed    EntitlementSnapshotOrganisationStatus = "closed"
+	EntitlementSnapshotOrganisationStatusSuspended EntitlementSnapshotOrganisationStatus = "suspended"
+	EntitlementSnapshotOrganisationStatusTrial     EntitlementSnapshotOrganisationStatus = "trial"
+)
+
+// Valid indicates whether the value is a known member of the EntitlementSnapshotOrganisationStatus enum.
+func (e EntitlementSnapshotOrganisationStatus) Valid() bool {
+	switch e {
+	case EntitlementSnapshotOrganisationStatusActive:
+		return true
+	case EntitlementSnapshotOrganisationStatusClosed:
+		return true
+	case EntitlementSnapshotOrganisationStatusSuspended:
+		return true
+	case EntitlementSnapshotOrganisationStatusTrial:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GrantInputDirection.
 const (
 	GrantInputDirectionInbound  GrantInputDirection = "inbound"
@@ -1522,6 +1546,52 @@ type DocumentSeriesPage struct {
 	// NextCursor Opaque cursor for the next page; absent when there are no more results.
 	NextCursor *string `json:"next_cursor,omitempty"`
 }
+
+// EntitlementSnapshot What an organisation is entitled to at one moment (ADR-0003 section 7, ADR-0008 S5), the shape carried by tenancy `getEntitlements` and by the `entitlements` claim of the offline pack. It never gates trading (ADR-0014 T10): an absent, stale or expired snapshot changes which optional features an app offers, never whether a sale, print or day close completes. Billing state (overdue, unpaid) is not part of it.
+type EntitlementSnapshot struct {
+	// AsOf Instant the snapshot was read from tenancy, UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	AsOf time.Time `json:"as_of"`
+
+	// EntitlementsV Version of the snapshot, per organisation, increased by every plan change and every organisation status change. A device keeps the highest version it has seen.
+	//
+	// Example: 3
+	EntitlementsV int `json:"entitlements_v"`
+
+	// Features Feature keys granted, sorted. An app ignores a key it does not know and treats a key that is not listed as not granted.
+	Features []string `json:"features"`
+
+	// Limits Quantities the plan includes, by name. Informational on a device, a limit is never enforced against a sale. Unknown names are ignored.
+	//
+	// Example: {"outlets":1}
+	Limits map[string]int `json:"limits"`
+
+	// OrganisationStatus Lifecycle status of the organisation. `suspended` takes effect on a device only when it holds no day in progress (ADR-0014 A1.2, BR-A1-71).
+	//
+	// Example: active
+	OrganisationStatus EntitlementSnapshotOrganisationStatus `json:"organisation_status"`
+
+	// PlanKey Plan key of the current subscription. Absent when the organisation has no subscription.
+	//
+	// Example: table_service
+	PlanKey *string `json:"plan_key,omitempty"`
+
+	// PlanVersion Plan version of the current subscription. Absent when there is no subscription.
+	//
+	// Example: 1
+	PlanVersion *int `json:"plan_version,omitempty"`
+
+	// ValidUntil Instant after which the snapshot is stale and the device refreshes it when online. Absent in A1 because plan entitlements carry no expiry (BR-A1-61). Stale never removes a feature or blocks trading.
+	//
+	// Example: 2026-12-31T00:00:00Z
+	ValidUntil *time.Time `json:"valid_until,omitempty"`
+}
+
+// EntitlementSnapshotOrganisationStatus Lifecycle status of the organisation. `suspended` takes effect on a device only when it holds no day in progress (ADR-0014 A1.2, BR-A1-71).
+//
+// Example: active
+type EntitlementSnapshotOrganisationStatus string
 
 // GrantInput A scope the proposer offers or asks for.
 type GrantInput struct {
@@ -3881,6 +3951,13 @@ type ClientInterface interface {
 	// Corresponds with POST /internal/v1/document-series-issuances (the `IssueDocumentSeries` operationId).
 	IssueDocumentSeries(ctx context.Context, params *IssueDocumentSeriesParams, body IssueDocumentSeriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetEntitlements The caller organisation's current entitlement snapshot
+	//
+	// Directory question of identity (offline pack, ADR-0014 T10). The service token names the tenant; there is no organisation id in the path. Plan features and included quantities of the current subscription plus the organisation status. Billing state (overdue, unpaid charges) never appears and never changes the answer (ADR-0008 S5, BR-A1-60): an organisation with every charge overdue gets the same snapshot. An organisation with no subscription gets an empty `features` list, not an error. Identity refreshes on `tenancy.subscription.changed` and `tenancy.organisation.status_changed`.
+	//
+	// Corresponds with GET /internal/v1/entitlements (the `GetEntitlements` operationId).
+	GetEntitlements(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetLinkDecision Link decision for go-auth
 	//
 	// Corresponds with GET /internal/v1/link-decisions (the `GetLinkDecision` operationId).
@@ -4736,6 +4813,23 @@ func (c *Client) IssueDocumentSeriesWithBody(ctx context.Context, params *IssueD
 // Corresponds with POST /internal/v1/document-series-issuances (the `IssueDocumentSeries` operationId).
 func (c *Client) IssueDocumentSeries(ctx context.Context, params *IssueDocumentSeriesParams, body IssueDocumentSeriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewIssueDocumentSeriesRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetEntitlements The caller organisation's current entitlement snapshot
+//
+// Directory question of identity (offline pack, ADR-0014 T10). The service token names the tenant; there is no organisation id in the path. Plan features and included quantities of the current subscription plus the organisation status. Billing state (overdue, unpaid charges) never appears and never changes the answer (ADR-0008 S5, BR-A1-60): an organisation with every charge overdue gets the same snapshot. An organisation with no subscription gets an empty `features` list, not an error. Identity refreshes on `tenancy.subscription.changed` and `tenancy.organisation.status_changed`.
+//
+// Corresponds with GET /internal/v1/entitlements (the `GetEntitlements` operationId).
+func (c *Client) GetEntitlements(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetEntitlementsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -6753,6 +6847,33 @@ func NewIssueDocumentSeriesRequestWithBody(server string, params *IssueDocumentS
 
 		req.Header.Set("Idempotency-Key", headerParam0)
 
+	}
+
+	return req, nil
+}
+
+// NewGetEntitlementsRequest constructs an http.Request for the GetEntitlements method
+func NewGetEntitlementsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/entitlements"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
 	}
 
 	return req, nil
@@ -11332,6 +11453,15 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /internal/v1/document-series-issuances (the `IssueDocumentSeries` operationId).
 	IssueDocumentSeriesWithResponse(ctx context.Context, params *IssueDocumentSeriesParams, body IssueDocumentSeriesJSONRequestBody, reqEditors ...RequestEditorFn) (*IssueDocumentSeriesResponse, error)
 
+	// GetEntitlementsWithResponse The caller organisation's current entitlement snapshot
+	//
+	// Directory question of identity (offline pack, ADR-0014 T10). The service token names the tenant; there is no organisation id in the path. Plan features and included quantities of the current subscription plus the organisation status. Billing state (overdue, unpaid charges) never appears and never changes the answer (ADR-0008 S5, BR-A1-60): an organisation with every charge overdue gets the same snapshot. An organisation with no subscription gets an empty `features` list, not an error. Identity refreshes on `tenancy.subscription.changed` and `tenancy.organisation.status_changed`.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/entitlements (the `GetEntitlements` operationId).
+	GetEntitlementsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetEntitlementsResponse, error)
+
 	// GetLinkDecisionWithResponse Link decision for go-auth
 	//
 	// Returns a wrapper object for the known response body format(s).
@@ -12379,6 +12509,61 @@ func (r IssueDocumentSeriesResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r IssueDocumentSeriesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetEntitlementsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *EntitlementSnapshot
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetEntitlementsResponse) GetJSON200() *EntitlementSnapshot {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetEntitlementsResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetEntitlementsResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetBody returns the raw response body bytes
+func (r GetEntitlementsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetEntitlementsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetEntitlementsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetEntitlementsResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -17291,6 +17476,21 @@ func (c *ClientWithResponses) IssueDocumentSeriesWithResponse(ctx context.Contex
 	return ParseIssueDocumentSeriesResponse(rsp)
 }
 
+// GetEntitlementsWithResponse The caller organisation's current entitlement snapshot
+//
+// Directory question of identity (offline pack, ADR-0014 T10). The service token names the tenant; there is no organisation id in the path. Plan features and included quantities of the current subscription plus the organisation status. Billing state (overdue, unpaid charges) never appears and never changes the answer (ADR-0008 S5, BR-A1-60): an organisation with every charge overdue gets the same snapshot. An organisation with no subscription gets an empty `features` list, not an error. Identity refreshes on `tenancy.subscription.changed` and `tenancy.organisation.status_changed`.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/entitlements (the `GetEntitlements` operationId).
+func (c *ClientWithResponses) GetEntitlementsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetEntitlementsResponse, error) {
+	rsp, err := c.GetEntitlements(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetEntitlementsResponse(rsp)
+}
+
 // GetLinkDecisionWithResponse Link decision for go-auth
 //
 // Returns a wrapper object for the known response body format(s).
@@ -18946,6 +19146,46 @@ func ParseIssueDocumentSeriesResponse(rsp *http.Response) (*IssueDocumentSeriesR
 			return nil, err
 		}
 		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetEntitlementsResponse parses an HTTP response from a GetEntitlementsWithResponse call
+func ParseGetEntitlementsResponse(rsp *http.Response) (*GetEntitlementsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetEntitlementsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest EntitlementSnapshot
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
 
 	}
 
@@ -22739,6 +22979,9 @@ type ServerInterface interface {
 	// IssueDocumentSeries Issue series codes for a device
 	// (POST /internal/v1/document-series-issuances)
 	IssueDocumentSeries(w http.ResponseWriter, r *http.Request, params IssueDocumentSeriesParams)
+	// GetEntitlements The caller organisation's current entitlement snapshot
+	// (GET /internal/v1/entitlements)
+	GetEntitlements(w http.ResponseWriter, r *http.Request)
 	// GetLinkDecision Link decision for go-auth
 	// (GET /internal/v1/link-decisions)
 	GetLinkDecision(w http.ResponseWriter, r *http.Request, params GetLinkDecisionParams)
@@ -23082,6 +23325,20 @@ func (siw *ServerInterfaceWrapper) IssueDocumentSeries(w http.ResponseWriter, r 
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.IssueDocumentSeries(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetEntitlements operation middleware
+func (siw *ServerInterfaceWrapper) GetEntitlements(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetEntitlements(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -27440,6 +27697,7 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/internal/v1/devices/{device_id}/series-closure", wrapper.CloseDeviceSeries)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/devices/{device_id}/series", wrapper.ListDeviceSeries)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/outlets/{outlet_id}/manual-book-series", wrapper.ListOutletManualBookSeries)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/entitlements", wrapper.GetEntitlements)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/stream-owners/{stream_id}", wrapper.GetStreamOwner)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/link-decisions", wrapper.GetLinkDecision)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/organisations", wrapper.ListOrganisationDirectory)

@@ -16,7 +16,7 @@ import (
 // ---- organisation status, lifecycle audit, grants ----
 
 func (x *pgTx) SetOrgStatus(ctx context.Context, status string, now time.Time) error {
-	res, err := x.tx.ExecContext(ctx, `UPDATE organisations SET status = $2, updated_at = $3 WHERE tenant_id = $1`, x.t, status, now)
+	res, err := x.tx.ExecContext(ctx, `UPDATE organisations SET status = $2, updated_at = $3, entitlements_bumps = entitlements_bumps + 1 WHERE tenant_id = $1`, x.t, status, now)
 	if err != nil {
 		return err
 	}
@@ -362,6 +362,9 @@ func (x *pgTx) UpdateSubscription(ctx context.Context, s model.Subscription) err
 }
 
 func (x *pgTx) ReplaceEntitlements(ctx context.Context, subID ids.ID, keys []string, now time.Time) error {
+	if _, err := x.tx.ExecContext(ctx, `UPDATE organisations SET entitlements_bumps = entitlements_bumps + 1 WHERE tenant_id = $1`, x.t); err != nil {
+		return err
+	}
 	// A key the new version no longer carries is withdrawn (never deleted); a key it carries is (re)granted.
 	if _, err := x.tx.ExecContext(ctx, `UPDATE entitlements SET withdrawn_at = $2 WHERE tenant_id = $1 AND withdrawn_at IS NULL`, x.t, now); err != nil {
 		return err
@@ -390,6 +393,15 @@ func (x *pgTx) Entitlements(ctx context.Context) ([]string, error) {
 		out = append(out, k)
 	}
 	return out, rows.Err()
+}
+
+func (x *pgTx) EntitlementVersion(ctx context.Context) (int, error) {
+	var n int
+	err := x.tx.QueryRowContext(ctx, `SELECT 1 + entitlements_bumps FROM organisations WHERE tenant_id = $1`, x.t).Scan(&n)
+	if errors.Is(err, sql.ErrNoRows) {
+		return 0, model.ErrNotFound
+	}
+	return n, err
 }
 
 func (x *pgTx) CountOutlets(ctx context.Context) (int, error) {

@@ -464,6 +464,10 @@
     "owner": "identity"
   },
   {
+    "name": "entitlement.directory.read",
+    "owner": "tenancy"
+  },
+  {
     "name": "series.directory.read",
     "owner": "tenancy"
   },

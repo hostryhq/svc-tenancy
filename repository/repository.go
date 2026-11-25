@@ -173,6 +173,8 @@ type Tx interface {
 	// ReplaceEntitlements sets the organisation's entitlement rows to the keys, in this transaction.
 	ReplaceEntitlements(ctx context.Context, subscriptionID ids.ID, keys []string, now time.Time) error
 	Entitlements(ctx context.Context) ([]string, error)
+	// EntitlementVersion is the version of the organisation's entitlement snapshot: 1 plus the plan changes and status changes so far.
+	EntitlementVersion(ctx context.Context) (int, error)
 	InsertCharge(ctx context.Context, c model.Charge) error
 	GetCharge(ctx context.Context, id ids.ID) (model.Charge, error)
 	UpdateCharge(ctx context.Context, c model.Charge) error

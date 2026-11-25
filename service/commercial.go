@@ -706,3 +706,52 @@ func allCharges(ctx context.Context, tx repository.Tx) ([]model.Charge, map[ids.
 	sort.SliceStable(out, func(i, j int) bool { return out[i].PeriodStart > out[j].PeriodStart })
 	return out, net, nil
 }
+
+// EntitlementSnapshot is what an organisation is entitled to now: the plan features, the included
+// quantities and the organisation status, with a version devices compare (ADR-0014 T10). Billing state is
+// never part of it, and it never gates trading.
+type EntitlementSnapshot struct {
+	Version     int
+	PlanKey     string // empty without a subscription
+	PlanVersion int
+	Features    []string
+	Limits      map[string]int
+	OrgStatus   string
+	AsOf        time.Time
+}
+
+// GetEntitlements answers identity's directory question for the caller's organisation (tenancy getEntitlements).
+func (s *Service) GetEntitlements(ctx context.Context) (EntitlementSnapshot, error) {
+	return run(ctx, s, func(ctx context.Context, tx repository.Tx) (EntitlementSnapshot, error) {
+		out := EntitlementSnapshot{Limits: map[string]int{}, AsOf: s.clock.Now()}
+		org, err := tx.GetOrg(ctx)
+		if err != nil {
+			return out, err
+		}
+		out.OrgStatus = org.Status
+		if out.Version, err = tx.EntitlementVersion(ctx); err != nil {
+			return out, err
+		}
+		if out.Features, err = tx.Entitlements(ctx); err != nil {
+			return out, err
+		}
+		if out.Features == nil {
+			out.Features = []string{}
+		}
+		sub, has, err := tx.CurrentSubscription(ctx)
+		if err != nil || !has {
+			return out, err
+		}
+		out.PlanKey, out.PlanVersion = sub.PlanKey, sub.PlanVersion
+		if ver, err := tx.GetPlanVersion(ctx, sub.PlanKey, sub.PlanVersion); err == nil {
+			extra := 0
+			for _, a := range sub.Addons {
+				if a.Name == "extra_outlet" {
+					extra += a.Quantity
+				}
+			}
+			out.Limits["outlets"] = ver.IncludedOutlets + extra
+		}
+		return out, nil
+	})
+}

@@ -664,3 +664,18 @@ func (s *Server) ListOutletManualBookSeries(w http.ResponseWriter, r *http.Reque
 	}
 	s.reply(w, r, http.StatusOK, out, err)
 }
+
+func (s *Server) GetEntitlements(w http.ResponseWriter, r *http.Request) {
+	e, err := s.svc.GetEntitlements(r.Context())
+	if err != nil {
+		s.fail(w, r, err)
+		return
+	}
+	out := gen.EntitlementSnapshot{EntitlementsV: e.Version, Features: e.Features, Limits: e.Limits, AsOf: e.AsOf.UTC(),
+		OrganisationStatus: gen.EntitlementSnapshotOrganisationStatus(e.OrgStatus)}
+	if e.PlanKey != "" {
+		k, v := e.PlanKey, e.PlanVersion
+		out.PlanKey, out.PlanVersion = &k, &v
+	}
+	s.reply(w, r, http.StatusOK, out, nil)
+}
