@@ -118,6 +118,30 @@ func New(t testing.TB) *DB {
 	return d
 }
 
+// Truncate empties every table of the schema (not schema_migrations), as the superuser, so one database can
+// be put into a different example world between operations of the contract suite.
+func (d *DB) Truncate(ctx context.Context) error {
+	rows, err := d.Admin.QueryContext(ctx, `SELECT quote_ident(tablename) FROM pg_tables WHERE schemaname = 'public' AND tablename <> 'schema_migrations'`)
+	if err != nil {
+		return err
+	}
+	var names []string
+	for rows.Next() {
+		var n string
+		if err := rows.Scan(&n); err != nil {
+			_ = rows.Close()
+			return err
+		}
+		names = append(names, n)
+	}
+	_ = rows.Close()
+	if err := rows.Err(); err != nil || len(names) == 0 {
+		return err
+	}
+	_, err = d.Admin.ExecContext(ctx, `TRUNCATE `+strings.Join(names, ", ")+` CASCADE`)
+	return err
+}
+
 // provisionRoles creates the cluster roles if missing (idempotent, serialised across test processes).
 func provisionRoles(ctx context.Context, admin *sql.DB) error {
 	conn, err := admin.Conn(ctx)

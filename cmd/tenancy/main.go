@@ -137,7 +137,7 @@ func serve(ctx context.Context, cfg config.Config, log *slog.Logger) error {
 	}
 
 	a, err := app.Build(app.Options{
-		AppDB: appDB, VendorDB: vendorDB, Log: log, LinksEnabled: cfg.LinksEnabled, AnyService: cfg.AnyService,
+		AppDB: appDB, VendorDB: vendorDB, Log: log, LinksEnabled: cfg.LinksEnabled,
 		Tenant:   &auth.Verifier{Keys: tenantKeys, Issuer: cfg.TenantIssuer, Audience: cfg.TenantAudience, Realm: auth.RealmTenant},
 		Vendor:   &auth.Verifier{Keys: vendorKeys, Issuer: cfg.VendorIssuer, Audience: cfg.VendorAudience, Realm: auth.RealmVendor},
 		Services: &auth.ServiceVerifier{Registry: auth.NewStaticKeySet(svcDoc), Self: cfg.SelfName},

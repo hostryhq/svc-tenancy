@@ -209,6 +209,20 @@ func (s *Server) UpdateTaxRegistration(w http.ResponseWriter, r *http.Request, r
 	s.reply(w, r, http.StatusOK, regDTO(x), err)
 }
 
+func (s *Server) CloseTaxRegistration(w http.ResponseWriter, r *http.Request, registrationID gen.Id, _ gen.CloseTaxRegistrationParams) {
+	id, ok := s.pathID(w, r, registrationID)
+	if !ok {
+		return
+	}
+	var in gen.CloseRegistration
+	ctx, ok := s.begin(w, r, "closeTaxRegistration", &in)
+	if !ok {
+		return
+	}
+	x, err := s.svc.CloseRegistration(ctx, id, in.Reason)
+	s.reply(w, r, http.StatusOK, regDTO(x), err)
+}
+
 // ---- document-series registry ----
 
 func (s *Server) ListDocumentSeries(w http.ResponseWriter, r *http.Request, p gen.ListDocumentSeriesParams) {
@@ -537,6 +551,24 @@ func (s *Server) VerifyTaxRegistration(w http.ResponseWriter, r *http.Request, o
 		return
 	}
 	x, err := s.svc.VerifyRegistration(ctx, oid, rid, service.VerifyInput{Method: string(in.Method), Note: deref(in.Note)})
+	s.reply(w, r, http.StatusOK, regDTO(x), err)
+}
+
+func (s *Server) RejectTaxRegistration(w http.ResponseWriter, r *http.Request, organisationID, registrationID gen.Id, _ gen.RejectTaxRegistrationParams) {
+	oid, ok := s.pathID(w, r, organisationID)
+	if !ok {
+		return
+	}
+	rid, ok := s.pathID(w, r, registrationID)
+	if !ok {
+		return
+	}
+	var in gen.RejectRegistration
+	ctx, ok := s.begin(w, r, "rejectTaxRegistration", &in)
+	if !ok {
+		return
+	}
+	x, err := s.svc.RejectRegistration(ctx, oid, rid, in.Reason)
 	s.reply(w, r, http.StatusOK, regDTO(x), err)
 }
 

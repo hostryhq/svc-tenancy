@@ -111,6 +111,13 @@ type Registration struct {
 	VerifiedBy   string
 	Status       string
 	CreatedAt    time.Time
+	// Rejection and closure keep their reason here, with the owning record; the reason never appears in
+	// the API body or in events.
+	RejectedAt     *time.Time
+	RejectedBy     string
+	RejectedReason string
+	ClosedAt       *time.Time
+	ClosedReason   string
 }
 
 // Series is one series code under a registration.

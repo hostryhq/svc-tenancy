@@ -255,5 +255,17 @@
   {
     "name": "admin.recovery.approve",
     "owner": "admin"
+  },
+  {
+    "name": "admin.taxrules.publish",
+    "owner": "admin"
+  },
+  {
+    "name": "admin.org.lifecycle.request",
+    "owner": "admin"
+  },
+  {
+    "name": "admin.org.lifecycle.approve",
+    "owner": "admin"
   }
 ]

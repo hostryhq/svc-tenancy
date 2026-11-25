@@ -30,7 +30,6 @@ Configuration is environment only; the process fails fast and lists every proble
 | `TENANCY_DB_MIGRATE_DSN` | the migrator, used only by `tenancy migrate` |
 | `TENANCY_TENANT_JWKS`, `TENANCY_VENDOR_JWKS`, `TENANCY_SERVICE_KEYS` | JWKS documents (URL or file) of the token issuers and the service key registry |
 | `LINKS_ENABLED` | register the tenant-facing link routes (default `false`) |
-| `TENANCY_ANY_SERVICE` | service names that `x-service-callers: ["*"]` stands for |
 
 DSNs and key files are secrets: pass them by reference from the secret store, never inline. Roles are provisioned once per
 cluster by `scripts/provision-roles.sql`; `tenancy migrate` then applies `repository/migrations` as the migrator. At start-up

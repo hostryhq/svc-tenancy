@@ -87,3 +87,38 @@ func (s *AuditSink) RecordRefused(ctx context.Context, e auth.VendorAccessEntry)
 		return outbox.Publish(c, tx, s.event(e, tid))
 	})
 }
+
+// PlatformAuditSink writes platform_vendor_access_log rows: vendor actions that name no organisation
+// (ADR-0013 V5 item 3). The table has no tenant column and no row-level security; the row commits in the
+// transaction of the action, and a refused request is recorded in a short transaction of its own.
+type PlatformAuditSink struct {
+	DB *sql.DB // the application pool
+}
+
+var _ auth.PlatformAuditSink = (*PlatformAuditSink)(nil)
+
+func insertPlatformEntry(ctx context.Context, x tenancy.Execer, e auth.VendorAccessEntry) error {
+	_, err := x.ExecContext(ctx, `INSERT INTO platform_vendor_access_log (id, occurred_at, vendor_user, token_type, support_session_id, action_key, target_id, ticket_reference, outcome, result_count, request_id)
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`, e.ID, e.Time, e.VendorUser, tokenType(e.TokenType), nullStr(e.SupportSession),
+		auditsink.ActionKey(e.ActionKey, tokenType(e.TokenType)), nullStr(e.TargetID), nullStr(e.Ticket), e.Outcome, e.ResultCount, e.RequestID)
+	return err
+}
+
+// RecordPlatformInTx implements auth.PlatformAuditSink.
+func (s *PlatformAuditSink) RecordPlatformInTx(ctx context.Context, x tenancy.Execer, e auth.VendorAccessEntry) error {
+	return insertPlatformEntry(ctx, x, e)
+}
+
+// RecordPlatformRefused implements auth.PlatformAuditSink.
+func (s *PlatformAuditSink) RecordPlatformRefused(ctx context.Context, e auth.VendorAccessEntry) error {
+	e.Outcome = auth.OutcomeRefused
+	tx, err := s.DB.BeginTx(context.WithoutCancel(ctx), nil)
+	if err != nil {
+		return err
+	}
+	if err := insertPlatformEntry(ctx, tx, e); err != nil {
+		_ = tx.Rollback()
+		return err
+	}
+	return tx.Commit()
+}

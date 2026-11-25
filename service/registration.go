@@ -222,6 +222,7 @@ func (s *Service) VerifyRegistration(ctx context.Context, orgID, regID ids.ID, i
 		}
 		now := s.clock.Now()
 		r.Verification, r.Method, r.VerifiedAt, r.VerifiedBy = model.Verified, in.Method, &now, p.VendorUser()
+		r.RejectedAt, r.RejectedBy, r.RejectedReason = nil, "", "" // a rejected registration whose GSTIN was corrected can be verified
 		if err := tx.UpdateRegistration(ctx, r); err != nil {
 			if errors.Is(err, model.ErrVerifiedElsewhere) {
 				return r, model.ErrGSTINInUse
@@ -248,4 +249,100 @@ func (s *Service) maxCodeIndex(ctx context.Context, tenant ids.ID, gstin string)
 		return err
 	})
 	return max, err
+}
+
+// checkClosingReason validates the free-text reason of a rejection or closure (10 to 500 characters).
+func checkClosingReason(reason string) error {
+	if n := len([]rune(strings.TrimSpace(reason))); n < 10 || n > 500 {
+		return model.Invalid("reason", "length", "10 to 500 characters")
+	}
+	return nil
+}
+
+// RejectRegistration marks an unverified registration rejected (vendor operation, ADR-0003 A1.1 item 4,
+// AC-TEN-20). Only an unverified registration can be rejected: a verified one is 409, as is a closed
+// one. Repeating it changes nothing. A rejected registration can get no series; the tenant corrects the
+// GSTIN or closes it. The reason stays with the registration row and the vendor audit trail, never in the
+// API body or an event.
+func (s *Service) RejectRegistration(ctx context.Context, orgID, regID ids.ID, reason string) (model.Registration, error) {
+	if err := checkClosingReason(reason); err != nil {
+		return model.Registration{}, err
+	}
+	ctx, err := auth.VendorTenant(ctx, "admin.registration.verify", orgID)
+	if err != nil {
+		return model.Registration{}, err
+	}
+	auth.SetAuditTarget(ctx, regID.String())
+	p, _ := auth.PrincipalFrom(ctx)
+	return run(ctx, s, func(ctx context.Context, tx repository.Tx) (model.Registration, error) {
+		r, err := tx.GetRegistration(ctx, regID)
+		if err != nil {
+			return r, err
+		}
+		switch {
+		case r.Verification == model.Rejected:
+			return r, nil
+		case r.Regime == model.RegimeUnregistered:
+			return r, model.Invalid("registration_id", "no_gstin", "an unregistered registration has no GSTIN to reject")
+		case r.Verification == model.Verified:
+			return r, apperr.New(apperr.Conflict, "registration_verified", "a verified registration cannot be rejected")
+		case r.Status != model.RegOpen:
+			return r, apperr.New(apperr.Conflict, "registration_closed", "the registration is closed")
+		}
+		now := s.clock.Now()
+		r.Verification, r.RejectedAt, r.RejectedBy, r.RejectedReason = model.Rejected, &now, p.VendorUser(), strings.TrimSpace(reason)
+		if err := tx.UpdateRegistration(ctx, r); err != nil {
+			return r, err
+		}
+		s.log.InfoContext(ctx, "tax registration rejected", "registration_id", r.ID, "organisation_id", orgID)
+		return r, nil
+	})
+}
+
+// CloseRegistration closes a registration and every dormant or active series under it (ADR-0003 A1.1
+// item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed).
+// While an active outlet still bills under it the answer is 409 registration_in_use. Closing is terminal
+// and idempotent. Series are closed, not erased: their codes stay taken, so the GSTIN's allocator floor
+// survives a later registration of the same GSTIN. Tenancy keeps no record of a device's unreconciled
+// tail (sync does), so every open series closes as plain closed; closeDocumentSeriesUnreconciled marks
+// the ones the tenant knows never reconciled.
+func (s *Service) CloseRegistration(ctx context.Context, id ids.ID, reason string) (model.Registration, error) {
+	if err := checkClosingReason(reason); err != nil {
+		return model.Registration{}, err
+	}
+	return run(ctx, s, func(ctx context.Context, tx repository.Tx) (model.Registration, error) {
+		r, err := tx.GetRegistration(ctx, id)
+		if err != nil {
+			return r, err
+		}
+		if r.Status == model.RegClosed {
+			return r, nil
+		}
+		var after ids.ID
+		for {
+			outlets, err := tx.ListOutlets(ctx, auth.AllOutlets(), "", after, 500)
+			if err != nil {
+				return r, err
+			}
+			for _, o := range outlets {
+				if o.TaxRegistrationID == id && o.Status == model.OutletActive {
+					return r, apperr.New(apperr.Conflict, "registration_in_use", "an active outlet still bills under this registration")
+				}
+			}
+			if len(outlets) < 500 {
+				break
+			}
+			after = outlets[len(outlets)-1].ID
+		}
+		now := s.clock.Now()
+		if _, err := tx.CloseRegistrationSeries(ctx, id, now); err != nil {
+			return r, err
+		}
+		r.Status, r.ClosedAt, r.ClosedReason = model.RegClosed, &now, strings.TrimSpace(reason)
+		if err := tx.UpdateRegistration(ctx, r); err != nil {
+			return r, err
+		}
+		s.log.InfoContext(ctx, "tax registration closed", "registration_id", r.ID)
+		return r, nil
+	})
 }

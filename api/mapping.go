@@ -45,6 +45,7 @@ func regDTO(r model.Registration) gen.TaxRegistration {
 		d.Verification.Method = &m
 	}
 	d.Verification.VerifiedAt = r.VerifiedAt
+	d.Verification.RejectedAt = r.RejectedAt
 	return d
 }
 

@@ -33,7 +33,6 @@ type Options struct {
 	IDs          *ids.Generator
 	Log          *slog.Logger
 	LinksEnabled bool
-	AnyService   []string
 }
 
 // App is the wired service.
@@ -62,20 +61,17 @@ func Build(o Options) (*App, error) {
 	if o.Log == nil {
 		o.Log = slog.Default()
 	}
-	if len(o.AnyService) == 0 {
-		o.AnyService = []string{"identity", "admin", "sync", "billing", "orders", "hospitality", "notifications"}
-	}
 	repo := pg.New(o.AppDB, o.VendorDB)
 	svc := service.New(repo, service.Options{Clock: o.Clock, IDs: o.IDs, Log: o.Log})
 	guard := &auth.Guard{
 		Catalogue: cat, Tenant: o.Tenant, Vendor: o.Vendor, Services: o.Services, Clock: o.AuthClock, Log: o.Log,
-		Audit:     &pg.AuditSink{DB: o.AppDB, Gen: o.IDs, Log: o.Log},
+		Audit: &pg.AuditSink{DB: o.AppDB, Gen: o.IDs, Log: o.Log}, PlatformAudit: &pg.PlatformAuditSink{DB: o.AppDB},
 		Approvals: &auth.ApprovalChecker{Verifier: o.Tenant, Used: auth.NewMemorySingleUse(o.AuthClock)},
 	}
 	h := health.New(0)
 	h.Add("postgres", repo.Ping)
 	return &App{
-		Handler: api.New(api.Config{Service: svc, Guard: guard, Clock: o.Clock, Log: o.Log, LinksEnabled: o.LinksEnabled, AnyService: o.AnyService, Health: h}),
+		Handler: api.New(api.Config{Service: svc, Guard: guard, Clock: o.Clock, Log: o.Log, LinksEnabled: o.LinksEnabled, Health: h}),
 		Service: svc, Repo: repo, Health: h,
 	}, nil
 }

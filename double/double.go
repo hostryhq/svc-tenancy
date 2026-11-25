@@ -40,8 +40,6 @@ type Config struct {
 	IDs *ids.Generator
 	// LinksEnabled registers the link routes (default true in the double).
 	LinksOff bool
-	// AnyService stands for "*" in x-service-callers.
-	AnyService []string
 }
 
 // Fault is an injected failure for matching requests.
@@ -73,15 +71,12 @@ func New(cfg Config) (*Double, error) {
 	if cfg.IDs == nil {
 		cfg.IDs = ids.NewGenerator(cfg.Clock.Now, &counter{})
 	}
-	if len(cfg.AnyService) == 0 {
-		cfg.AnyService = []string{"identity", "admin", "sync", "billing", "orders", "hospitality", "notifications"}
-	}
 	store := mem.New(cfg.IDs)
 	svc := service.New(store, service.Options{Clock: cfg.Clock, IDs: cfg.IDs, Log: slog.New(slog.DiscardHandler)})
-	guard := &auth.Guard{Catalogue: cat, Tenant: cfg.Tenant, Vendor: cfg.Vendor, Services: cfg.Services, Audit: store,
+	guard := &auth.Guard{Catalogue: cat, Tenant: cfg.Tenant, Vendor: cfg.Vendor, Services: cfg.Services, Audit: store, PlatformAudit: store,
 		Approvals: &auth.ApprovalChecker{Verifier: cfg.Tenant, Used: auth.NewMemorySingleUse(nil)}, Log: slog.New(slog.DiscardHandler)}
 	d := &Double{Store: store, Svc: svc}
-	d.h = api.New(api.Config{Service: svc, Guard: guard, Clock: cfg.Clock, Log: slog.New(slog.DiscardHandler), LinksEnabled: !cfg.LinksOff, AnyService: cfg.AnyService})
+	d.h = api.New(api.Config{Service: svc, Guard: guard, Clock: cfg.Clock, Log: slog.New(slog.DiscardHandler), LinksEnabled: !cfg.LinksOff})
 	return d, nil
 }
 
@@ -97,6 +92,14 @@ func (c *counter) Read(p []byte) (int, error) {
 
 // SeedExampleWorld stores the organisation the spec examples refer to (see internal/seed).
 func (d *Double) SeedExampleWorld(ctx context.Context) error { return seed.ExampleWorld(ctx, d.Store) }
+
+// SeedWorld empties the double and stores the named example world of the OpenAPI document
+// (info.x-example-worlds), so a test of another service can start from the state an operation's examples
+// assume. It is the SeedWorld hook of the shared contract suite.
+func (d *Double) SeedWorld(ctx context.Context, world string) error {
+	d.Store.Reset()
+	return seed.ApplyWorld(ctx, d.Store, world)
+}
 
 // Events returns the events the double published to its outbox.
 func (d *Double) Events() []events.Envelope { return d.Store.Events() }

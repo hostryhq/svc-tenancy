@@ -67,6 +67,23 @@ func (r *Repo) InTx(ctx context.Context, fn func(ctx context.Context, tx reposit
 	})
 }
 
+// InPlatformTx implements repository.Repository: the transaction of a vendor route that names no
+// organisation. The platform audit row (no tenant) commits with the work through go-auth's
+// WithPlatformAuditedTx; the tenant context of ctx (the organisation being created or replayed) is applied
+// to the transaction here, so row-level security still holds for every statement.
+func (r *Repo) InPlatformTx(ctx context.Context, fn func(ctx context.Context, tx repository.Tx) error) error {
+	tc, err := tenancy.Require(ctx)
+	if err != nil {
+		return err
+	}
+	return auth.WithPlatformAuditedTx(ctx, r.app, func(ctx context.Context, tx *sql.Tx) error {
+		if err := tenancy.SetDBContext(ctx, tx, tc.TenantID); err != nil {
+			return err
+		}
+		return fn(ctx, &pgTx{tx: tx, t: tc.TenantID})
+	})
+}
+
 // Ping implements repository.Repository.
 func (r *Repo) Ping(ctx context.Context) error {
 	if err := r.app.PingContext(ctx); err != nil {
@@ -320,14 +337,16 @@ func (x *pgTx) UpdateOutlet(ctx context.Context, o model.Outlet) error {
 
 // ---- tax registrations ----
 
-const regCols = `id, legal_name, regime, gstin_normalised, state_code, verification_state, verification_method, verified_at, verified_by, status, created_at`
+const regCols = `id, legal_name, regime, gstin_normalised, state_code, verification_state, verification_method, verified_at, verified_by, status, created_at,
+	rejected_at, rejected_by, rejected_reason, closed_at, closed_reason`
 
 func scanReg(row interface{ Scan(...any) error }) (model.Registration, error) {
 	var r model.Registration
-	var g, m, by sql.NullString
-	var va sql.NullTime
-	err := row.Scan(&r.ID, &r.LegalName, &r.Regime, &g, &r.StateCode, &r.Verification, &m, &va, &by, &r.Status, &r.CreatedAt)
+	var g, m, by, rby, rr, cr sql.NullString
+	var va, ra, ca sql.NullTime
+	err := row.Scan(&r.ID, &r.LegalName, &r.Regime, &g, &r.StateCode, &r.Verification, &m, &va, &by, &r.Status, &r.CreatedAt, &ra, &rby, &rr, &ca, &cr)
 	r.GSTIN, r.Method, r.VerifiedBy, r.VerifiedAt, r.CreatedAt = g.String, m.String, by.String, nullTime(va), utc(r.CreatedAt)
+	r.RejectedAt, r.RejectedBy, r.RejectedReason, r.ClosedAt, r.ClosedReason = nullTime(ra), rby.String, rr.String, nullTime(ca), cr.String
 	return r, err
 }
 
@@ -387,8 +406,10 @@ func (x *pgTx) ListRegistrations(ctx context.Context, after ids.ID, limit int) (
 
 func (x *pgTx) UpdateRegistration(ctx context.Context, r model.Registration) error {
 	res, err := x.tx.ExecContext(ctx, `UPDATE tax_registrations SET legal_name = $3, gstin_normalised = $4, verification_state = $5, verification_method = $6,
-		verified_at = $7, verified_by = $8, status = $9 WHERE tenant_id = $1 AND id = $2`,
-		x.t, r.ID, r.LegalName, nullStr(r.GSTIN), r.Verification, nullStr(r.Method), r.VerifiedAt, nullStr(r.VerifiedBy), r.Status)
+		verified_at = $7, verified_by = $8, status = $9, rejected_at = $10, rejected_by = $11, rejected_reason = $12, closed_at = $13, closed_reason = $14
+		WHERE tenant_id = $1 AND id = $2`,
+		x.t, r.ID, r.LegalName, nullStr(r.GSTIN), r.Verification, nullStr(r.Method), r.VerifiedAt, nullStr(r.VerifiedBy), r.Status,
+		r.RejectedAt, nullStr(r.RejectedBy), nullStr(r.RejectedReason), r.ClosedAt, nullStr(r.ClosedReason))
 	if err != nil {
 		return mapRegErr(err)
 	}
@@ -482,6 +503,16 @@ func (x *pgTx) CloseDeviceSeries(ctx context.Context, deviceID ids.ID, now time.
 	//scopelint:internal see above
 	err = x.tx.QueryRowContext(ctx, `SELECT count(*) FROM document_series WHERE tenant_id = $1 AND device_id = $2`, x.t, deviceID).Scan(&total)
 	return int(closed), total, err
+}
+
+func (x *pgTx) CloseRegistrationSeries(ctx context.Context, regID ids.ID, now time.Time) (int, error) {
+	//scopelint:internal closing a registration closes every outlet's series under it; the registration belongs to the tenant
+	res, err := x.tx.ExecContext(ctx, `UPDATE document_series SET status = 'closed', closed_at = $3 WHERE tenant_id = $1 AND tax_registration_id = $2 AND status IN ('dormant', 'active')`, x.t, regID, now)
+	if err != nil {
+		return 0, err
+	}
+	n, _ := res.RowsAffected()
+	return int(n), nil
 }
 
 func (x *pgTx) NextCodeIndex(ctx context.Context, reg ids.ID) (int, error) {

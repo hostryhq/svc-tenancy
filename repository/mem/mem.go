@@ -63,6 +63,7 @@ type state struct {
 	activity []model.Activity
 	outbox   []events.Envelope
 	vlog     []VendorLogEntry
+	plog     []VendorLogEntry // platform_vendor_access_log: rows that concern no organisation
 }
 
 func newState() *state {
@@ -127,6 +128,7 @@ func (s *state) clone() *state {
 	c.activity = append([]model.Activity(nil), s.activity...)
 	c.outbox = append([]events.Envelope(nil), s.outbox...)
 	c.vlog = append([]VendorLogEntry(nil), s.vlog...)
+	c.plog = append([]VendorLogEntry(nil), s.plog...)
 	return c
 }
 
@@ -147,8 +149,9 @@ func New(gen *ids.Generator) *Store {
 }
 
 var (
-	_ repository.Repository = (*Store)(nil)
-	_ auth.VendorAuditSink  = (*Store)(nil)
+	_ repository.Repository  = (*Store)(nil)
+	_ auth.VendorAuditSink   = (*Store)(nil)
+	_ auth.PlatformAuditSink = (*Store)(nil)
 )
 
 // Events returns every event written to the outbox, in order.
@@ -163,6 +166,38 @@ func (s *Store) VendorLog() []VendorLogEntry {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	return append([]VendorLogEntry(nil), s.st.vlog...)
+}
+
+// PlatformLog returns the platform_vendor_access_log rows (vendor actions that name no organisation).
+func (s *Store) PlatformLog() []VendorLogEntry {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return append([]VendorLogEntry(nil), s.st.plog...)
+}
+
+// Reset drops every row, as a fresh store (used to load an example world).
+func (s *Store) Reset() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.st = newState()
+}
+
+// RecordPlatformInTx writes the platform log row into the running transaction.
+func (s *Store) RecordPlatformInTx(_ context.Context, _ tenancy.Execer, e auth.VendorAccessEntry) error {
+	if s.failAudit {
+		return errAuditDown
+	}
+	s.pending.plog = append(s.pending.plog, VendorLogEntry{keyed(e)})
+	return nil
+}
+
+// RecordPlatformRefused records a refused request in the platform log, in a transaction of its own.
+func (s *Store) RecordPlatformRefused(_ context.Context, e auth.VendorAccessEntry) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	e.Outcome = auth.OutcomeRefused
+	s.st.plog = append(s.st.plog, VendorLogEntry{keyed(e)})
+	return nil
 }
 
 // FailAuditWrites makes the vendor access log unwritable, to prove that vendor requests fail closed.
@@ -241,6 +276,26 @@ func (s *Store) InTx(ctx context.Context, fn func(ctx context.Context, tx reposi
 	s.pending = work
 	defer func() { s.pending = nil }()
 	if err := auth.WithAuditedTx(ctx, s.db, func(c context.Context, _ *sql.Tx) error {
+		return fn(c, &tx{st: work, t: tc.TenantID})
+	}); err != nil {
+		return err
+	}
+	s.st = work
+	return nil
+}
+
+// InPlatformTx implements repository.Repository.
+func (s *Store) InPlatformTx(ctx context.Context, fn func(ctx context.Context, tx repository.Tx) error) error {
+	tc, err := tenancy.Require(ctx)
+	if err != nil {
+		return err
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	work := s.st.clone()
+	s.pending = work
+	defer func() { s.pending = nil }()
+	if err := auth.WithPlatformAuditedTx(ctx, s.db, func(c context.Context, _ *sql.Tx) error {
 		return fn(c, &tx{st: work, t: tc.TenantID})
 	}); err != nil {
 		return err
@@ -603,6 +658,18 @@ func (x *tx) CloseDeviceSeries(_ context.Context, deviceID ids.ID, now time.Time
 		}
 	}
 	return closed, total, nil
+}
+
+func (x *tx) CloseRegistrationSeries(_ context.Context, regID ids.ID, now time.Time) (int, error) {
+	closed := 0
+	for k, s := range x.st.series {
+		if k.t == x.t && s.TaxRegistrationID == regID && (s.Status == model.SeriesActive || s.Status == model.SeriesDormant) {
+			s.Status, s.ClosedAt = model.SeriesClosed, &now
+			x.st.series[k] = s
+			closed++
+		}
+	}
+	return closed, nil
 }
 
 func (x *tx) NextCodeIndex(_ context.Context, reg ids.ID) (int, error) {

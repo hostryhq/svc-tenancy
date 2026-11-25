@@ -206,7 +206,7 @@ func (s *Service) CreateOrganisation(ctx context.Context, in CreateOrgInput) (Or
 		}
 		auth.SetAuditTarget(tctx, tid.String())
 		var out OrgCreated
-		err = s.repo.InTx(tctx, func(c context.Context, tx repository.Tx) error {
+		err = s.repo.InPlatformTx(tctx, func(c context.Context, tx repository.Tx) error {
 			now := s.clock.Now()
 			out.Org = model.Org{ID: tid, Name: orgName, Status: model.OrgTrial, DataPlacement: "primary", CreatedAt: now, UpdatedAt: now,
 				CreateKeyHash: keyHash, CreateFingerprint: in.Fingerprint}
@@ -263,7 +263,7 @@ func (s *Service) replayCreation(ctx context.Context, orgID ids.ID) (OrgCreated,
 	}
 	auth.SetAuditTarget(tctx, orgID.String())
 	var out OrgCreated
-	err = s.repo.InTx(tctx, func(c context.Context, tx repository.Tx) error {
+	err = s.repo.InPlatformTx(tctx, func(c context.Context, tx repository.Tx) error {
 		d, err := loadDetail(c, tx)
 		if err != nil {
 			return err

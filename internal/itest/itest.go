@@ -68,6 +68,15 @@ func (s *Stack) Seed(t testing.TB, worlds ...seed.World) {
 	}
 }
 
+// SeedWorld empties the database and stores the named example world of the OpenAPI document
+// (contracttest Options.SeedWorld).
+func (s *Stack) SeedWorld(ctx context.Context, world string) error {
+	if err := s.DB.Truncate(ctx); err != nil {
+		return err
+	}
+	return seed.ApplyWorld(ctx, s.App.Repo, world)
+}
+
 // Vendor returns the vendor user's credentials: by default every admin permission tenancy uses.
 func (s *Stack) Vendor(perms ...string) http.Header {
 	if len(perms) == 0 {

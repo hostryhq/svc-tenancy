@@ -23,6 +23,9 @@ import (
 type Repository interface {
 	// InTx runs fn in one transaction for the tenant in ctx. fn's error rolls everything back.
 	InTx(ctx context.Context, fn func(ctx context.Context, tx Tx) error) error
+	// InPlatformTx is InTx for a vendor route that names no organisation (createOrganisation): the
+	// audit row goes to the platform log, which has no tenant, in the same transaction.
+	InPlatformTx(ctx context.Context, fn func(ctx context.Context, tx Tx) error) error
 	// Directory reads the vendor directory through the separate tenancy_vendor role.
 	Directory() Directory
 	// Ping checks the database for readiness.
@@ -93,6 +96,8 @@ type Tx interface {
 	// CloseDeviceSeries closes every dormant or active series of the device. It returns how many it
 	// closed and how many series the device has in total (0 means the device is unknown here).
 	CloseDeviceSeries(ctx context.Context, deviceID ids.ID, now time.Time) (closed, total int, err error)
+	// CloseRegistrationSeries closes every dormant or active series under the registration and returns how many.
+	CloseRegistrationSeries(ctx context.Context, registrationID ids.ID, now time.Time) (int, error)
 	// NextCodeIndex locks and returns the registration's allocator position (0 when none yet).
 	NextCodeIndex(ctx context.Context, registrationID ids.ID) (int, error)
 	// SetCodeIndex stores the allocator position; it never moves backwards.

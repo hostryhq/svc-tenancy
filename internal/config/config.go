@@ -27,10 +27,8 @@ type Config struct {
 	LinksEnabled bool
 	// NatsURL and NatsSeedFile connect the outbox relay to the bus; empty disables publishing.
 	NatsURL, NatsSeedFile string
-	// AnyService stands for "*" in x-service-callers.
-	AnyService []string
-	KeyRefresh time.Duration
-	LogLevel   string
+	KeyRefresh            time.Duration
+	LogLevel              string
 }
 
 // Load reads the environment through lookup.
@@ -53,7 +51,6 @@ func Load(lookup config.Lookup) (Config, error) {
 		LinksEnabled:   l.Bool("LINKS_ENABLED", false),
 		NatsURL:        l.String("NATS_URL", ""),
 		NatsSeedFile:   l.String("NATS_SEED_FILE", ""),
-		AnyService:     l.List("TENANCY_ANY_SERVICE"),
 		KeyRefresh:     l.Duration("TENANCY_KEY_REFRESH", time.Minute),
 		LogLevel:       l.String("LOG_LEVEL", "info"),
 	}

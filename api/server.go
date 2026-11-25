@@ -37,8 +37,6 @@ type Config struct {
 	Log     *slog.Logger
 	// LinksEnabled registers the tenant-facing link routes (LINKS_ENABLED; default false).
 	LinksEnabled bool
-	// AnyService lists the service names x-service-callers "*" stands for.
-	AnyService []string
 	// Health, when set, mounts /healthz and /readyz.
 	Health *health.Handler
 }
@@ -89,36 +87,18 @@ func (rt *router) HandleFunc(pattern string, h func(http.ResponseWriter, *http.R
 	if p.FeatureFlag == "LINKS_ENABLED" && !rt.cfg.LinksEnabled {
 		return // the link routes exist only when the flag is on
 	}
-	if p.Permission == "authenticated" { // any signed-in tenant caller; no permission to check
-		rt.mux.Handle(pattern, rt.authenticated(http.HandlerFunc(h)))
-		return
-	}
 	pol := auth.Policy{OperationID: p.OperationID, Permission: p.Permission, StepUp: p.StepUp, Internal: p.Internal, ServiceOnly: p.ServiceOnly}
-	for _, c := range p.Callers {
-		if c == "*" {
-			pol.Callers = append(pol.Callers, rt.cfg.AnyService...)
-		} else {
-			pol.Callers = append(pol.Callers, c)
-		}
+	if p.Permission == "authenticated" { // x-permission: authenticated: any valid token of the realm, no permission
+		pol.Permission, pol.Authenticated = "", true
 	}
+	pol.Callers = append(pol.Callers, p.Callers...) // "*" is auth.AnyCaller
 	if p.VendorRealm {
 		pol.Realm, pol.VendorAuditNone, pol.DirectoryClass = auth.RealmVendor, p.VendorAuditNone, p.DirectoryClass
+		// A vendor route that names no organisation in its path (createOrganisation) is recorded in the
+		// platform audit table: the organisation does not exist until the action succeeds.
+		pol.PlatformAudit = !p.VendorAuditNone && !strings.Contains(pattern, "{organisation_id}")
 	}
 	rt.cfg.Guard.Handle(rt.mux, pattern, pol, http.HandlerFunc(h))
-}
-
-// authenticated admits any verified tenant-realm bearer token (reference data such as the state table).
-func (rt *router) authenticated(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h := r.Header.Get("Authorization")
-		if len(h) > 7 && strings.EqualFold(h[:7], "bearer ") && rt.cfg.Guard.Tenant != nil {
-			if _, err := rt.cfg.Guard.Tenant.Verify(strings.TrimSpace(h[7:])); err == nil {
-				next.ServeHTTP(w, r)
-				return
-			}
-		}
-		apperr.WriteProblem(w, r, apperr.New(apperr.Unauthenticated, "auth.invalid_token", "invalid or missing credentials"))
-	})
 }
 
 // badParam answers parameter binding errors from the generated wrappers.
@@ -221,40 +201,17 @@ func (s *Server) reply(w http.ResponseWriter, r *http.Request, status int, v any
 	_ = json.NewEncoder(w).Encode(v)
 }
 
-// pageParams validates cursor and limit.
+// pageParams validates cursor and limit. A cursor carries a full id (UUIDv7).
 func pageParams(cursor *string, limit *int, def, max int) (after ids.ID, n int, err error) {
 	c, err := page.Decode(cursor)
 	if err != nil {
 		return "", 0, err
 	}
-	after = ids.ID(c)
 	if c != "" {
-		if after, err = cursorBound(c); err != nil {
+		if after, err = ids.Parse(c); err != nil {
 			return "", 0, apperr.New(apperr.Validation, "validation", "invalid cursor").WithFields(apperr.FieldError{Field: "cursor", Code: "invalid"})
 		}
 	}
 	n, err = page.Limit(limit, def, max)
 	return after, n, err
 }
-
-// cursorBound turns the id inside a cursor into a bound that is safe to compare with stored ids. A full
-// id is used as is; a hex prefix of an id (cursors are opaque, and clients may hold truncated ones) is
-// padded with zeros, which orders just before every id starting with that prefix.
-func cursorBound(c string) (ids.ID, error) {
-	if id, err := ids.Parse(c); err == nil {
-		return id, nil
-	}
-	hex := strings.ReplaceAll(c, "-", "")
-	if len(hex) == 0 || len(hex) > 32 {
-		return "", errBadCursor
-	}
-	for _, r := range hex {
-		if (r < '0' || r > '9') && (r < 'a' || r > 'f') {
-			return "", errBadCursor
-		}
-	}
-	hex += strings.Repeat("0", 32-len(hex))
-	return ids.ID(hex[0:8] + "-" + hex[8:12] + "-" + hex[12:16] + "-" + hex[16:20] + "-" + hex[20:]), nil
-}
-
-var errBadCursor = errors.New("bad cursor")

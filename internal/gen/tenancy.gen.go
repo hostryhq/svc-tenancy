@@ -589,7 +589,7 @@ type Brand struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -627,6 +627,14 @@ type CloseDeviceSeries struct {
 // Example: reinstalled
 type CloseDeviceSeriesReason string
 
+// CloseRegistration Close a registration and its series. The reason is the record for the auditor.
+type CloseRegistration struct {
+	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
+	//
+	// Example: Owner phoned to report a lost tablet.
+	Reason Reason `json:"reason"`
+}
+
 // CloseSeries Close a series whose device never reconciled. The reason is the record for the auditor.
 type CloseSeries struct {
 	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
@@ -637,7 +645,7 @@ type CloseSeries struct {
 
 // ConfirmLink Confirm who accepted. The id must be the one shown to the proposer, so a swap between viewing and confirming is refused.
 type ConfirmLink struct {
-	// CounterpartyOrganisationId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// CounterpartyOrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	CounterpartyOrganisationId Id `json:"counterparty_organisation_id"`
@@ -647,7 +655,7 @@ type ConfirmLink struct {
 type CounterpartyRegistration struct {
 	// Gstin GSTIN, 15 characters, upper case, no spaces. Format only here; the check character and the state-code match are validated by the service (rule from gst-invoicing-india).
 	//
-	// Example: 33ABCDE1234F1Z5
+	// Example: 33ABCDE1234F1Z7
 	Gstin *Gstin `json:"gstin,omitempty"`
 
 	// GstinVerified Whether Hostry verified the GSTIN.
@@ -668,7 +676,7 @@ type CounterpartyRegistration struct {
 
 // CreateBrand Create a brand.
 type CreateBrand struct {
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -698,12 +706,12 @@ type CreateOrganisation struct {
 
 // CreateOutlet Create an outlet. The brand defaults to the default brand; the registration must belong to the organisation.
 type CreateOutlet struct {
-	// BrandId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// BrandId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	BrandId *Id `json:"brand_id,omitempty"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -713,7 +721,7 @@ type CreateOutlet struct {
 	// Example: restaurant
 	Kind OutletKind `json:"kind"`
 
-	// LocatedInOutletId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// LocatedInOutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	LocatedInOutletId *Id `json:"located_in_outlet_id,omitempty"`
@@ -728,7 +736,7 @@ type CreateOutlet struct {
 	// Example: 33
 	StateCode StateCode `json:"state_code"`
 
-	// TaxRegistrationId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	TaxRegistrationId Id `json:"tax_registration_id"`
@@ -738,10 +746,10 @@ type CreateOutlet struct {
 type CreateTaxRegistration struct {
 	// Gstin GSTIN, 15 characters, upper case, no spaces. Format only here; the check character and the state-code match are validated by the service (rule from gst-invoicing-india).
 	//
-	// Example: 33ABCDE1234F1Z5
+	// Example: 33ABCDE1234F1Z7
 	Gstin *Gstin `json:"gstin,omitempty"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -777,7 +785,7 @@ type DecideAmendmentDecision string
 
 // DirectoryBrand Brand in the directory.
 type DirectoryBrand struct {
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -800,7 +808,7 @@ type DirectoryOrganisation struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -823,7 +831,7 @@ type DirectoryOrganisation struct {
 
 // DirectoryOutlet Outlet in the directory: name, kind, state only.
 type DirectoryOutlet struct {
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -862,10 +870,10 @@ type DirectoryPage struct {
 type DirectoryRegistration struct {
 	// Gstin GSTIN, 15 characters, upper case, no spaces. Format only here; the check character and the state-code match are validated by the service (rule from gst-invoicing-india).
 	//
-	// Example: 33ABCDE1234F1Z5
+	// Example: 33ABCDE1234F1Z7
 	Gstin *Gstin `json:"gstin,omitempty"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -918,12 +926,12 @@ type DocumentSeries struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	ClosedAt *Timestamp `json:"closed_at,omitempty"`
 
-	// Code Series code.
+	// Code Series code, 3 characters from capitals and digits without I, O, 0 and 1 (ADR-0002 S7). Printed as <code>/<FY>/<running>.
 	//
-	// Example: A7
+	// Example: A7K
 	Code string `json:"code"`
 
-	// DeviceId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// DeviceId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	DeviceId Id `json:"device_id"`
@@ -933,7 +941,7 @@ type DocumentSeries struct {
 	// Example: tax_invoice
 	DocType DocType `json:"doc_type"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -943,7 +951,7 @@ type DocumentSeries struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	IssuedAt Timestamp `json:"issued_at"`
 
-	// OutletId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// OutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	OutletId Id `json:"outlet_id"`
@@ -953,7 +961,7 @@ type DocumentSeries struct {
 	// Example: active
 	Status DocumentSeriesStatus `json:"status"`
 
-	// TaxRegistrationId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	TaxRegistrationId Id `json:"tax_registration_id"`
@@ -996,17 +1004,17 @@ type GrantInputDirection string
 
 // Gstin GSTIN, 15 characters, upper case, no spaces. Format only here; the check character and the state-code match are validated by the service (rule from gst-invoicing-india).
 //
-// Example: 33ABCDE1234F1Z5
+// Example: 33ABCDE1234F1Z7
 type Gstin = string
 
-// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 //
 // Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 type Id = string
 
 // IssueSeries Issue series codes for a device under the outlet's registration (identity is the only caller). The registration is read from the stored outlet, never from the request.
 type IssueSeries struct {
-	// DeviceId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// DeviceId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	DeviceId Id `json:"device_id"`
@@ -1014,7 +1022,7 @@ type IssueSeries struct {
 	// DocTypes Document types to issue.
 	DocTypes []DocType `json:"doc_types"`
 
-	// OutletId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// OutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	OutletId Id `json:"outlet_id"`
@@ -1045,7 +1053,7 @@ type Link struct {
 	// Counterparty The other organisation, shown only once it has accepted (or, to the acceptor, about the proposer). Contains no member, device or contact data.
 	Counterparty *LinkCounterparty `json:"counterparty,omitempty"`
 
-	// CounterpartyOrganisationId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// CounterpartyOrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	CounterpartyOrganisationId *Id `json:"counterparty_organisation_id,omitempty"`
@@ -1058,7 +1066,7 @@ type Link struct {
 	// Grants Grants of this link.
 	Grants []LinkGrant `json:"grants"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1096,12 +1104,12 @@ type LinkActivity struct {
 	// Example: link.confirmed
 	Action string `json:"action"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
 
-	// LinkId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// LinkId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	LinkId Id `json:"link_id"`
@@ -1161,12 +1169,12 @@ type LinkAmendment struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
 
-	// LinkId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// LinkId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	LinkId Id `json:"link_id"`
@@ -1187,7 +1195,7 @@ type LinkAmendmentInput struct {
 	// AddGrants Grants to add.
 	AddGrants []GrantInput `json:"add_grants"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1216,7 +1224,7 @@ type LinkDecision struct {
 	// Example: 30
 	CacheSeconds int `json:"cache_seconds"`
 
-	// DataOwnerOrganisationId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// DataOwnerOrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	DataOwnerOrganisationId *Id `json:"data_owner_organisation_id,omitempty"`
@@ -1242,7 +1250,7 @@ type LinkGrant struct {
 	// Example: outbound
 	Direction LinkGrantDirection `json:"direction"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1336,7 +1344,7 @@ type NewOutlet struct {
 type NewRegistration struct {
 	// Gstin GSTIN, 15 characters, upper case, no spaces. Format only here; the check character and the state-code match are validated by the service (rule from gst-invoicing-india).
 	//
-	// Example: 33ABCDE1234F1Z5
+	// Example: 33ABCDE1234F1Z7
 	Gstin *Gstin `json:"gstin,omitempty"`
 
 	// LegalName Legal name.
@@ -1357,7 +1365,7 @@ type Organisation struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1433,7 +1441,7 @@ type OrganisationStatus string
 
 // Outlet An outlet or property: one physical place with its own business date, devices, staff assignments and tax registration.
 type Outlet struct {
-	// BrandId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// BrandId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	BrandId Id `json:"brand_id"`
@@ -1443,7 +1451,7 @@ type Outlet struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1453,7 +1461,7 @@ type Outlet struct {
 	// Example: restaurant
 	Kind OutletKind `json:"kind"`
 
-	// LocatedInOutletId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// LocatedInOutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	LocatedInOutletId *Id `json:"located_in_outlet_id,omitempty"`
@@ -1473,7 +1481,7 @@ type Outlet struct {
 	// Example: active
 	Status OutletStatus `json:"status"`
 
-	// TaxRegistrationId Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	TaxRegistrationId Id `json:"tax_registration_id"`
@@ -1569,7 +1577,7 @@ type ProposeLink struct {
 	// Grants Scopes offered and asked for.
 	Grants []GrantInput `json:"grants"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1587,6 +1595,14 @@ type ProposeLink struct {
 //
 // Example: Owner phoned to report a lost tablet.
 type Reason = string
+
+// RejectRegistration Reject a registration. The reason is the record for the auditor.
+type RejectRegistration struct {
+	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
+	//
+	// Example: Owner phoned to report a lost tablet.
+	Reason Reason `json:"reason"`
+}
 
 // SeriesClosure Result of closing a device's series.
 type SeriesClosure struct {
@@ -1640,10 +1656,10 @@ type TaxRegistration struct {
 
 	// Gstin GSTIN, 15 characters, upper case, no spaces. Format only here; the check character and the state-code match are validated by the service (rule from gst-invoicing-india).
 	//
-	// Example: 33ABCDE1234F1Z5
+	// Example: 33ABCDE1234F1Z7
 	Gstin *Gstin `json:"gstin,omitempty"`
 
-	// Id Client-generated, time-sortable identifier (UUIDv7 or ULID).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1729,7 +1745,7 @@ type UpdateOutlet struct {
 type UpdateTaxRegistration struct {
 	// Gstin GSTIN, 15 characters, upper case, no spaces. Format only here; the check character and the state-code match are validated by the service (rule from gst-invoicing-india).
 	//
-	// Example: 33ABCDE1234F1Z5
+	// Example: 33ABCDE1234F1Z7
 	Gstin *Gstin `json:"gstin,omitempty"`
 
 	// LegalName Legal name.
@@ -1744,6 +1760,11 @@ type Verification struct {
 	//
 	// Example: certificate_seen
 	Method *VerificationMethod `json:"method,omitempty"`
+
+	// RejectedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	RejectedAt *Timestamp `json:"rejected_at,omitempty"`
 
 	// State unverified until vendor staff verify; verified registrations are the only ones that can get series.
 	//
@@ -1848,13 +1869,13 @@ type ValidationFailed = Problem
 
 // CloseDeviceSeriesParams defines parameters for CloseDeviceSeries.
 type CloseDeviceSeriesParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // IssueDocumentSeriesParams defines parameters for IssueDocumentSeries.
 type IssueDocumentSeriesParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
@@ -1893,7 +1914,7 @@ type CreateOrganisationParams struct {
 	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
 	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
 
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
@@ -1903,12 +1924,21 @@ type GetOrganisationDirectoryEntryParams struct {
 	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
 }
 
+// RejectTaxRegistrationParams defines parameters for RejectTaxRegistration.
+type RejectTaxRegistrationParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
 // VerifyTaxRegistrationParams defines parameters for VerifyTaxRegistration.
 type VerifyTaxRegistrationParams struct {
 	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
 	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
 
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
@@ -1923,7 +1953,7 @@ type ListBrandsParams struct {
 
 // CreateBrandParams defines parameters for CreateBrand.
 type CreateBrandParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
@@ -1947,13 +1977,13 @@ type ListDocumentSeriesParamsStatus string
 
 // CloseDocumentSeriesUnreconciledParams defines parameters for CloseDocumentSeriesUnreconciled.
 type CloseDocumentSeriesUnreconciledParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // AcceptLinkParams defines parameters for AcceptLink.
 type AcceptLinkParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
@@ -1971,7 +2001,7 @@ type ListLinksParams struct {
 
 // ProposeLinkParams defines parameters for ProposeLink.
 type ProposeLinkParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
@@ -1986,61 +2016,61 @@ type ListLinkActivityParams struct {
 
 // ProposeLinkAmendmentParams defines parameters for ProposeLinkAmendment.
 type ProposeLinkAmendmentParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // DecideLinkAmendmentParams defines parameters for DecideLinkAmendment.
 type DecideLinkAmendmentParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // ConfirmLinkParams defines parameters for ConfirmLink.
 type ConfirmLinkParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // DeclineLinkParams defines parameters for DeclineLink.
 type DeclineLinkParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // RemoveLinkGrantParams defines parameters for RemoveLinkGrant.
 type RemoveLinkGrantParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // RevokeLinkParams defines parameters for RevokeLink.
 type RevokeLinkParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // ResumeLinkParams defines parameters for ResumeLink.
 type ResumeLinkParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // SuspendLinkParams defines parameters for SuspendLink.
 type SuspendLinkParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // UpdateOrganisationSettingsParams defines parameters for UpdateOrganisationSettings.
 type UpdateOrganisationSettingsParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // UpdateCurrentOrganisationParams defines parameters for UpdateCurrentOrganisation.
 type UpdateCurrentOrganisationParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
@@ -2058,13 +2088,13 @@ type ListOutletsParams struct {
 
 // CreateOutletParams defines parameters for CreateOutlet.
 type CreateOutletParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // UpdateOutletParams defines parameters for UpdateOutlet.
 type UpdateOutletParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
@@ -2079,13 +2109,19 @@ type ListTaxRegistrationsParams struct {
 
 // CreateTaxRegistrationParams defines parameters for CreateTaxRegistration.
 type CreateTaxRegistrationParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
 // UpdateTaxRegistrationParams defines parameters for UpdateTaxRegistration.
 type UpdateTaxRegistrationParams struct {
-	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 or ULID is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// CloseTaxRegistrationParams defines parameters for CloseTaxRegistration.
+type CloseTaxRegistrationParams struct {
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
@@ -2097,6 +2133,9 @@ type IssueDocumentSeriesJSONRequestBody = IssueSeries
 
 // CreateOrganisationJSONRequestBody defines body for CreateOrganisation for application/json ContentType.
 type CreateOrganisationJSONRequestBody = CreateOrganisation
+
+// RejectTaxRegistrationJSONRequestBody defines body for RejectTaxRegistration for application/json ContentType.
+type RejectTaxRegistrationJSONRequestBody = RejectRegistration
 
 // VerifyTaxRegistrationJSONRequestBody defines body for VerifyTaxRegistration for application/json ContentType.
 type VerifyTaxRegistrationJSONRequestBody = VerifyRegistration
@@ -2148,6 +2187,9 @@ type CreateTaxRegistrationJSONRequestBody = CreateTaxRegistration
 
 // UpdateTaxRegistrationJSONRequestBody defines body for UpdateTaxRegistration for application/json ContentType.
 type UpdateTaxRegistrationJSONRequestBody = UpdateTaxRegistration
+
+// CloseTaxRegistrationJSONRequestBody defines body for CloseTaxRegistration for application/json ContentType.
+type CloseTaxRegistrationJSONRequestBody = CloseRegistration
 
 // RequestEditorFn is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -2287,6 +2329,24 @@ type ClientInterface interface {
 	//
 	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id} (the `GetOrganisationDirectoryEntry` operationId).
 	GetOrganisationDirectoryEntry(ctx context.Context, organisationId Id, params *GetOrganisationDirectoryEntryParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RejectTaxRegistrationWithBody Mark a registration rejected
+	//
+	// ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection (the `RejectTaxRegistration` operationId).
+	RejectTaxRegistrationWithBody(ctx context.Context, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RejectTaxRegistration Mark a registration rejected
+	//
+	// ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection (the `RejectTaxRegistration` operationId).
+	RejectTaxRegistration(ctx context.Context, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, body RejectTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// VerifyTaxRegistrationWithBody Mark a registration verified
 	//
@@ -2604,6 +2664,24 @@ type ClientInterface interface {
 	//
 	// Corresponds with PATCH /v1/tax-registrations/{registration_id} (the `UpdateTaxRegistration` operationId).
 	UpdateTaxRegistration(ctx context.Context, registrationId Id, params *UpdateTaxRegistrationParams, body UpdateTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloseTaxRegistrationWithBody Close a tax registration and its series
+	//
+	// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /v1/tax-registrations/{registration_id}/closure (the `CloseTaxRegistration` operationId).
+	CloseTaxRegistrationWithBody(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloseTaxRegistration Close a tax registration and its series
+	//
+	// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /v1/tax-registrations/{registration_id}/closure (the `CloseTaxRegistration` operationId).
+	CloseTaxRegistration(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, body CloseTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 // CloseDeviceSeriesWithBody Close a device's series
@@ -2751,6 +2829,44 @@ func (c *Client) CreateOrganisation(ctx context.Context, params *CreateOrganisat
 // Corresponds with GET /internal/v1/vendor/organisations/{organisation_id} (the `GetOrganisationDirectoryEntry` operationId).
 func (c *Client) GetOrganisationDirectoryEntry(ctx context.Context, organisationId Id, params *GetOrganisationDirectoryEntryParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganisationDirectoryEntryRequest(c.Server, organisationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// RejectTaxRegistrationWithBody Mark a registration rejected
+//
+// ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection (the `RejectTaxRegistration` operationId).
+func (c *Client) RejectTaxRegistrationWithBody(ctx context.Context, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRejectTaxRegistrationRequestWithBody(c.Server, organisationId, registrationId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// RejectTaxRegistration Mark a registration rejected
+//
+// ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection (the `RejectTaxRegistration` operationId).
+func (c *Client) RejectTaxRegistration(ctx context.Context, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, body RejectTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRejectTaxRegistrationRequest(c.Server, organisationId, registrationId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3568,6 +3684,44 @@ func (c *Client) UpdateTaxRegistration(ctx context.Context, registrationId Id, p
 	return c.Client.Do(req)
 }
 
+// CloseTaxRegistrationWithBody Close a tax registration and its series
+//
+// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /v1/tax-registrations/{registration_id}/closure (the `CloseTaxRegistration` operationId).
+func (c *Client) CloseTaxRegistrationWithBody(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloseTaxRegistrationRequestWithBody(c.Server, registrationId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloseTaxRegistration Close a tax registration and its series
+//
+// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /v1/tax-registrations/{registration_id}/closure (the `CloseTaxRegistration` operationId).
+func (c *Client) CloseTaxRegistration(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, body CloseTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloseTaxRegistrationRequest(c.Server, registrationId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // NewCloseDeviceSeriesRequest calls the generic CloseDeviceSeries builder with application/json body
 func NewCloseDeviceSeriesRequest(server string, deviceId Id, params *CloseDeviceSeriesParams, body CloseDeviceSeriesJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -3963,6 +4117,84 @@ func NewGetOrganisationDirectoryEntryRequest(server string, organisationId Id, p
 
 			req.Header.Set("X-Vendor-Client-Address", headerParam0)
 		}
+
+	}
+
+	return req, nil
+}
+
+// NewRejectTaxRegistrationRequest calls the generic RejectTaxRegistration builder with application/json body
+func NewRejectTaxRegistrationRequest(server string, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, body RejectTaxRegistrationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRejectTaxRegistrationRequestWithBody(server, organisationId, registrationId, params, "application/json", bodyReader)
+}
+
+// NewRejectTaxRegistrationRequestWithBody constructs an http.Request for the RejectTaxRegistration method, with any body, and a specified content type
+func NewRejectTaxRegistrationRequestWithBody(server string, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "registration_id", registrationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/tax-registrations/" + pathParam1 + "/rejection"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
 
 	}
 
@@ -5734,6 +5966,66 @@ func NewUpdateTaxRegistrationRequestWithBody(server string, registrationId Id, p
 	return req, nil
 }
 
+// NewCloseTaxRegistrationRequest calls the generic CloseTaxRegistration builder with application/json body
+func NewCloseTaxRegistrationRequest(server string, registrationId Id, params *CloseTaxRegistrationParams, body CloseTaxRegistrationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloseTaxRegistrationRequestWithBody(server, registrationId, params, "application/json", bodyReader)
+}
+
+// NewCloseTaxRegistrationRequestWithBody constructs an http.Request for the CloseTaxRegistration method, with any body, and a specified content type
+func NewCloseTaxRegistrationRequestWithBody(server string, registrationId Id, params *CloseTaxRegistrationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "registration_id", registrationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/v1/tax-registrations/" + pathParam0 + "/closure"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam0)
+
+	}
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -5848,6 +6140,24 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id} (the `GetOrganisationDirectoryEntry` operationId).
 	GetOrganisationDirectoryEntryWithResponse(ctx context.Context, organisationId Id, params *GetOrganisationDirectoryEntryParams, reqEditors ...RequestEditorFn) (*GetOrganisationDirectoryEntryResponse, error)
+
+	// RejectTaxRegistrationWithBodyWithResponse Mark a registration rejected
+	//
+	// ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection (the `RejectTaxRegistration` operationId).
+	RejectTaxRegistrationWithBodyWithResponse(ctx context.Context, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RejectTaxRegistrationResponse, error)
+
+	// RejectTaxRegistrationWithResponse Mark a registration rejected
+	//
+	// ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection (the `RejectTaxRegistration` operationId).
+	RejectTaxRegistrationWithResponse(ctx context.Context, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, body RejectTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*RejectTaxRegistrationResponse, error)
 
 	// VerifyTaxRegistrationWithBodyWithResponse Mark a registration verified
 	//
@@ -6195,6 +6505,24 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with PATCH /v1/tax-registrations/{registration_id} (the `UpdateTaxRegistration` operationId).
 	UpdateTaxRegistrationWithResponse(ctx context.Context, registrationId Id, params *UpdateTaxRegistrationParams, body UpdateTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateTaxRegistrationResponse, error)
+
+	// CloseTaxRegistrationWithBodyWithResponse Close a tax registration and its series
+	//
+	// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/tax-registrations/{registration_id}/closure (the `CloseTaxRegistration` operationId).
+	CloseTaxRegistrationWithBodyWithResponse(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseTaxRegistrationResponse, error)
+
+	// CloseTaxRegistrationWithResponse Close a tax registration and its series
+	//
+	// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/tax-registrations/{registration_id}/closure (the `CloseTaxRegistration` operationId).
+	CloseTaxRegistrationWithResponse(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, body CloseTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*CloseTaxRegistrationResponse, error)
 }
 
 type CloseDeviceSeriesResponse struct {
@@ -6591,6 +6919,82 @@ func (r GetOrganisationDirectoryEntryResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetOrganisationDirectoryEntryResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RejectTaxRegistrationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *TaxRegistration
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r RejectTaxRegistrationResponse) GetJSON200() *TaxRegistration {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r RejectTaxRegistrationResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r RejectTaxRegistrationResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r RejectTaxRegistrationResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r RejectTaxRegistrationResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r RejectTaxRegistrationResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r RejectTaxRegistrationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r RejectTaxRegistrationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RejectTaxRegistrationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RejectTaxRegistrationResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -8637,6 +9041,82 @@ func (r UpdateTaxRegistrationResponse) ContentType() string {
 	return ""
 }
 
+type CloseTaxRegistrationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *TaxRegistration
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *StepUpRequired
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloseTaxRegistrationResponse) GetJSON200() *TaxRegistration {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r CloseTaxRegistrationResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r CloseTaxRegistrationResponse) GetApplicationproblemJSON403() *StepUpRequired {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r CloseTaxRegistrationResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r CloseTaxRegistrationResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r CloseTaxRegistrationResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r CloseTaxRegistrationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloseTaxRegistrationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloseTaxRegistrationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloseTaxRegistrationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // CloseDeviceSeriesWithBodyWithResponse Close a device's series
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
@@ -8760,6 +9240,36 @@ func (c *ClientWithResponses) GetOrganisationDirectoryEntryWithResponse(ctx cont
 		return nil, err
 	}
 	return ParseGetOrganisationDirectoryEntryResponse(rsp)
+}
+
+// RejectTaxRegistrationWithBodyWithResponse Mark a registration rejected
+//
+// ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection (the `RejectTaxRegistration` operationId).
+func (c *ClientWithResponses) RejectTaxRegistrationWithBodyWithResponse(ctx context.Context, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RejectTaxRegistrationResponse, error) {
+	rsp, err := c.RejectTaxRegistrationWithBody(ctx, organisationId, registrationId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRejectTaxRegistrationResponse(rsp)
+}
+
+// RejectTaxRegistrationWithResponse Mark a registration rejected
+//
+// ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection (the `RejectTaxRegistration` operationId).
+func (c *ClientWithResponses) RejectTaxRegistrationWithResponse(ctx context.Context, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, body RejectTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*RejectTaxRegistrationResponse, error) {
+	rsp, err := c.RejectTaxRegistration(ctx, organisationId, registrationId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRejectTaxRegistrationResponse(rsp)
 }
 
 // VerifyTaxRegistrationWithBodyWithResponse Mark a registration verified
@@ -9403,6 +9913,36 @@ func (c *ClientWithResponses) UpdateTaxRegistrationWithResponse(ctx context.Cont
 	return ParseUpdateTaxRegistrationResponse(rsp)
 }
 
+// CloseTaxRegistrationWithBodyWithResponse Close a tax registration and its series
+//
+// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/tax-registrations/{registration_id}/closure (the `CloseTaxRegistration` operationId).
+func (c *ClientWithResponses) CloseTaxRegistrationWithBodyWithResponse(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseTaxRegistrationResponse, error) {
+	rsp, err := c.CloseTaxRegistrationWithBody(ctx, registrationId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloseTaxRegistrationResponse(rsp)
+}
+
+// CloseTaxRegistrationWithResponse Close a tax registration and its series
+//
+// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/tax-registrations/{registration_id}/closure (the `CloseTaxRegistration` operationId).
+func (c *ClientWithResponses) CloseTaxRegistrationWithResponse(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, body CloseTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*CloseTaxRegistrationResponse, error) {
+	rsp, err := c.CloseTaxRegistration(ctx, registrationId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloseTaxRegistrationResponse(rsp)
+}
+
 // ParseCloseDeviceSeriesResponse parses an HTTP response from a CloseDeviceSeriesWithResponse call
 func ParseCloseDeviceSeriesResponse(rsp *http.Response) (*CloseDeviceSeriesResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -9707,6 +10247,67 @@ func ParseGetOrganisationDirectoryEntryResponse(rsp *http.Response) (*GetOrganis
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRejectTaxRegistrationResponse parses an HTTP response from a RejectTaxRegistrationWithResponse call
+func ParseRejectTaxRegistrationResponse(rsp *http.Response) (*RejectTaxRegistrationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RejectTaxRegistrationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TaxRegistration
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	}
 
@@ -11288,6 +11889,67 @@ func ParseUpdateTaxRegistrationResponse(rsp *http.Response) (*UpdateTaxRegistrat
 	return response, nil
 }
 
+// ParseCloseTaxRegistrationResponse parses an HTTP response from a CloseTaxRegistrationWithResponse call
+func ParseCloseTaxRegistrationResponse(rsp *http.Response) (*CloseTaxRegistrationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloseTaxRegistrationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest TaxRegistration
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest StepUpRequired
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// CloseDeviceSeries Close a device's series
@@ -11308,6 +11970,9 @@ type ServerInterface interface {
 	// GetOrganisationDirectoryEntry Organisation detail: structure only
 	// (GET /internal/v1/vendor/organisations/{organisation_id})
 	GetOrganisationDirectoryEntry(w http.ResponseWriter, r *http.Request, organisationId Id, params GetOrganisationDirectoryEntryParams)
+	// RejectTaxRegistration Mark a registration rejected
+	// (PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection)
+	RejectTaxRegistration(w http.ResponseWriter, r *http.Request, organisationId Id, registrationId Id, params RejectTaxRegistrationParams)
 	// VerifyTaxRegistration Mark a registration verified
 	// (PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/verification)
 	VerifyTaxRegistration(w http.ResponseWriter, r *http.Request, organisationId Id, registrationId Id, params VerifyTaxRegistrationParams)
@@ -11404,6 +12069,9 @@ type ServerInterface interface {
 	// UpdateTaxRegistration Correct an unverified registration
 	// (PATCH /v1/tax-registrations/{registration_id})
 	UpdateTaxRegistration(w http.ResponseWriter, r *http.Request, registrationId Id, params UpdateTaxRegistrationParams)
+	// CloseTaxRegistration Close a tax registration and its series
+	// (PUT /v1/tax-registrations/{registration_id}/closure)
+	CloseTaxRegistration(w http.ResponseWriter, r *http.Request, registrationId Id, params CloseTaxRegistrationParams)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -11771,6 +12439,88 @@ func (siw *ServerInterfaceWrapper) GetOrganisationDirectoryEntry(w http.Response
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetOrganisationDirectoryEntry(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RejectTaxRegistration operation middleware
+func (siw *ServerInterfaceWrapper) RejectTaxRegistration(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "registration_id" -------------
+	var registrationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "registration_id", r.PathValue("registration_id"), &registrationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "registration_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params RejectTaxRegistrationParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RejectTaxRegistration(w, r, organisationId, registrationId, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -13272,6 +14022,60 @@ func (siw *ServerInterfaceWrapper) UpdateTaxRegistration(w http.ResponseWriter, 
 	handler.ServeHTTP(w, r)
 }
 
+// CloseTaxRegistration operation middleware
+func (siw *ServerInterfaceWrapper) CloseTaxRegistration(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "registration_id" -------------
+	var registrationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "registration_id", r.PathValue("registration_id"), &registrationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "registration_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CloseTaxRegistrationParams
+
+	headers := r.Header
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CloseTaxRegistration(w, r, registrationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 type UnescapedCookieParamError struct {
 	ParamName string
 	Err       error
@@ -13405,6 +14209,7 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/v1/tax-registrations", wrapper.CreateTaxRegistration)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/tax-registrations/{registration_id}", wrapper.GetTaxRegistration)
 	m.HandleFunc(http.MethodPatch+" "+options.BaseURL+"/v1/tax-registrations/{registration_id}", wrapper.UpdateTaxRegistration)
+	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/v1/tax-registrations/{registration_id}/closure", wrapper.CloseTaxRegistration)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/states", wrapper.ListStates)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/organisation-settings", wrapper.GetOrganisationSettings)
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/v1/organisation-settings", wrapper.UpdateOrganisationSettings)
@@ -13430,6 +14235,7 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations", wrapper.CreateOrganisation)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}", wrapper.GetOrganisationDirectoryEntry)
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/verification", wrapper.VerifyTaxRegistration)
+	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection", wrapper.RejectTaxRegistration)
 
 	return m
 }
