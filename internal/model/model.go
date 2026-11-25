@@ -228,6 +228,9 @@ var (
 	ErrSeriesCap     = apperr.New(apperr.RateLimited, "series_cap_reached", "")
 	ErrLinkState     = apperr.New(apperr.Conflict, "link_state_conflict", "")
 	ErrInviteInvalid = apperr.New(apperr.Conflict, "invitation_code_invalid", "")
+	// ErrCounterpartyChanged: the accepting organisation's declared details differ from the snapshot the
+	// proposer was shown (ADR-0003 N1 R3).
+	ErrCounterpartyChanged = apperr.New(apperr.Conflict, "counterparty_changed", "")
 	// Errors the repository returns for constraint violations; the service maps them.
 	ErrDuplicateGSTIN    = apperr.New(apperr.Conflict, "gstin_duplicate", "")
 	ErrVerifiedElsewhere = apperr.New(apperr.Conflict, "gstin_in_use", "")

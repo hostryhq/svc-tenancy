@@ -6,7 +6,7 @@
   "outlets": "outlet_scoped",
   "document_series": "outlet_scoped",
   "series_allocators": "tenant_wide",
-  "idempotency_keys": "tenant_wide",
+  "idempotency_records": "tenant_wide",
   "event_keys": "tenant_wide",
   "vendor_access_log": "tenant_wide"
 }

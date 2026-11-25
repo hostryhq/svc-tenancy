@@ -94,7 +94,7 @@ func tablesWithColumn(t *testing.T, db *sql.DB, col string) []string {
 	return out
 }
 
-var tenantTables = []string{"document_series", "event_keys", "idempotency_keys", "organisation_settings", "organisations", "outbox", "outlets",
+var tenantTables = []string{"document_series", "event_keys", "idempotency_records", "organisation_settings", "organisations", "outbox", "outlets",
 	"series_allocators", "tax_registrations", "vendor_access_log", "brands"}
 
 // T1 / TST-01: for every tenant-owned table, as the application role: no context sees nothing; context A
@@ -280,7 +280,7 @@ func TestSchemaAndRoleLint(t *testing.T) {
 	}
 	// Tenant-owned tables keep exactly one policy (the outbox adds the relay role's).
 	var multi string
-	if err := db.QueryRowContext(ctx, `SELECT COALESCE(string_agg(tablename, ','), '') FROM (SELECT tablename FROM pg_policies WHERE tablename = ANY($1) AND tablename <> 'outbox' GROUP BY tablename HAVING count(*) <> 1) x`, pqArray(tenantTables)).Scan(&multi); err != nil || multi != "" {
+	if err := db.QueryRowContext(ctx, `SELECT COALESCE(string_agg(tablename, ','), '') FROM (SELECT tablename FROM pg_policies WHERE tablename = ANY($1) AND tablename NOT IN ('outbox', 'idempotency_records') GROUP BY tablename HAVING count(*) <> 1) x`, pqArray(tenantTables)).Scan(&multi); err != nil || multi != "" {
 		t.Errorf("tenant-owned tables with other than one policy: %q %v", multi, err)
 	}
 	// Roles.
@@ -314,7 +314,7 @@ func TestSchemaAndRoleLint(t *testing.T) {
 	if got := grants(pgtest.Vendor); got != "directory_organisations:SELECT,directory_registrations:SELECT" {
 		t.Errorf("tenancy_vendor grants: %s", got)
 	}
-	if got := grants(pgtest.Relay); got != "outbox:DELETE,outbox:SELECT,outbox:UPDATE" {
+	if got := grants(pgtest.Relay); got != "idempotency_records:DELETE,idempotency_records:SELECT,outbox:DELETE,outbox:SELECT,outbox:UPDATE" {
 		t.Errorf("tenancy_relay grants: %s", got)
 	}
 	if g := grants(pgtest.App); strings.Contains(g, "DELETE") || strings.Contains(g, "TRUNCATE") {
@@ -415,7 +415,7 @@ func TestTwoPartyAndDirectoryPolicies(t *testing.T) {
 		}
 	})
 	for _, q := range []string{`SELECT count(*) FROM organisations`, `SELECT count(*) FROM tax_registrations`, `SELECT count(*) FROM outbox`,
-		`SELECT count(*) FROM vendor_access_log`, `SELECT count(*) FROM links`, `SELECT count(*) FROM idempotency_keys`} {
+		`SELECT count(*) FROM vendor_access_log`, `SELECT count(*) FROM links`, `SELECT count(*) FROM idempotency_records`} {
 		inTx(t, s.DB.Vendor, "", func(tx *sql.Tx) {
 			if _, err := tx.ExecContext(ctx, q); err == nil {
 				t.Errorf("tenancy_vendor can run %q", q)

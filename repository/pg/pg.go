@@ -7,13 +7,16 @@ package pg
 
 import (
 	"context"
+	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"time"
 
 	"github.com/hostryhq/go-auth"
 	"github.com/hostryhq/go-common/events"
+	"github.com/hostryhq/go-common/idempotency"
 	"github.com/hostryhq/go-common/ids"
 	"github.com/hostryhq/go-common/outbox"
 	"github.com/hostryhq/go-common/tenancy"
@@ -557,10 +560,21 @@ func (x *pgTx) ForceAdvanceAllocators(ctx context.Context, n int, now time.Time)
 
 // ---- idempotency ----
 
-// IdemGet claims the key for this transaction when it is new. A concurrent transaction holding the same
-// key makes the insert wait until it commits, so a replay always sees the finished response.
+// IdemGet claims the key for this transaction when it is new, in go-common's idempotency_records (the
+// claim, the effect and the result commit or roll back together, so a crash leaves nothing stuck).
+// An expired record is reclaimed by update (the application role has no DELETE; the sweep removes old
+// rows). A concurrent transaction holding the same key makes the claim wait until it commits, so a
+// replay always sees the finished response. The stored response never holds a one-time secret: the
+// service's response types leave such fields out of their JSON (ADR-0003 N1 R1).
 func (x *pgTx) IdemGet(ctx context.Context, op, key string) (string, []byte, bool, error) {
-	res, err := x.tx.ExecContext(ctx, `INSERT INTO idempotency_keys (tenant_id, op, key, fingerprint, created_at) VALUES ($1,$2,$3,'',now()) ON CONFLICT DO NOTHING`, x.t, op, key)
+	k, t := op+"/"+key, x.t.String()
+	ttl := int64(idempotency.DefaultTTL.Seconds())
+	if _, err := x.tx.ExecContext(ctx, `UPDATE idempotency_records SET fingerprint = '', done = false, status = 0, content_type = '', body = NULL, body_sha256 = '',
+		created_at = now(), expires_at = now() + $3 * interval '1 second' WHERE tenant_id = $1 AND key = $2 AND expires_at <= now()`, t, k, ttl); err != nil {
+		return "", nil, false, err
+	}
+	res, err := x.tx.ExecContext(ctx, `INSERT INTO idempotency_records (tenant_id, key, fingerprint, created_at, expires_at)
+		VALUES ($1,$2,'',now(), now() + $3 * interval '1 second') ON CONFLICT DO NOTHING`, t, k, ttl)
 	if err != nil {
 		return "", nil, false, err
 	}
@@ -569,12 +583,17 @@ func (x *pgTx) IdemGet(ctx context.Context, op, key string) (string, []byte, boo
 	}
 	var fp string
 	var resp []byte
-	err = x.tx.QueryRowContext(ctx, `SELECT fingerprint, response FROM idempotency_keys WHERE tenant_id = $1 AND op = $2 AND key = $3`, x.t, op, key).Scan(&fp, &resp)
-	return fp, resp, err == nil, err
+	var done bool
+	if err = x.tx.QueryRowContext(ctx, `SELECT fingerprint, body, done FROM idempotency_records WHERE tenant_id = $1 AND key = $2`, t, k).Scan(&fp, &resp, &done); err != nil {
+		return "", nil, false, err
+	}
+	return fp, resp, done, nil
 }
 
 func (x *pgTx) IdemPut(ctx context.Context, op, key, fp string, resp []byte, _ time.Time) error {
-	_, err := x.tx.ExecContext(ctx, `UPDATE idempotency_keys SET fingerprint = $4, response = $5 WHERE tenant_id = $1 AND op = $2 AND key = $3`, x.t, op, key, fp, resp)
+	sum := sha256.Sum256(resp)
+	_, err := x.tx.ExecContext(ctx, `UPDATE idempotency_records SET fingerprint = $3, done = true, status = 200, content_type = 'application/json', body = $4, body_sha256 = $5
+		WHERE tenant_id = $1 AND key = $2`, x.t.String(), op+"/"+key, fp, resp, hex.EncodeToString(sum[:]))
 	return err
 }
 

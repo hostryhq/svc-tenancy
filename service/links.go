@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"crypto/sha256"
+	"errors"
 	"strconv"
 	"strings"
 	"time"
@@ -41,9 +42,15 @@ type ProposeInput struct {
 }
 
 // Proposal is the proposed link and its one-time invitation code.
+//
+// Code is never serialised: the idempotency record stores the response as JSON, and an idempotency
+// record never holds a one-time secret (ADR-0003 N1 R1). A replayed proposeLink therefore returns the
+// link with an empty Code.
+// TODO(spec round): mark proposeLink x-one-time-secret, add secret_withheld to the response, and add
+// reissueLinkInvitation (PUT /v1/links/{link_id}/invitation) so an owner who lost the code can get a new one.
 type Proposal struct {
 	Link model.Link
-	Code string
+	Code string `json:"-"`
 }
 
 // Decision is the answer to go-auth's link lookup.
@@ -290,9 +297,6 @@ func (s *Service) AcceptLink(ctx context.Context, code string, outletIDs []ids.I
 		if err != nil || l.Status != model.LinkProposed || Expired(l, s.clock.Now()) || l.ProposerID == tid {
 			return model.Link{}, model.ErrInviteInvalid
 		}
-		if used, err := tx.UseInvite(ctx, h, s.clock.Now()); err != nil || !used {
-			return model.Link{}, model.ErrInviteInvalid
-		}
 		party, err := s.snapshot(ctx, tx, outletIDs)
 		if err != nil {
 			return model.Link{}, err
@@ -309,8 +313,13 @@ func (s *Service) AcceptLink(ctx context.Context, code string, outletIDs []ids.I
 		}
 		now := s.clock.Now()
 		l.Status, l.AcceptorID, l.AcceptorOutlets, l.AcceptorParty, l.AcceptedAt = model.LinkAccepted, tid, outletIDs, party, &now
+		// The acceptor is written into the link first; only then is the invitation marked used (N1 R2):
+		// the invitation capability allows that one update and nothing else.
 		if err := tx.SaveLink(ctx, l); err != nil {
 			return model.Link{}, err
+		}
+		if used, err := tx.UseInvite(ctx, h, s.clock.Now()); err != nil || !used {
+			return model.Link{}, model.ErrInviteInvalid
 		}
 		if err := s.activity(ctx, tx, l, model.SideAcceptor, "link.accepted", "", ""); err != nil {
 			return model.Link{}, err
@@ -394,6 +403,9 @@ func setGrants(l *model.Link, from, to string) {
 // ConfirmLink is the proposer's confirmation of the accepting organisation. The id must be the one the
 // proposer was shown, so a swap between viewing and confirming is refused. Only now do grants go live.
 func (s *Service) ConfirmLink(ctx context.Context, id, counterparty ids.ID) (model.Link, error) {
+	if err := s.recheckCounterparty(ctx, id, counterparty); err != nil {
+		return model.Link{}, err
+	}
 	return s.transition(ctx, id, "confirmed", func(l *model.Link, side string, now time.Time) (string, error) {
 		if side != model.SideProposer || l.Status != model.LinkAccepted {
 			return "", model.ErrLinkState
@@ -405,6 +417,53 @@ func (s *Service) ConfirmLink(ctx context.Context, id, counterparty ids.ID) (mod
 		setGrants(l, model.GrantPending, model.GrantActive)
 		return "link.confirmed", nil
 	})
+}
+
+// recheckCounterparty compares the accepting organisation's current declared details with the snapshot
+// the proposer was shown (N1 R3.3). A difference is 409 counterparty_changed and nothing is confirmed.
+// The read runs in the acceptor's own context, outside the confirmation transaction and outside any
+// idempotency claim; the snapshot itself is never refreshed.
+func (s *Service) recheckCounterparty(ctx context.Context, id, counterparty ids.ID) error {
+	tid, err := tenantOf(ctx)
+	if err != nil {
+		return err
+	}
+	plain := context.WithValue(ctx, idemKey{}, nil)
+	l, err := run(plain, s, func(ctx context.Context, tx repository.Tx) (model.Link, error) { return tx.GetLink(ctx, id, false) })
+	if err != nil {
+		return err
+	}
+	if tid != l.ProposerID || l.Status != model.LinkAccepted || l.AcceptorID != counterparty || Expired(l, s.clock.Now()) {
+		return nil // the transition reports state and identity problems
+	}
+	var now model.Party
+	if err := s.internalTx(l.AcceptorID, func(c context.Context, tx repository.Tx) error {
+		p, err := s.snapshot(c, tx, l.AcceptorOutlets)
+		now = p
+		return err
+	}); err != nil {
+		var pe *apperr.Error
+		if errors.As(err, &pe) && pe.Kind == apperr.Validation {
+			return model.ErrCounterpartyChanged
+		}
+		return err
+	}
+	if !samePartyDetails(l.AcceptorParty, now) {
+		return model.ErrCounterpartyChanged
+	}
+	return nil
+}
+
+func samePartyDetails(a, b model.Party) bool {
+	if a.DisplayName != b.DisplayName || len(a.Registrations) != len(b.Registrations) {
+		return false
+	}
+	for i := range a.Registrations {
+		if a.Registrations[i] != b.Registrations[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func checkReason(reason string) error {

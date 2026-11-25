@@ -20,6 +20,7 @@ import (
 
 	"github.com/hostryhq/go-auth"
 	"github.com/hostryhq/go-common/bus"
+	"github.com/hostryhq/go-common/idempotency"
 	"github.com/hostryhq/go-common/logx"
 	"github.com/hostryhq/go-common/outbox"
 
@@ -187,6 +188,7 @@ func relay(ctx context.Context, cfg config.Config, log *slog.Logger) {
 		return
 	}
 	defer nc.Close()
+	go idempotencySweepLoop(ctx, db, log)
 	pub, err := bus.NewPublisher(nc)
 	if err != nil {
 		log.Error("relay: publisher", "error", err)
@@ -210,6 +212,24 @@ func expireLoop(ctx context.Context, a *app.App, log *slog.Logger) {
 				log.Error("link expiry sweep failed", "error", err)
 			} else if n > 0 {
 				log.Info("links expired", "count", n)
+			}
+		}
+	}
+}
+
+// idempotencySweepLoop deletes expired idempotency records (24 h retention) once an hour, as the relay role.
+func idempotencySweepLoop(ctx context.Context, db *sql.DB, log *slog.Logger) {
+	t := time.NewTicker(time.Hour)
+	defer t.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-t.C:
+			if n, err := idempotency.Sweep(ctx, db, idempotency.PGOptions{}); err != nil {
+				log.Error("idempotency sweep failed", "error", err)
+			} else if n > 0 {
+				log.Info("idempotency records expired", "count", n)
 			}
 		}
 	}

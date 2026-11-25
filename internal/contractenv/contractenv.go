@@ -60,6 +60,10 @@ func Run(t *testing.T, base string, tk *double.Tokens, seedWorld func(ctx contex
 		},
 	}}
 	contracttest.Run(t, contracttest.Options{SpecPath: SpecPath(t), BaseURL: base, Client: client,
+		// ADR-0003 N1 R1: a replay of proposeLink must not return the one-time invitation code, which the
+		// suite's byte-equal replay check cannot yet express (needs x-one-time-secret in api-specs).
+		// Covered by TestInvitationCodeIsNeverStoredAndAReplayWithholdsIt until the spec round lands.
+		Skip: map[string]string{"proposeLink": "replay withholds the one-time invitation code (ADR-0003 N1 R1); suite lacks x-one-time-secret support"},
 		SeedWorld: func(ctx context.Context, w string) error {
 			mu.Lock()
 			current = w

@@ -27,6 +27,8 @@ github.com/hostryhq/go-auth v0.0.0-20261125000521-b19b5407e3f2 h1:WvjSMR/0kF3nw/
 github.com/hostryhq/go-auth v0.0.0-20261125000521-b19b5407e3f2/go.mod h1:axy2RsM8cfUKFRNFbJpsgEAiEgpufRM8WhomcqVBJpY=
 github.com/hostryhq/go-common v0.0.0-20261124215603-ad5f1e546d2e h1:6UdG4EW5fUQNlLCGjob4VfQ+SZk6g03QZmwlZzu/LZ8=
 github.com/hostryhq/go-common v0.0.0-20261124215603-ad5f1e546d2e/go.mod h1:S9CVsQN7xgRer3MvHY3D/QonmbGAa99+nZHuIRHw930=
+github.com/hostryhq/go-common v0.0.0-20261125020101-732c3b1fd21a h1:tm6EaKVaqI10xdfAJU3MYErfJWIPApyVSbDLUZc/8ig=
+github.com/hostryhq/go-common v0.0.0-20261125020101-732c3b1fd21a/go.mod h1:S9CVsQN7xgRer3MvHY3D/QonmbGAa99+nZHuIRHw930=
 github.com/jackc/pgpassfile v1.0.0 h1:/6Hmqy13Ss2zCq62VdNG8tM1wchn8zjSGOBJ6icpsIM=
 github.com/jackc/pgpassfile v1.0.0/go.mod h1:CEx0iS5ambNFdcRtxPj5JhEz+xB6uRky5eyVu/W2HEg=
 github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 h1:iCEnooe7UlwOQYpKFhBabPMi4aNAfoODPEFNiAnClxo=

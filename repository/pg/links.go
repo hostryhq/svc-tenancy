@@ -111,7 +111,7 @@ func (x *pgTx) FindLinkByInvite(ctx context.Context, hash []byte) (ids.ID, error
 }
 
 func (x *pgTx) UseInvite(ctx context.Context, hash []byte, now time.Time) (bool, error) {
-	res, err := x.tx.ExecContext(ctx, `UPDATE link_invitations SET used_at = $2 WHERE code_hash = $1 AND used_at IS NULL`, hash, now)
+	res, err := x.tx.ExecContext(ctx, `UPDATE link_invitations SET used_at = $2, used_by = $3 WHERE code_hash = $1 AND used_at IS NULL`, hash, now, x.t)
 	if err != nil {
 		return false, err
 	}
