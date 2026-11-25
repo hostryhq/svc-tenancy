@@ -1,6 +1,9 @@
 package double
 
 import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
 	"net/http"
 
 	"github.com/hostryhq/go-auth"
@@ -15,12 +18,18 @@ type Tokens struct {
 	TenantIssuer *authtest.Issuer
 	VendorIssuer *authtest.Issuer
 	Registry     *authtest.ServiceRegistry
+	// GrantKey signs the vendor approval grants of tests (the role of identity's vendor-realm key).
+	GrantKey *ecdsa.PrivateKey
 }
 
 // NewTokens creates issuers and a service registry containing identity, admin, tenancy and the given services.
 func NewTokens(extraServices ...string) *Tokens {
 	clk := clock.System
-	return &Tokens{TenantIssuer: authtest.NewTenantIssuer(clk), VendorIssuer: authtest.NewVendorIssuer(clk),
+	key, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		panic(err)
+	}
+	return &Tokens{TenantIssuer: authtest.NewTenantIssuer(clk), VendorIssuer: authtest.NewVendorIssuer(clk), GrantKey: key,
 		Registry: authtest.NewServiceRegistry(clk, append([]string{"identity", "admin", "tenancy", "billing", "sync", "orders"}, extraServices...)...)}
 }
 
@@ -37,7 +46,8 @@ func NewEnv(extraServices ...string) (*Env, error) { return NewEnvLinks(true, ex
 // NewEnvLinks is NewEnv with the link routes switched on or off (LINKS_ENABLED).
 func NewEnvLinks(links bool, extraServices ...string) (*Env, error) {
 	tk := NewTokens(extraServices...)
-	d, err := New(Config{Tenant: tk.TenantIssuer.Verifier(), Vendor: tk.VendorIssuer.Verifier(), Services: tk.Registry.Verifier("tenancy"), LinksOff: !links})
+	d, err := New(Config{Tenant: tk.TenantIssuer.Verifier(), Vendor: tk.VendorIssuer.Verifier(), Services: tk.Registry.Verifier("tenancy"), LinksOff: !links,
+		GrantKeys: tk.GrantKeySet()})
 	if err != nil {
 		return nil, err
 	}
@@ -105,6 +115,9 @@ type ContractTransport struct {
 	Tenant func() string
 	Vendor func() http.Header
 	Svc    func(path string) http.Header
+	// Grant, when set, returns the Hostry-Vendor-Approval grant for a vendor request ("" for none): the example
+	// grant of the spec is for one kind, one clock and one jti, so the suite gets a fresh grant per request.
+	Grant func(method, path string) string
 }
 
 // RoundTrip implements http.RoundTripper.
@@ -114,6 +127,11 @@ func (t *ContractTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	switch {
 	case hasPrefix(r.URL.Path, "/internal/v1/vendor/"):
 		h = t.Vendor()
+		if t.Grant != nil {
+			if g := t.Grant(r.Method, r.URL.Path); g != "" {
+				r.Header.Set("Hostry-Vendor-Approval", g)
+			}
+		}
 	case hasPrefix(r.URL.Path, "/internal/v1/"):
 		h = t.Svc(r.URL.Path)
 	default:

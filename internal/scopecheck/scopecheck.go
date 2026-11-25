@@ -43,7 +43,7 @@ func Resources(svc *service.Service) []scopetest.Resource {
 		{
 			Name: "document series", Permission: "series.read",
 			Seed: func(ctx context.Context, x, y string) (string, string, error) {
-				rows, err := svc.IssueSeries(tenantCtx(), service.IssueInput{OutletID: ids.ID(y), DeviceID: "018f0000-0000-7000-8000-0000000000e6", DocTypes: []string{"tax_invoice"}, State: "active"})
+				rows, err := svc.IssueSeries(tenantCtx(), service.IssueInput{OutletID: ids.ID(y), DeviceID: "018f0000-0000-7000-8000-0000000000e6", DocTypes: []string{"tax_invoice", "credit_note"}, State: "active"})
 				if err != nil {
 					return "", "", err
 				}

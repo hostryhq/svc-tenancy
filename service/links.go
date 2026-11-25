@@ -46,8 +46,7 @@ type ProposeInput struct {
 // Code is never serialised: the idempotency record stores the response as JSON, and an idempotency
 // record never holds a one-time secret (ADR-0003 N1 R1). A replayed proposeLink therefore returns the
 // link with an empty Code.
-// TODO(spec round): mark proposeLink x-one-time-secret, add secret_withheld to the response, and add
-// reissueLinkInvitation (PUT /v1/links/{link_id}/invitation) so an owner who lost the code can get a new one.
+// The response carries secret_withheld on such a replay, and reissueLinkInvitation issues a fresh code.
 type Proposal struct {
 	Link model.Link
 	Code string `json:"-"`
@@ -323,6 +322,75 @@ func (s *Service) AcceptLink(ctx context.Context, code string, outletIDs []ids.I
 		}
 		if err := s.activity(ctx, tx, l, model.SideAcceptor, "link.accepted", "", ""); err != nil {
 			return model.Link{}, err
+		}
+		return l, s.linkEvent(ctx, tx, "accepted", l, tid)
+	})
+}
+
+// ReissueInvitation gives the proposer a fresh invitation code for a link that is still proposed (ADR-0003
+// N1 R1). The previous code stops working at once. The code is shown once in this response and is never
+// stored readable; a replay of the same Idempotency-Key returns the link without a code (Proposal.Code is
+// not serialised). Anyone but the proposer is told the link does not exist.
+func (s *Service) ReissueInvitation(ctx context.Context, id ids.ID) (Proposal, error) {
+	tid, err := tenantOf(ctx)
+	if err != nil {
+		return Proposal{}, err
+	}
+	return run(ctx, s, func(ctx context.Context, tx repository.Tx) (Proposal, error) {
+		l, err := tx.GetLink(ctx, id, true)
+		if err != nil {
+			return Proposal{}, err
+		}
+		if l.ProposerID != tid {
+			return Proposal{}, model.ErrNotFound
+		}
+		now := s.clock.Now()
+		if l.Status != model.LinkProposed || Expired(l, now) {
+			return Proposal{}, model.ErrLinkNotProposed
+		}
+		code, err := s.newCode()
+		if err != nil {
+			return Proposal{}, err
+		}
+		if err := tx.ReissueInvite(ctx, id, hashCode(code), l.ExpiresAt, now); err != nil {
+			return Proposal{}, err
+		}
+		if err := s.activity(ctx, tx, l, model.SideProposer, "link.invitation_reissued", "", ""); err != nil {
+			return Proposal{}, err
+		}
+		return Proposal{Link: l, Code: code}, nil
+	})
+}
+
+// ReacceptLink lets the acceptor refresh its snapshot after counterparty_changed (N1 R3, never refreshed on
+// its own): a new snapshot of its details for the proposer to review, the acceptance and its grants stay
+// pending, and tenancy.link.accepted is published again. Only the acceptor, only while the link is accepted.
+func (s *Service) ReacceptLink(ctx context.Context, id ids.ID) (model.Link, error) {
+	tid, err := tenantOf(ctx)
+	if err != nil {
+		return model.Link{}, err
+	}
+	return run(ctx, s, func(ctx context.Context, tx repository.Tx) (model.Link, error) {
+		l, err := tx.GetLink(ctx, id, true)
+		if err != nil {
+			return l, err
+		}
+		if l.AcceptorID == "" || l.AcceptorID != tid {
+			return l, model.ErrNotFound
+		}
+		if l.Status != model.LinkAccepted || Expired(l, s.clock.Now()) {
+			return l, model.ErrLinkNotAccepted
+		}
+		party, err := s.snapshot(ctx, tx, l.AcceptorOutlets)
+		if err != nil {
+			return l, err
+		}
+		l.AcceptorParty = party
+		if err := tx.SaveLink(ctx, l); err != nil {
+			return l, err
+		}
+		if err := s.activity(ctx, tx, l, model.SideAcceptor, "link.accepted", "", ""); err != nil {
+			return l, err
 		}
 		return l, s.linkEvent(ctx, tx, "accepted", l, tid)
 	})

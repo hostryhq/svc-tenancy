@@ -40,8 +40,10 @@ func SpecPath(t testing.TB) string {
 }
 
 // Run executes the whole contract suite against base. seedWorld puts the target into an example world;
-// tk mints the credentials the target trusts. It returns the worlds the suite asked for, in order.
-func Run(t *testing.T, base string, tk *double.Tokens, seedWorld func(ctx context.Context, world string) error) []string {
+// tk mints the credentials the target trusts. grantNow is the instant the target's grant verifier judges
+// vendor approval grants at: the double's fixed clock (seed.At), or the wall clock for the real service, whose
+// token checks use the system clock. It returns the worlds the suite asked for, in order.
+func Run(t *testing.T, base string, tk *double.Tokens, seedWorld func(ctx context.Context, world string) error, grantNow func() time.Time) []string {
 	t.Helper()
 	var mu sync.Mutex
 	var current string
@@ -49,21 +51,39 @@ func Run(t *testing.T, base string, tk *double.Tokens, seedWorld func(ctx contex
 	world := func() string { mu.Lock(); defer mu.Unlock(); return current }
 	client := &http.Client{Timeout: 10 * time.Second, Transport: &double.ContractTransport{
 		Tenant: func() string { return tk.TenantToken(seed.WorldCaller(world())) },
-		Vendor: func() http.Header {
-			return tk.VendorHeaders("admin.org.read", "admin.org.create", "admin.registration.verify")
+		// The vendor user of the examples (the approver of lifecycle actions, the recorder of payments) holds
+		// every admin permission tenancy's vendor operations use.
+		Vendor: func() http.Header { return tk.VendorHeadersAs(double.ExampleApprover, double.AllVendorPerms...) },
+		// The spec's example grant is for one kind and one instant, so each lifecycle request gets a fresh grant.
+		Grant: func(method, path string) string {
+			if method != http.MethodPost {
+				return ""
+			}
+			var kind string
+			switch {
+			case strings.HasSuffix(path, "/suspension"):
+				kind = "org_suspend"
+			case strings.HasSuffix(path, "/reinstatement"):
+				kind = "org_reinstate"
+			case strings.HasSuffix(path, "/closure"):
+				kind = "org_close"
+			default:
+				return ""
+			}
+			org := strings.Split(strings.TrimPrefix(path, "/internal/v1/vendor/organisations/"), "/")[0]
+			return tk.MintGrant(double.GrantSpec{Kind: kind, Org: org, Now: grantNow()})
 		},
 		Svc: func(path string) http.Header {
 			if path == "/internal/v1/link-decisions" { // any registered service, acting for the invited party
 				return tk.ServiceHeaders("orders", seed.Restaurants)
 			}
+			if strings.HasPrefix(path, "/internal/v1/stream-owners/") || (strings.HasPrefix(path, "/internal/v1/outlets/") && strings.HasSuffix(path, "/manual-book-series")) || (strings.HasPrefix(path, "/internal/v1/devices/") && strings.HasSuffix(path, "/series")) {
+				return tk.ServiceHeaders("sync", seed.Org) // the gateway's directory questions (ADR-0005 A3.2 row 8)
+			}
 			return tk.ServiceHeaders("identity", seed.Org)
 		},
 	}}
 	contracttest.Run(t, contracttest.Options{SpecPath: SpecPath(t), BaseURL: base, Client: client,
-		// ADR-0003 N1 R1: a replay of proposeLink must not return the one-time invitation code, which the
-		// suite's byte-equal replay check cannot yet express (needs x-one-time-secret in api-specs).
-		// Covered by TestInvitationCodeIsNeverStoredAndAReplayWithholdsIt until the spec round lands.
-		Skip: map[string]string{"proposeLink": "replay withholds the one-time invitation code (ADR-0003 N1 R1); suite lacks x-one-time-secret support"},
 		SeedWorld: func(ctx context.Context, w string) error {
 			mu.Lock()
 			current = w

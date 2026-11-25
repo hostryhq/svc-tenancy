@@ -303,9 +303,10 @@ func (s *Service) RejectRegistration(ctx context.Context, orgID, regID ids.ID, r
 // item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed).
 // While an active outlet still bills under it the answer is 409 registration_in_use. Closing is terminal
 // and idempotent. Series are closed, not erased: their codes stay taken, so the GSTIN's allocator floor
-// survives a later registration of the same GSTIN. Tenancy keeps no record of a device's unreconciled
-// tail (sync does), so every open series closes as plain closed; closeDocumentSeriesUnreconciled marks
-// the ones the tenant knows never reconciled.
+// survives a later registration of the same GSTIN. Every open series closes as plain closed, "awaiting
+// device": tail_confirmed_at and last_number stay empty until billing.series.reconciled (ADR-0014 A2.5
+// item 2); closeDocumentSeriesUnreconciled is a person's decision. tenancy.series.closed is published for
+// each series closed.
 func (s *Service) CloseRegistration(ctx context.Context, id ids.ID, reason string) (model.Registration, error) {
 	if err := checkClosingReason(reason); err != nil {
 		return model.Registration{}, err
@@ -335,7 +336,11 @@ func (s *Service) CloseRegistration(ctx context.Context, id ids.ID, reason strin
 			after = outlets[len(outlets)-1].ID
 		}
 		now := s.clock.Now()
-		if _, err := tx.CloseRegistrationSeries(ctx, id, now); err != nil {
+		closedSeries, err := tx.CloseRegistrationSeries(ctx, id, now)
+		if err != nil {
+			return r, err
+		}
+		if err := s.publishSeriesClosed(ctx, tx, closedSeries, "registration_closed"); err != nil {
 			return r, err
 		}
 		r.Status, r.ClosedAt, r.ClosedReason = model.RegClosed, &now, strings.TrimSpace(reason)

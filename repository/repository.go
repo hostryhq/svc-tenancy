@@ -26,6 +26,13 @@ type Repository interface {
 	// InPlatformTx is InTx for a vendor route that names no organisation (createOrganisation): the
 	// audit row goes to the platform log, which has no tenant, in the same transaction.
 	InPlatformTx(ctx context.Context, fn func(ctx context.Context, tx Tx) error) error
+	// InPlatformOnlyTx is the transaction of a vendor route on platform data that belongs to no organisation
+	// (plans, Hostry's GST configuration, the ledger export): the platform audit row commits with the work.
+	// The tenant methods of Tx are not usable in it; idempotency records live under model.PlatformTenant.
+	InPlatformOnlyTx(ctx context.Context, fn func(ctx context.Context, tx Tx) error) error
+	// InPlatformReadTx is a read-only transaction on platform data for directory-class vendor reads
+	// (x-vendor-audit: none): no audit row, nothing is written.
+	InPlatformReadTx(ctx context.Context, fn func(ctx context.Context, tx Tx) error) error
 	// Directory reads the vendor directory through the separate tenancy_vendor role.
 	Directory() Directory
 	// Ping checks the database for readiness.
@@ -43,6 +50,12 @@ type Directory interface {
 	Holders(ctx context.Context, gstin string) ([]model.DirHolder, error)
 	// TenantIDs pages over all organisation ids (for per-tenant loops that set the context for each).
 	TenantIDs(ctx context.Context, after ids.ID, limit int) ([]ids.ID, error)
+	// LedgerList derives one staff work list from the directory ledger rows (no scheduled work, nothing is
+	// sent). today and the horizon dates are IST dates (YYYY-MM-DD). Rows are ordered by (due date, subject id)
+	// and continue after (afterDue, afterID).
+	LedgerList(ctx context.Context, kind string, today string, afterDue string, afterID ids.ID, limit int) ([]model.LedgerRow, error)
+	// LedgerExport returns charge rows whose due date lies in [from, to] ("" is open) for the CSV export.
+	LedgerExport(ctx context.Context, from, to string) ([]model.ExportRow, error)
 }
 
 // DirectoryFilter selects directory rows.
@@ -87,6 +100,9 @@ type Tx interface {
 	// ---- document-series registry ----
 	// SeriesForDevice returns the series of one device at one outlet (all statuses).
 	SeriesForDevice(ctx context.Context, outletID, deviceID ids.ID) ([]model.Series, error)
+	// SeriesByDevice returns every series ever issued to the device, in any outlet and any status (the sync
+	// gateway's directory question, ADR-0005 A3.2 row 8).
+	SeriesByDevice(ctx context.Context, deviceID ids.ID) ([]model.Series, error)
 	// ListSeries returns the series inside scope (outlet filter and status "" mean any).
 	ListSeries(ctx context.Context, scope auth.OutletScope, status string, after ids.ID, limit int) ([]model.Series, error)
 	GetSeries(ctx context.Context, id ids.ID) (model.Series, error)
@@ -96,8 +112,89 @@ type Tx interface {
 	// CloseDeviceSeries closes every dormant or active series of the device. It returns how many it
 	// closed and how many series the device has in total (0 means the device is unknown here).
 	CloseDeviceSeries(ctx context.Context, deviceID ids.ID, now time.Time) (closed, total int, err error)
-	// CloseRegistrationSeries closes every dormant or active series under the registration and returns how many.
-	CloseRegistrationSeries(ctx context.Context, registrationID ids.ID, now time.Time) (int, error)
+	// CloseRegistrationSeries closes every dormant or active series under the registration and returns them
+	// (as closed), for the tenancy.series.closed events.
+	CloseRegistrationSeries(ctx context.Context, registrationID ids.ID, now time.Time) ([]model.Series, error)
+	// CloseOutletSeries closes every dormant or active series of the outlet under the registration and returns them.
+	CloseOutletSeries(ctx context.Context, outletID, registrationID ids.ID, now time.Time) ([]model.Series, error)
+	// OpenSeriesIDs returns the ids of the outlet's dormant and active series.
+	OpenSeriesIDs(ctx context.Context, outletID ids.ID) ([]ids.ID, error)
+	// ConfirmTail fills tail_confirmed_at and last_number of a closed series that has none yet (the first
+	// statement wins). It returns false when the series is unknown here, open, or already confirmed.
+	ConfirmTail(ctx context.Context, seriesID ids.ID, at time.Time, last int) (bool, error)
+
+	// ---- manual bill books ----
+	// InsertManualBook returns model.ErrSeriesCodeInUse when the code is a device series code under the same
+	// GSTIN or another book's code under the registration.
+	InsertManualBook(ctx context.Context, b model.ManualBook) error
+	// ListManualBooks returns the books after the id, in id order.
+	ListManualBooks(ctx context.Context, after ids.ID, limit int) ([]model.ManualBook, error)
+
+	// ---- organisation status, lifecycle audit and the single-use grant record ----
+	// SetOrgStatus changes the organisation status and its directory row.
+	SetOrgStatus(ctx context.Context, status string, now time.Time) error
+	AppendLifecycle(ctx context.Context, e model.LifecycleEntry) error
+	// MarkGrantUsed records the vendor approval grant id as used in this transaction; false when the jti or the
+	// approval was used before (ADR-0014 A2.6 item 4; an approval executes once, ADR-0005 A3.4 item 1).
+	MarkGrantUsed(ctx context.Context, jti, approvalID, kind string, now time.Time) (first bool, err error)
+
+	// ---- trading state (fed by billing.trading_day.changed, ADR-0014 A1.2) ----
+	// UpsertTradingState keeps one row per outlet and source: the latest business date wins, and for one date
+	// the later change. It reports whether the stored row changed.
+	UpsertTradingState(ctx context.Context, s model.TradingState) (bool, error)
+	// OutletsInProgress counts the outlets (all, or only outletID when set) with a day open and dated from..to
+	// inclusive (IST dates, YYYY-MM-DD).
+	OutletsInProgress(ctx context.Context, from, to string, outletID ids.ID) (int, error)
+
+	// ---- plans and Hostry's GST configuration (platform data, readable in any transaction) ----
+	GetPlan(ctx context.Context, key string) (model.Plan, error)
+	// ListPlans returns plans in key order after the key (exclusive).
+	ListPlans(ctx context.Context, afterKey string, limit int) ([]model.Plan, error)
+	// InsertPlan stores a plan with its versions; model.ErrPlanExists when the key is taken.
+	InsertPlan(ctx context.Context, p model.Plan) error
+	InsertPlanVersion(ctx context.Context, v model.PlanVersion) error
+	UpdatePlanVersion(ctx context.Context, v model.PlanVersion) error
+	GetPlanVersion(ctx context.Context, key string, version int) (model.PlanVersion, error)
+	// NextPlanVersion locks the plan and returns the next version number (404 when the plan is unknown).
+	NextPlanVersion(ctx context.Context, key string) (int, error)
+	// InsertBillingConfig returns apperr conflict `effective_from_taken` when that date has a version.
+	InsertBillingConfig(ctx context.Context, c model.BillingConfig) error
+	// ListBillingConfigs returns versions newest first (effective_from, then id) after the id.
+	ListBillingConfigs(ctx context.Context, after ids.ID, limit int) ([]model.BillingConfig, error)
+	// BillingConfigFor returns the version with the latest effective_from not after date.
+	BillingConfigFor(ctx context.Context, date string) (model.BillingConfig, bool, error)
+
+	// ---- subscription, entitlements, charges and payments (tenant-owned, ADR-0008 S2) ----
+	CurrentSubscription(ctx context.Context) (model.Subscription, bool, error)
+	// SubscriptionHistory returns the superseded rows, newest first.
+	SubscriptionHistory(ctx context.Context) ([]model.Subscription, error)
+	InsertSubscription(ctx context.Context, s model.Subscription) error
+	UpdateSubscription(ctx context.Context, s model.Subscription) error
+	// ReplaceEntitlements sets the organisation's entitlement rows to the keys, in this transaction.
+	ReplaceEntitlements(ctx context.Context, subscriptionID ids.ID, keys []string, now time.Time) error
+	Entitlements(ctx context.Context) ([]string, error)
+	// EntitlementVersion is the version of the organisation's entitlement snapshot: 1 plus the plan changes and status changes so far.
+	EntitlementVersion(ctx context.Context) (int, error)
+	InsertCharge(ctx context.Context, c model.Charge) error
+	GetCharge(ctx context.Context, id ids.ID) (model.Charge, error)
+	UpdateCharge(ctx context.Context, c model.Charge) error
+	// ListCharges returns charges newest period first after the id, status "" meaning any stored status.
+	ListCharges(ctx context.Context, status string, after ids.ID, limit int) ([]model.Charge, error)
+	// LiveChargesOverlapping returns the period charges that are not cancelled and overlap [start, end].
+	LiveChargesOverlapping(ctx context.Context, start, end string) ([]model.Charge, error)
+	InsertPayment(ctx context.Context, p model.Payment) error
+	GetPayment(ctx context.Context, chargeID, id ids.ID) (model.Payment, error)
+	// ListPayments returns the rows of one charge, oldest first, after the id.
+	ListPayments(ctx context.Context, chargeID ids.ID, after ids.ID, limit int) ([]model.Payment, error)
+	// NetPaid returns the net paid amount per charge (payments less reversals).
+	NetPaid(ctx context.Context) (map[ids.ID]int64, error)
+	// AllPayments returns every payment row of the organisation, oldest first.
+	AllPayments(ctx context.Context) ([]model.Payment, error)
+	// CountPaymentRef counts original payments of the organisation with the same reference (a duplicate is
+	// a warning only, BR-A1-45).
+	CountPaymentRef(ctx context.Context, reference string) (int, error)
+	// CountOutlets counts the organisation's outlets (the basis of the soft outlet limit, A1-Q9).
+	CountOutlets(ctx context.Context) (int, error)
 	// NextCodeIndex locks and returns the registration's allocator position (0 when none yet).
 	NextCodeIndex(ctx context.Context, registrationID ids.ID) (int, error)
 	// SetCodeIndex stores the allocator position; it never moves backwards.
@@ -128,6 +225,8 @@ type Tx interface {
 	FindLinkByInvite(ctx context.Context, hash []byte) (ids.ID, error)
 	// UseInvite marks the invitation used; false when it was already used.
 	UseInvite(ctx context.Context, hash []byte, now time.Time) (bool, error)
+	// ReissueInvite invalidates the link's unused invitations and stores a new one (proposer only).
+	ReissueInvite(ctx context.Context, linkID ids.ID, hash []byte, expires, now time.Time) error
 	ListLinks(ctx context.Context, status string, after ids.ID, limit int) ([]model.Link, error)
 	SaveLink(ctx context.Context, l model.Link) error
 	InsertAmendment(ctx context.Context, a model.Amendment) error

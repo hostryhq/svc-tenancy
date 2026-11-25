@@ -7,6 +7,7 @@ package httpsuite
 import (
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/hostryhq/go-common/events"
 	"github.com/hostryhq/go-common/ids"
@@ -39,7 +40,17 @@ type Target struct {
 	CloseRegistration func(t testing.TB, tenant, registration ids.ID)
 	// LinksEnabled reports whether the link routes were registered.
 	LinksEnabled bool
+	// Deliver applies an event from another service (billing.trading_day.changed, billing.series.reconciled), as
+	// the bus consumer does.
+	Deliver func(t testing.TB, e events.Envelope)
+	// SetNow moves the clock of the service's entities (charge dates, "today" in IST).
+	SetNow func(t time.Time)
+	// Now is the instant the service's grant verifier judges grants at.
+	Now func() time.Time
 }
+
+// vendorUser is the subject of the vendor tokens the suites mint: a UUID, because payments and charges record it.
+const vendorUser = double.ExampleApprover
 
 // Factory starts a new Target; links says whether the link routes are on.
 type Factory func(t *testing.T, links bool) *Target
@@ -58,5 +69,5 @@ func (g *Target) Vendor(perms ...string) http.Header {
 	if len(perms) == 0 {
 		perms = []string{"admin.org.read", "admin.org.create", "admin.registration.verify"}
 	}
-	return g.VendorHeaders(perms...)
+	return g.VendorHeadersAs(vendorUser, perms...)
 }

@@ -11,7 +11,10 @@ import (
 
 // Organisation, outlet, registration and series states.
 const (
-	OrgTrial = "trial"
+	OrgTrial     = "trial"
+	OrgActive    = "active"
+	OrgSuspended = "suspended"
+	OrgClosed    = "closed"
 
 	OutletActive   = "active"
 	OutletInactive = "inactive"
@@ -134,6 +137,10 @@ type Series struct {
 	IssuedAt          time.Time
 	ClosedAt          *time.Time
 	ClosedReason      string
+	// TailConfirmedAt and LastNumber are filled from billing.series.reconciled (ADR-0014 A2.5 item 2): empty
+	// at closure, so a closed series without them reads "closed, awaiting device".
+	TailConfirmedAt *time.Time
+	LastNumber      *int
 }
 
 // Grant is one directional scope of a link. GrantorSide is the side that owns the data.
@@ -226,8 +233,10 @@ var (
 	ErrGSTINInUse    = apperr.New(apperr.Conflict, "gstin_in_use", "")
 	ErrRegUnverified = apperr.New(apperr.Conflict, "registration_unverified", "")
 	ErrSeriesCap     = apperr.New(apperr.RateLimited, "series_cap_reached", "")
-	ErrLinkState     = apperr.New(apperr.Conflict, "link_state_conflict", "")
-	ErrInviteInvalid = apperr.New(apperr.Conflict, "invitation_code_invalid", "")
+	// ErrCreditNoteRequired refuses an invoice series issued without its credit note pair (soak finding F5).
+	ErrCreditNoteRequired = apperr.New(apperr.Validation, "series.credit_note_required", "a billing device gets a credit_note series with its invoice series")
+	ErrLinkState          = apperr.New(apperr.Conflict, "link_state_conflict", "")
+	ErrInviteInvalid      = apperr.New(apperr.Conflict, "invitation_code_invalid", "")
 	// ErrCounterpartyChanged: the accepting organisation's declared details differ from the snapshot the
 	// proposer was shown (ADR-0003 N1 R3).
 	ErrCounterpartyChanged = apperr.New(apperr.Conflict, "counterparty_changed", "")

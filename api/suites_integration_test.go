@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hostryhq/go-common/events"
 	"github.com/hostryhq/go-common/ids"
@@ -36,6 +37,13 @@ func pgFactory(t *testing.T, links bool) *httpsuite.Target {
 				}
 			}
 		},
+		Deliver: func(t testing.TB, e events.Envelope) {
+			if err := s.App.Service.HandleEvent(context.Background(), e); err != nil {
+				t.Fatal(err)
+			}
+		},
+		SetNow: s.Clock.Set,
+		Now:    time.Now,
 		Events: func(t testing.TB) []events.Envelope {
 			rows, err := s.DB.Admin.QueryContext(context.Background(), `SELECT payload FROM outbox ORDER BY seq`)
 			if err != nil {
@@ -104,12 +112,19 @@ func pgFactory(t *testing.T, links bool) *httpsuite.Target {
 	}
 }
 
-func TestPostgresIsolation(t *testing.T)     { httpsuite.Isolation(t, pgFactory) }
-func TestPostgresOutletScope(t *testing.T)   { httpsuite.OutletScope(t, pgFactory) }
-func TestPostgresRealms(t *testing.T)        { httpsuite.Realms(t, pgFactory) }
-func TestPostgresLinksOff(t *testing.T)      { httpsuite.LinksOff(t, pgFactory) }
-func TestPostgresVendor(t *testing.T)        { httpsuite.Vendor(t, pgFactory) }
-func TestPostgresDirectory(t *testing.T)     { httpsuite.Directory(t, pgFactory) }
-func TestPostgresAudit(t *testing.T)         { httpsuite.Audit(t, pgFactory) }
-func TestPostgresLinks(t *testing.T)         { httpsuite.Links(t, pgFactory) }
-func TestPostgresRegistrations(t *testing.T) { httpsuite.Registrations(t, pgFactory) }
+func TestPostgresIsolation(t *testing.T)         { httpsuite.Isolation(t, pgFactory) }
+func TestPostgresOutletScope(t *testing.T)       { httpsuite.OutletScope(t, pgFactory) }
+func TestPostgresRealms(t *testing.T)            { httpsuite.Realms(t, pgFactory) }
+func TestPostgresLinksOff(t *testing.T)          { httpsuite.LinksOff(t, pgFactory) }
+func TestPostgresVendor(t *testing.T)            { httpsuite.Vendor(t, pgFactory) }
+func TestPostgresDirectory(t *testing.T)         { httpsuite.Directory(t, pgFactory) }
+func TestPostgresAudit(t *testing.T)             { httpsuite.Audit(t, pgFactory) }
+func TestPostgresLinks(t *testing.T)             { httpsuite.Links(t, pgFactory) }
+func TestPostgresRegistrations(t *testing.T)     { httpsuite.Registrations(t, pgFactory) }
+func TestPostgresCommercial(t *testing.T)        { httpsuite.Commercial(t, pgFactory) }
+func TestPostgresLifecycle(t *testing.T)         { httpsuite.Lifecycle(t, pgFactory) }
+func TestPostgresSeriesTail(t *testing.T)        { httpsuite.SeriesTail(t, pgFactory) }
+func TestPostgresBooks(t *testing.T)             { httpsuite.Books(t, pgFactory) }
+func TestPostgresGateway(t *testing.T)           { httpsuite.Gateway(t, pgFactory) }
+func TestPostgresLinksP2(t *testing.T)           { httpsuite.LinksP2(t, pgFactory) }
+func TestPostgresPhaseTwoIsolation(t *testing.T) { httpsuite.PhaseTwoIsolation(t, pgFactory) }

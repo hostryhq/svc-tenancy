@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/hostryhq/svc-tenancy/internal/auditsink"
 	"io"
 	"log/slog"
 	"net"
@@ -108,6 +109,10 @@ func badParam(w http.ResponseWriter, r *http.Request, err error) {
 		apperr.WriteProblem(w, r, idempotency.ErrKeyInvalid)
 		return
 	}
+	if errors.As(err, &req) && strings.EqualFold(req.ParamName, "Hostry-Vendor-Approval") {
+		apperr.WriteProblem(w, r, apperr.New(apperr.Forbidden, auth.CodeGrantRequired, "a vendor approval grant is required"))
+		return
+	}
 	var f apperr.FieldError
 	var inv *gen.InvalidParamFormatError
 	if errors.As(err, &inv) {
@@ -129,7 +134,7 @@ const maxBody = 1 << 20
 // begin prepares a mutating request: it decodes the body strictly into body (an unknown field, such as a
 // tenant id, is a 422), validates the Idempotency-Key and puts the idempotency identity on the context.
 func (s *Server) begin(w http.ResponseWriter, r *http.Request, op string, body any) (context.Context, bool) {
-	ctx := service.WithClientAddr(r.Context(), clientHost(r))
+	ctx := auditsink.WithApprovalNote(service.WithClientAddr(r.Context(), clientHost(r)))
 	var canonical []byte
 	if body != nil {
 		raw, err := io.ReadAll(http.MaxBytesReader(w, r.Body, maxBody))

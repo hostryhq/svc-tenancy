@@ -8,7 +8,9 @@ import (
 	"github.com/hostryhq/go-auth"
 	"github.com/hostryhq/go-common/clock"
 	"github.com/hostryhq/go-common/ids"
+	"github.com/hostryhq/go-common/tenancy"
 
+	tev "github.com/hostryhq/svc-tenancy/events"
 	"github.com/hostryhq/svc-tenancy/internal/model"
 	"github.com/hostryhq/svc-tenancy/repository"
 )
@@ -65,6 +67,15 @@ func (s *Service) IssueSeries(ctx context.Context, in IssueInput) ([]model.Serie
 			return nil, model.Invalid("doc_types", "invalid", "unknown or repeated document type")
 		}
 		seen[d] = true
+	}
+	// A billing device gets a pair in one transaction: its numbered invoice series and a credit_note series under
+	// the same registration (soak finding F5). A credit_note alone is accepted (the invoice series is already held).
+	if !seen["credit_note"] {
+		for d := range seen {
+			if d != "credit_note" {
+				return nil, model.ErrCreditNoteRequired
+			}
+		}
 	}
 	return run(ctx, s, func(ctx context.Context, tx repository.Tx) ([]model.Series, error) {
 		o, err := tx.GetOutlet(ctx, in.OutletID)
@@ -131,6 +142,9 @@ func (s *Service) IssueSeries(ctx context.Context, in IssueInput) ([]model.Serie
 					next += collisionJump
 				}
 				byType[d] = sr
+				if err := s.publishSeriesIssued(ctx, tx, sr); err != nil {
+					return nil, err
+				}
 			}
 			if err := tx.SetCodeIndex(ctx, reg.ID, next, now); err != nil {
 				return nil, err
@@ -230,13 +244,50 @@ func (s *Service) CloseSeriesUnreconciled(ctx context.Context, id ids.ID, reason
 		if sr.Status == model.SeriesClosedUnreconciled {
 			return sr, nil
 		}
+		// Offered only while no tail is confirmed: once a device stated its last number the series is
+		// reconciled, not abandoned (ADR-0014 A2.5 item 2).
+		if sr.TailConfirmedAt != nil {
+			return sr, model.ErrTailConfirmed
+		}
 		now := s.clock.Now()
 		sr.Status, sr.ClosedReason = model.SeriesClosedUnreconciled, reason
 		if sr.ClosedAt == nil {
 			sr.ClosedAt = &now
 		}
-		return sr, tx.UpdateSeries(ctx, sr)
+		if err := tx.UpdateSeries(ctx, sr); err != nil {
+			return sr, err
+		}
+		return sr, s.publishSeriesClosed(ctx, tx, []model.Series{sr}, "closed_unreconciled")
 	})
+}
+
+func seriesData(sr model.Series) tev.SeriesData {
+	return tev.SeriesData{SeriesID: sr.ID, Code: sr.Code, DocType: sr.DocType, TaxRegistrationID: sr.TaxRegistrationID, OutletID: sr.OutletID, DeviceID: sr.DeviceID}
+}
+
+// publishSeriesIssued tells billing which codes to expect (ids and codes only).
+func (s *Service) publishSeriesIssued(ctx context.Context, tx repository.Tx, sr model.Series) error {
+	tid, err := tenantOf(ctx)
+	if err != nil {
+		return err
+	}
+	return s.publish(ctx, tx, tev.SeriesIssued(s.newID(), s.clock.Now(), actor(ctx), tid, seriesData(sr)))
+}
+
+// publishSeriesClosed publishes tenancy.series.closed for each series with its cause.
+func (s *Service) publishSeriesClosed(ctx context.Context, tx repository.Tx, rows []model.Series, cause string) error {
+	tid, err := tenantOf(ctx)
+	if err != nil {
+		return err
+	}
+	for _, sr := range rows {
+		d := seriesData(sr)
+		d.Cause = cause
+		if err := s.publish(ctx, tx, tev.SeriesClosed(s.newID(), s.clock.Now(), actor(ctx), tid, d)); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // AdvanceAllocatorsAfterRestore moves every registration's allocator forward by 200 x (whole days in
@@ -265,4 +316,51 @@ func (s *Service) AdvanceAllocatorsAfterRestore(ctx context.Context, lostDays in
 		}
 		after = batch[len(batch)-1]
 	}
+}
+
+// ListDeviceSeries answers the sync gateway's directory question (ADR-0005 A3.2 row 8): every series ever
+// issued to the device in the token's tenant, closed ones included, in issue order. By device, not by code:
+// a code is unique per tax registration and an organisation may hold several. A device the tenant never
+// issued a series (a kds or a hub) gets an empty list; another tenant's device looks the same.
+func (s *Service) ListDeviceSeries(ctx context.Context, deviceID ids.ID) ([]model.Series, error) {
+	if err := validID("device_id", deviceID); err != nil {
+		return nil, err
+	}
+	return run(ctx, s, func(ctx context.Context, tx repository.Tx) ([]model.Series, error) {
+		return tx.SeriesByDevice(ctx, deviceID)
+	})
+}
+
+// StreamOwner is the answer to getStreamOwner.
+type StreamOwner struct {
+	StreamID       ids.ID
+	Kind           string // outlet or brand
+	OrganisationID ids.ID
+	BrandID        ids.ID
+}
+
+// GetStreamOwner says whether an outlet or brand id belongs to the token's tenant (ADR-0005 A3.2 row 8). An id
+// that does not exist, or belongs to another tenant, is 404.
+func (s *Service) GetStreamOwner(ctx context.Context, streamID ids.ID) (StreamOwner, error) {
+	if err := validID("stream_id", streamID); err != nil {
+		return StreamOwner{}, err
+	}
+	return run(ctx, s, func(ctx context.Context, tx repository.Tx) (StreamOwner, error) {
+		var tid ids.ID
+		if tc, ok := tenancy.From(ctx); ok {
+			tid = tc.TenantID
+		}
+		b, err := tx.GetBrand(ctx, streamID)
+		if err == nil {
+			return StreamOwner{StreamID: b.ID, Kind: "brand", OrganisationID: tid, BrandID: b.ID}, nil
+		}
+		if !errors.Is(err, model.ErrNotFound) {
+			return StreamOwner{}, err
+		}
+		o, err := tx.GetOutlet(ctx, streamID)
+		if err != nil {
+			return StreamOwner{}, err
+		}
+		return StreamOwner{StreamID: o.ID, Kind: "outlet", OrganisationID: tid, BrandID: o.BrandID}, nil
+	})
 }

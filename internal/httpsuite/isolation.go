@@ -109,7 +109,7 @@ func Isolation(t *testing.T, mk Factory) {
 	t.Run("internal operations bound to the tenant named by the service token", func(t *testing.T) {
 		// Identity names tenant B but the outlet and the device are tenant A's.
 		h := g.ServiceHeaders("identity", b.Org)
-		r := g.Call(t, "POST", "/internal/v1/document-series-issuances", h, obj{"outlet_id": a.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"})
+		r := g.Call(t, "POST", "/internal/v1/document-series-issuances", h, obj{"outlet_id": a.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"})
 		want(t, r, 404, "not_found")
 		r = g.Call(t, "PUT", "/internal/v1/devices/"+a.Device.String()+"/series-closure", h, obj{"reason": "revoked"})
 		want(t, r, 404, "not_found")
@@ -239,7 +239,7 @@ func OutletScope(t *testing.T, mk Factory) {
 	x, y := w.Outlet.String(), w.OutletY.String()
 	// A second series, at outlet Y, so each outlet has one.
 	r := g.Call(t, "POST", "/internal/v1/document-series-issuances", g.ServiceHeaders("identity", w.Org),
-		obj{"outlet_id": y, "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"})
+		obj{"outlet_id": y, "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"})
 	want(t, r, 201, "")
 	seriesY := r.JSON(t)["items"].([]any)[0].(obj)["id"].(string)
 
@@ -260,7 +260,7 @@ func OutletScope(t *testing.T, mk Factory) {
 	if got := itemIDs(t, g.Call(t, "GET", "/v1/outlets", orgWide, nil)); !contains(got, x) || !contains(got, y) {
 		t.Fatalf("an organisation-wide member sees both outlets: %v", got)
 	}
-	if got := itemIDs(t, g.Call(t, "GET", "/v1/document-series?outlet_id="+y, orgWide, nil)); len(got) != 1 || got[0] != seriesY {
+	if got := itemIDs(t, g.Call(t, "GET", "/v1/document-series?outlet_id="+y, orgWide, nil)); len(got) != 2 || !contains(got, seriesY) {
 		t.Fatalf("filter for an organisation-wide member: %v", got)
 	}
 	want(t, g.Call(t, "PUT", "/v1/document-series/"+seriesY+"/closure", orgWide, obj{"reason": "Device stolen and never reconnected."}), 200, "")

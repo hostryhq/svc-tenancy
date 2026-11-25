@@ -87,6 +87,41 @@ func (r *Repo) InPlatformTx(ctx context.Context, fn func(ctx context.Context, tx
 	})
 }
 
+// InPlatformOnlyTx implements repository.Repository: a vendor route on platform data (plans, GST
+// configuration, ledger export). The platform audit row commits with the work. The database context is the
+// reserved platform tenant, under which only idempotency records live; tenant tables see no row.
+func (r *Repo) InPlatformOnlyTx(ctx context.Context, fn func(ctx context.Context, tx repository.Tx) error) error {
+	return auth.WithPlatformAuditedTx(ctx, r.app, func(ctx context.Context, tx *sql.Tx) error {
+		if err := tenancy.SetDBContext(ctx, tx, model.PlatformTenant); err != nil {
+			return err
+		}
+		return fn(ctx, &pgTx{tx: tx, t: model.PlatformTenant})
+	})
+}
+
+// InPlatformReadTx implements repository.Repository: a read-only transaction on platform data, with no audit
+// row (directory-class reads record nothing).
+func (r *Repo) InPlatformReadTx(ctx context.Context, fn func(ctx context.Context, tx repository.Tx) error) error {
+	tx, err := r.app.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback() }()
+	if err := fn(ctx, &pgTx{tx: tx, t: model.PlatformTenant}); err != nil {
+		return err
+	}
+	return tx.Commit()
+}
+
+// Adopt wraps a transaction opened by someone else (the event inbox, which commits its dedupe row with
+// the handler's effect) as a tenant-scoped Tx: the tenant context is applied to it first.
+func (r *Repo) Adopt(ctx context.Context, tx *sql.Tx, tenant ids.ID) (repository.Tx, error) {
+	if err := tenancy.SetDBContext(ctx, tx, tenant); err != nil {
+		return nil, err
+	}
+	return &pgTx{tx: tx, t: tenant}, nil
+}
+
 // Ping implements repository.Repository.
 func (r *Repo) Ping(ctx context.Context) error {
 	if err := r.app.PingContext(ctx); err != nil {
@@ -328,7 +363,7 @@ func (x *pgTx) ListOutlets(ctx context.Context, scope auth.OutletScope, kind str
 }
 
 func (x *pgTx) UpdateOutlet(ctx context.Context, o model.Outlet) error {
-	res, err := x.tx.ExecContext(ctx, `UPDATE outlets SET name = $3, status = $4 WHERE tenant_id = $1 AND outlet_id = $2`, x.t, o.ID, o.Name, o.Status)
+	res, err := x.tx.ExecContext(ctx, `UPDATE outlets SET name = $3, status = $4, tax_registration_id = $5 WHERE tenant_id = $1 AND outlet_id = $2`, x.t, o.ID, o.Name, o.Status, o.TaxRegistrationID)
 	if err != nil {
 		return err
 	}
@@ -424,14 +459,20 @@ func (x *pgTx) UpdateRegistration(ctx context.Context, r model.Registration) err
 
 // ---- document-series registry ----
 
-const seriesCols = `id, tax_registration_id, gstin_normalised, code, code_index, doc_type, outlet_id, device_id, status, issued_at, closed_at, closed_reason`
+const seriesCols = `id, tax_registration_id, gstin_normalised, code, code_index, doc_type, outlet_id, device_id, status, issued_at, closed_at, closed_reason, tail_confirmed_at, last_number`
 
 func scanSeries(row interface{ Scan(...any) error }) (model.Series, error) {
 	var s model.Series
 	var g, cr sql.NullString
-	var ca sql.NullTime
-	err := row.Scan(&s.ID, &s.TaxRegistrationID, &g, &s.Code, &s.CodeIndex, &s.DocType, &s.OutletID, &s.DeviceID, &s.Status, &s.IssuedAt, &ca, &cr)
+	var ca, tc sql.NullTime
+	var ln sql.NullInt64
+	err := row.Scan(&s.ID, &s.TaxRegistrationID, &g, &s.Code, &s.CodeIndex, &s.DocType, &s.OutletID, &s.DeviceID, &s.Status, &s.IssuedAt, &ca, &cr, &tc, &ln)
 	s.GSTIN, s.ClosedReason, s.ClosedAt, s.IssuedAt = g.String, cr.String, nullTime(ca), utc(s.IssuedAt)
+	s.TailConfirmedAt = nullTime(tc)
+	if ln.Valid {
+		n := int(ln.Int64)
+		s.LastNumber = &n
+	}
 	return s, err
 }
 
@@ -455,6 +496,11 @@ func (x *pgTx) SeriesForDevice(ctx context.Context, outletID, deviceID ids.ID) (
 	return scanSeriesRows(x.tx.QueryContext(ctx, `SELECT `+seriesCols+` FROM document_series WHERE tenant_id = $1 AND outlet_id = $2 AND device_id = $3 ORDER BY id`, x.t, outletID, deviceID))
 }
 
+func (x *pgTx) SeriesByDevice(ctx context.Context, deviceID ids.ID) ([]model.Series, error) {
+	//scopelint:internal the gateway directory is addressed by device id; the device belongs to the tenant of the service token
+	return scanSeriesRows(x.tx.QueryContext(ctx, `SELECT `+seriesCols+` FROM document_series WHERE tenant_id = $1 AND device_id = $2 ORDER BY issued_at, id`, x.t, deviceID))
+}
+
 func (x *pgTx) ListSeries(ctx context.Context, scope auth.OutletScope, status string, after ids.ID, limit int) ([]model.Series, error) {
 	return scanSeriesRows(x.tx.QueryContext(ctx, `SELECT `+seriesCols+` FROM document_series
 		WHERE tenant_id = $1 AND id > $2::uuid AND ($3::text = '' OR status = $3)
@@ -470,6 +516,15 @@ func (x *pgTx) GetSeries(ctx context.Context, id ids.ID) (model.Series, error) {
 // InsertSeries uses a savepoint so a refused code (unique index) leaves the transaction usable and the
 // allocator can jump and retry.
 func (x *pgTx) InsertSeries(ctx context.Context, s model.Series) error {
+	// A registered bill book owns its code under the registration (A1.6 item 4): the allocator skips it.
+	var booked bool
+	if err := x.tx.QueryRowContext(ctx, `SELECT EXISTS (SELECT 1 FROM manual_book_series WHERE tenant_id = $1 AND tax_registration_id = $2 AND code = $3)`,
+		x.t, s.TaxRegistrationID, s.Code).Scan(&booked); err != nil {
+		return err
+	}
+	if booked {
+		return model.ErrSeriesCollision
+	}
 	if _, err := x.tx.ExecContext(ctx, `SAVEPOINT series_insert`); err != nil {
 		return err
 	}
@@ -508,14 +563,41 @@ func (x *pgTx) CloseDeviceSeries(ctx context.Context, deviceID ids.ID, now time.
 	return int(closed), total, err
 }
 
-func (x *pgTx) CloseRegistrationSeries(ctx context.Context, regID ids.ID, now time.Time) (int, error) {
+func (x *pgTx) CloseRegistrationSeries(ctx context.Context, regID ids.ID, now time.Time) ([]model.Series, error) {
 	//scopelint:internal closing a registration closes every outlet's series under it; the registration belongs to the tenant
-	res, err := x.tx.ExecContext(ctx, `UPDATE document_series SET status = 'closed', closed_at = $3 WHERE tenant_id = $1 AND tax_registration_id = $2 AND status IN ('dormant', 'active')`, x.t, regID, now)
+	return scanSeriesRows(x.tx.QueryContext(ctx, `UPDATE document_series SET status = 'closed', closed_at = $3 WHERE tenant_id = $1 AND tax_registration_id = $2 AND status IN ('dormant', 'active') RETURNING `+seriesCols, x.t, regID, now))
+}
+
+func (x *pgTx) CloseOutletSeries(ctx context.Context, outletID, regID ids.ID, now time.Time) ([]model.Series, error) {
+	return scanSeriesRows(x.tx.QueryContext(ctx, `UPDATE document_series SET status = 'closed', closed_at = $4 WHERE tenant_id = $1 AND outlet_id = $2 AND tax_registration_id = $3 AND status IN ('dormant', 'active') RETURNING `+seriesCols, x.t, outletID, regID, now))
+}
+
+func (x *pgTx) OpenSeriesIDs(ctx context.Context, outletID ids.ID) ([]ids.ID, error) {
+	rows, err := x.tx.QueryContext(ctx, `SELECT id FROM document_series WHERE tenant_id = $1 AND outlet_id = $2 AND status IN ('dormant', 'active') ORDER BY id`, x.t, outletID)
 	if err != nil {
-		return 0, err
+		return nil, err
+	}
+	defer func() { _ = rows.Close() }()
+	var out []ids.ID
+	for rows.Next() {
+		var id ids.ID
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		out = append(out, id)
+	}
+	return out, rows.Err()
+}
+
+func (x *pgTx) ConfirmTail(ctx context.Context, id ids.ID, at time.Time, last int) (bool, error) {
+	//scopelint:internal billing's reconciliation event addresses the series by id; it is the registry's own bookkeeping
+	res, err := x.tx.ExecContext(ctx, `UPDATE document_series SET tail_confirmed_at = $3, last_number = $4
+		WHERE tenant_id = $1 AND id = $2 AND status IN ('closed', 'closed_unreconciled') AND tail_confirmed_at IS NULL`, x.t, id, at, last)
+	if err != nil {
+		return false, err
 	}
 	n, _ := res.RowsAffected()
-	return int(n), nil
+	return n == 1, nil
 }
 
 func (x *pgTx) NextCodeIndex(ctx context.Context, reg ids.ID) (int, error) {

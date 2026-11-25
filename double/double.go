@@ -40,6 +40,10 @@ type Config struct {
 	IDs *ids.Generator
 	// LinksEnabled registers the link routes (default true in the double).
 	LinksOff bool
+	// GrantKeys are the public keys of the vendor approval grants the double accepts (identity's vendor-realm
+	// key set). Without them the lifecycle operations refuse every grant, as the real service does when
+	// unconfigured. Grants are checked against Clock, so tests mint them at the double's instant.
+	GrantKeys auth.KeySet
 }
 
 // Fault is an injected failure for matching requests.
@@ -57,6 +61,30 @@ type Double struct {
 	h     http.Handler
 	mu    sync.Mutex
 	fault []Fault
+	seen  map[ids.ID]bool
+	mc    *movableClock
+	clk   clock.Clock
+}
+
+// movableClock is the double's default clock: the instant of the spec examples, moved by SeedWorld when a world
+// is set on another day (the overdue world is on 2026-12-11).
+type movableClock struct {
+	mu sync.Mutex
+	t  time.Time
+}
+
+func (m *movableClock) Now() time.Time { m.mu.Lock(); defer m.mu.Unlock(); return m.t }
+
+func (m *movableClock) set(t time.Time) { m.mu.Lock(); m.t = t; m.mu.Unlock() }
+
+// Now is the instant of the double's clock.
+func (d *Double) Now() time.Time { return d.clk.Now() }
+
+// SetNow moves the double's own clock (a no-op when the double was given a clock of its own).
+func (d *Double) SetNow(t time.Time) {
+	if d.mc != nil {
+		d.mc.set(t)
+	}
 }
 
 // New builds a double. The store is empty; call SeedExampleWorld to match the spec examples.
@@ -65,17 +93,23 @@ func New(cfg Config) (*Double, error) {
 	if err != nil {
 		return nil, err
 	}
+	var mc *movableClock
 	if cfg.Clock == nil {
-		cfg.Clock = clock.Func(func() time.Time { return seed.At })
+		mc = &movableClock{t: seed.At}
+		cfg.Clock = mc
 	}
 	if cfg.IDs == nil {
 		cfg.IDs = ids.NewGenerator(cfg.Clock.Now, &counter{})
 	}
 	store := mem.New(cfg.IDs)
-	svc := service.New(store, service.Options{Clock: cfg.Clock, IDs: cfg.IDs, Log: slog.New(slog.DiscardHandler)})
+	var grants *auth.GrantVerifier
+	if cfg.GrantKeys != nil {
+		grants = &auth.GrantVerifier{Keys: cfg.GrantKeys, Issuer: GrantIssuer, Audience: "tenancy", Clock: cfg.Clock}
+	}
+	svc := service.New(store, service.Options{Clock: cfg.Clock, IDs: cfg.IDs, Log: slog.New(slog.DiscardHandler), Grants: grants})
 	guard := &auth.Guard{Catalogue: cat, Tenant: cfg.Tenant, Vendor: cfg.Vendor, Services: cfg.Services, Audit: store, PlatformAudit: store,
 		Approvals: &auth.ApprovalChecker{Verifier: cfg.Tenant, Used: auth.NewMemorySingleUse(nil)}, Log: slog.New(slog.DiscardHandler)}
-	d := &Double{Store: store, Svc: svc}
+	d := &Double{Store: store, Svc: svc, mc: mc, clk: cfg.Clock}
 	d.h = api.New(api.Config{Service: svc, Guard: guard, Clock: cfg.Clock, Log: slog.New(slog.DiscardHandler), LinksEnabled: !cfg.LinksOff})
 	return d, nil
 }
@@ -98,7 +132,27 @@ func (d *Double) SeedExampleWorld(ctx context.Context) error { return seed.Examp
 // assume. It is the SeedWorld hook of the shared contract suite.
 func (d *Double) SeedWorld(ctx context.Context, world string) error {
 	d.Store.Reset()
+	d.mu.Lock()
+	d.seen = nil
+	d.mu.Unlock()
+	d.SetNow(seed.WorldInstant(world))
 	return seed.ApplyWorld(ctx, d.Store, world)
+}
+
+// Deliver applies an event from another service to the double, as the bus consumer does for the real
+// service (billing.trading_day.changed and billing.series.reconciled). A repeated event id is ignored.
+func (d *Double) Deliver(ctx context.Context, e events.Envelope) error {
+	d.mu.Lock()
+	if d.seen == nil {
+		d.seen = map[ids.ID]bool{}
+	}
+	dup := d.seen[e.ID]
+	d.seen[e.ID] = true
+	d.mu.Unlock()
+	if dup {
+		return nil
+	}
+	return d.Svc.HandleEvent(ctx, e)
 }
 
 // Events returns the events the double published to its outbox.

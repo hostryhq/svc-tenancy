@@ -139,7 +139,7 @@ func TestVerifiedRegistrationIsFixed(t *testing.T) {
 
 func issue(f *fixture, tenant, outlet, device ids.ID, state string, types ...string) ([]model.Series, error) {
 	if len(types) == 0 {
-		types = []string{"tax_invoice"}
+		types = []string{"tax_invoice", "credit_note"}
 	}
 	return f.svc.IssueSeries(system(tenant), service.IssueInput{OutletID: outlet, DeviceID: device, DocTypes: types, State: state})
 }
@@ -166,7 +166,7 @@ func TestIssueSeriesNeedsAVerifiedRegistration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if rows, err := issue(f, seed.Example.Org, stall.ID, f.newID(), "active"); err != nil || len(rows) != 1 || rows[0].GSTIN != "" {
+	if rows, err := issue(f, seed.Example.Org, stall.ID, f.newID(), "active"); err != nil || len(rows) != 2 || rows[0].GSTIN != "" {
 		t.Fatalf("unregistered issuance: %v %v", rows, err)
 	}
 }
@@ -182,7 +182,7 @@ func TestIssueSeriesIsPerRegistrationAndRepeatable(t *testing.T) {
 	if err != nil || marshal(t, a) != marshal(t, again) {
 		t.Fatalf("a repeat for the same device and outlet must return the same codes: %v %v", again, err)
 	}
-	b, err := issue(f, seed.Example.Org, seed.Outlet, d2, "active", "tax_invoice")
+	b, err := issue(f, seed.Example.Org, seed.Outlet, d2, "active", "tax_invoice", "credit_note")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -216,7 +216,7 @@ func TestIssueSeriesIsBoundByTenant(t *testing.T) {
 
 func TestIssueSeriesDailyCapPerRegistration(t *testing.T) {
 	f := newFixture(t)
-	for i := 0; i < service.DailyCap-1; i++ { // the seeded series was issued on the same IST day
+	for i := 0; i < (service.DailyCap-2)/2; i++ { // a pair is two codes; the seeded series was issued on the same IST day
 		if _, err := issue(f, seed.Example.Org, seed.Outlet, f.newID(), "active"); err != nil {
 			t.Fatalf("code %d: %v", i+1, err)
 		}
@@ -237,7 +237,7 @@ func TestDeviceSeriesClosureAndReissue(t *testing.T) {
 	if err != nil || n != 2 {
 		t.Fatalf("closed %d, %v", n, err)
 	}
-	again, err := issue(f, seed.Example.Org, seed.Outlet, d, "active", "tax_invoice")
+	again, err := issue(f, seed.Example.Org, seed.Outlet, d, "active", "tax_invoice", "credit_note")
 	if err != nil || again[0].Code == first[0].Code || again[0].Code == first[1].Code {
 		t.Fatalf("re-activation must get new codes: %v %v", again, err)
 	}
@@ -262,7 +262,7 @@ func TestCloseSeriesUnreconciledNeedsReasonAndKeepsRecord(t *testing.T) {
 	_, _ = issue(f, seed.Example.Org, seed.Outlet, d, "active")
 	_, _ = f.svc.CloseDeviceSeries(system(seed.Example.Org), d, "revoked")
 	rows, _ := f.svc.ListSeries(ctx, "", "closed", "", 50)
-	if len(rows.Items) != 1 {
+	if len(rows.Items) != 2 {
 		t.Fatalf("closed series: %v", rows.Items)
 	}
 	if got, err := f.svc.CloseSeriesUnreconciled(ctx, rows.Items[0].ID, "Revoked device never uploaded its tail."); err != nil || got.Status != "closed_unreconciled" {

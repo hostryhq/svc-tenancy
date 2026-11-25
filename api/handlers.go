@@ -155,7 +155,12 @@ func (s *Server) UpdateOutlet(w http.ResponseWriter, r *http.Request, outletID g
 		v := string(*in.Status)
 		status = &v
 	}
-	o, err := s.svc.UpdateOutlet(ctx, id, in.Name, status)
+	var brand *ids.ID
+	if in.BrandId != nil {
+		b := ids.ID(*in.BrandId)
+		brand = &b
+	}
+	o, err := s.svc.UpdateOutlet(ctx, id, in.Name, status, brand)
 	s.reply(w, r, http.StatusOK, outletDTO(o), err)
 }
 
@@ -328,7 +333,7 @@ func (s *Server) ProposeLink(w http.ResponseWriter, r *http.Request, _ gen.Propo
 		return
 	}
 	p, err := s.svc.ProposeLink(ctx, service.ProposeInput{ID: ids.ID(in.Id), Template: string(in.Template), Grants: grantsIn(in.Grants), OutletIDs: toIDs(in.OutletIds)})
-	s.reply(w, r, http.StatusCreated, gen.LinkProposal{Link: linkDTO(p.Link, viewer(r), s.clk.Now()), InvitationCode: p.Code}, err)
+	s.reply(w, r, http.StatusCreated, proposalDTO(p, viewer(r), s.clk.Now()), err)
 }
 
 func (s *Server) GetLink(w http.ResponseWriter, r *http.Request, linkID gen.Id) {
@@ -577,4 +582,31 @@ func otherSide(side string) string {
 		return model.SideAcceptor
 	}
 	return model.SideProposer
+}
+
+func (s *Server) ListDeviceSeries(w http.ResponseWriter, r *http.Request, deviceID gen.Id) {
+	id, ok := s.pathID(w, r, deviceID)
+	if !ok {
+		return
+	}
+	rows, err := s.svc.ListDeviceSeries(r.Context(), id)
+	out := gen.SeriesIssuance{Items: []gen.DocumentSeries{}}
+	for _, x := range rows {
+		out.Items = append(out.Items, seriesDTO(x))
+	}
+	s.reply(w, r, http.StatusOK, out, err)
+}
+
+func (s *Server) GetStreamOwner(w http.ResponseWriter, r *http.Request, streamID gen.Id) {
+	id, ok := s.pathID(w, r, streamID)
+	if !ok {
+		return
+	}
+	o, err := s.svc.GetStreamOwner(r.Context(), id)
+	out := gen.StreamOwner{StreamId: o.StreamID.String(), Kind: gen.StreamOwnerKind(o.Kind), OrganisationId: o.OrganisationID.String()}
+	if o.BrandID != "" {
+		b := o.BrandID.String()
+		out.BrandId = &b
+	}
+	s.reply(w, r, http.StatusOK, out, err)
 }

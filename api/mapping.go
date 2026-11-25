@@ -51,7 +51,8 @@ func regDTO(r model.Registration) gen.TaxRegistration {
 
 func seriesDTO(s model.Series) gen.DocumentSeries {
 	return gen.DocumentSeries{Id: s.ID.String(), TaxRegistrationId: s.TaxRegistrationID.String(), Code: s.Code, DocType: gen.DocType(s.DocType),
-		OutletId: s.OutletID.String(), DeviceId: s.DeviceID.String(), Status: gen.DocumentSeriesStatus(s.Status), IssuedAt: s.IssuedAt, ClosedAt: s.ClosedAt}
+		OutletId: s.OutletID.String(), DeviceId: s.DeviceID.String(), Status: gen.DocumentSeriesStatus(s.Status), IssuedAt: s.IssuedAt, ClosedAt: s.ClosedAt,
+		TailConfirmedAt: s.TailConfirmedAt, LastNumber: s.LastNumber}
 }
 
 func idStrings(in []ids.ID) *[]string {

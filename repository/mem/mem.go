@@ -64,13 +64,14 @@ type state struct {
 	outbox   []events.Envelope
 	vlog     []VendorLogEntry
 	plog     []VendorLogEntry // platform_vendor_access_log: rows that concern no organisation
+	com      *commercial      // Phase 2: plans, ledger, trading state, lifecycle
 }
 
 func newState() *state {
 	return &state{orgs: map[ids.ID]model.Org{}, settings: map[ids.ID]model.Settings{}, brands: map[key]model.Brand{},
 		outlets: map[key]model.Outlet{}, regs: map[key]model.Registration{}, series: map[key]model.Series{},
 		alloc: map[key]int{}, idem: map[idemKey]idemVal{}, keySeq: map[key]int64{}, links: map[ids.ID]model.Link{},
-		invites: map[string]*invite{}, amends: map[key]model.Amendment{}}
+		invites: map[string]*invite{}, amends: map[key]model.Amendment{}, com: newCommercial()}
 }
 
 func cloneLink(l model.Link) model.Link {
@@ -129,6 +130,7 @@ func (s *state) clone() *state {
 	c.outbox = append([]events.Envelope(nil), s.outbox...)
 	c.vlog = append([]VendorLogEntry(nil), s.vlog...)
 	c.plog = append([]VendorLogEntry(nil), s.plog...)
+	c.com = s.com.clone()
 	return c
 }
 
@@ -208,13 +210,13 @@ func (s *Store) FailAuditWrites(fail bool) {
 }
 
 // RecordInTx writes the log row and its outbox event into the running transaction.
-func (s *Store) RecordInTx(_ context.Context, _ tenancy.Execer, e auth.VendorAccessEntry) error {
+func (s *Store) RecordInTx(ctx context.Context, _ tenancy.Execer, e auth.VendorAccessEntry) error {
 	if s.failAudit {
 		return errAuditDown
 	}
 	tid := ids.ID(e.TenantID)
 	s.pending.vlog = append(s.pending.vlog, VendorLogEntry{keyed(e)})
-	return s.pending.publish(tid, tev.VendorAccessRecorded(e.ID, e.Time, tid, vendorData(e)))
+	return s.pending.publish(tid, tev.VendorAccessRecorded(e.ID, e.Time, tid, withApproval(ctx, vendorData(e))))
 }
 
 // RecordRefused records a refused request in a transaction of its own.
@@ -237,6 +239,12 @@ func keyed(e auth.VendorAccessEntry) auth.VendorAccessEntry {
 	}
 	e.ActionKey = auditsink.ActionKey(e.ActionKey, tt)
 	return e
+}
+
+func withApproval(ctx context.Context, d tev.VendorAccess) tev.VendorAccess {
+	ap := auditsink.ApprovalFrom(ctx)
+	d.ApprovalID, d.GrantJTI = ap.ApprovalID, ap.GrantJTI
+	return d
 }
 
 func vendorData(e auth.VendorAccessEntry) tev.VendorAccess {
@@ -290,13 +298,17 @@ func (s *Store) InPlatformTx(ctx context.Context, fn func(ctx context.Context, t
 	if err != nil {
 		return err
 	}
+	return s.platformTx(ctx, tc.TenantID, fn)
+}
+
+func (s *Store) platformTx(ctx context.Context, tenant ids.ID, fn func(ctx context.Context, tx repository.Tx) error) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	work := s.st.clone()
 	s.pending = work
 	defer func() { s.pending = nil }()
 	if err := auth.WithPlatformAuditedTx(ctx, s.db, func(c context.Context, _ *sql.Tx) error {
-		return fn(c, &tx{st: work, t: tc.TenantID})
+		return fn(c, &tx{st: work, t: tenant})
 	}); err != nil {
 		return err
 	}
@@ -601,6 +613,17 @@ func (x *tx) SeriesForDevice(_ context.Context, outletID, deviceID ids.ID) ([]mo
 	return out, nil
 }
 
+func (x *tx) SeriesByDevice(_ context.Context, deviceID ids.ID) ([]model.Series, error) {
+	var out []model.Series
+	for k, s := range x.st.series {
+		if k.t == x.t && s.DeviceID == deviceID {
+			out = append(out, s)
+		}
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].ID < out[j].ID })
+	return out, nil
+}
+
 func (x *tx) ListSeries(_ context.Context, scope auth.OutletScope, status string, after ids.ID, limit int) ([]model.Series, error) {
 	var out []model.Series
 	for k, s := range x.st.series {
@@ -624,6 +647,11 @@ func (x *tx) GetSeries(_ context.Context, id ids.ID) (model.Series, error) {
 }
 
 func (x *tx) InsertSeries(_ context.Context, s model.Series) error {
+	for k, b := range x.st.com.books {
+		if k.t == x.t && b.TaxRegistrationID == s.TaxRegistrationID && b.Code == s.Code {
+			return model.ErrSeriesCollision // a registered bill book owns the code
+		}
+	}
 	for k, e := range x.st.series {
 		if e.Code != s.Code {
 			continue
@@ -660,15 +688,16 @@ func (x *tx) CloseDeviceSeries(_ context.Context, deviceID ids.ID, now time.Time
 	return closed, total, nil
 }
 
-func (x *tx) CloseRegistrationSeries(_ context.Context, regID ids.ID, now time.Time) (int, error) {
-	closed := 0
+func (x *tx) CloseRegistrationSeries(_ context.Context, regID ids.ID, now time.Time) ([]model.Series, error) {
+	var closed []model.Series
 	for k, s := range x.st.series {
 		if k.t == x.t && s.TaxRegistrationID == regID && (s.Status == model.SeriesActive || s.Status == model.SeriesDormant) {
 			s.Status, s.ClosedAt = model.SeriesClosed, &now
 			x.st.series[k] = s
-			closed++
+			closed = append(closed, s)
 		}
 	}
+	sort.Slice(closed, func(i, j int) bool { return closed[i].ID < closed[j].ID })
 	return closed, nil
 }
 

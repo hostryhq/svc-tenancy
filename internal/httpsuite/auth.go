@@ -39,7 +39,7 @@ func Realms(t *testing.T, mk Factory) {
 			t.Run(tc.name, func(t *testing.T) {
 				var body any
 				if tc.method == "POST" {
-					body = obj{"outlet_id": a.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"}
+					body = obj{"outlet_id": a.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"}
 				}
 				want(t, g.Call(t, tc.method, tc.path, tc.h, body), 401, "auth.invalid_token")
 			})
@@ -47,7 +47,7 @@ func Realms(t *testing.T, mk Factory) {
 	})
 
 	t.Run("internal operations accept only the callers they declare", func(t *testing.T) {
-		issue := obj{"outlet_id": a.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"}
+		issue := obj{"outlet_id": a.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"}
 		want(t, g.Call(t, "POST", "/internal/v1/document-series-issuances", g.ServiceHeaders("admin", a.Org), issue), 403, "auth.caller_not_allowed")
 		want(t, g.Call(t, "POST", "/internal/v1/document-series-issuances", g.ServiceHeaders("identity", a.Org), issue), 201, "")
 		// admin is the only caller of the vendor operations; a vendor token with identity's service token is refused.

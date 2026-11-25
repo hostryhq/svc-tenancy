@@ -242,7 +242,7 @@ func (s *Service) CreateOrganisation(ctx context.Context, in CreateOrgInput) (Or
 			if err := s.publish(c, tx, tev.OrganisationCreated(s.newID(), now, p.VendorUser(), tid, out.Org.Status)); err != nil {
 				return err
 			}
-			return s.publish(c, tx, outletEvent(s, "tenancy.outlet.created", c, tid, out.Outlet))
+			return s.publishOutlet(c, tx, "tenancy.outlet.created", tid, out.Outlet)
 		})
 		if errors.Is(err, model.ErrCreateKeyTaken) {
 			continue // a concurrent request with the same key won; the next pass replays it
