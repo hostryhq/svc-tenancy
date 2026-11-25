@@ -4,7 +4,7 @@ go 1.27
 
 require (
 	github.com/getkin/kin-openapi v0.153.0
-	github.com/hostryhq/api-specs v0.0.0-20261125052600-2bb76e08872c
+	github.com/hostryhq/api-specs v0.0.0-20261125053238-6e63014a4ed7
 	github.com/hostryhq/go-auth v0.0.0-20261125030157-94f1970efd79
 	github.com/hostryhq/go-common v0.0.0-20261125032613-92884d6c83f8
 	github.com/jackc/pgx/v5 v5.13.0

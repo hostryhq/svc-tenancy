@@ -4465,7 +4465,7 @@ type ClientInterface interface {
 
 	// RegisterManualBookSeriesWithBody Register a paper bill book as an entry-only series
 	//
-	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (`manual_books`), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -4474,7 +4474,7 @@ type ClientInterface interface {
 
 	// RegisterManualBookSeries Register a paper bill book as an entry-only series
 	//
-	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (`manual_books`), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -6156,7 +6156,7 @@ func (c *Client) ListManualBookSeries(ctx context.Context, params *ListManualBoo
 
 // RegisterManualBookSeriesWithBody Register a paper bill book as an entry-only series
 //
-// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (`manual_books`), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 //
 // Takes any type of body and a specified content type.
 //
@@ -6175,7 +6175,7 @@ func (c *Client) RegisterManualBookSeriesWithBody(ctx context.Context, params *R
 
 // RegisterManualBookSeries Register a paper bill book as an entry-only series
 //
-// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (`manual_books`), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 //
 // Takes a body of the `application/json` content type.
 //
@@ -11962,7 +11962,7 @@ type ClientWithResponsesInterface interface {
 
 	// RegisterManualBookSeriesWithBodyWithResponse Register a paper bill book as an entry-only series
 	//
-	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (`manual_books`), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -11971,7 +11971,7 @@ type ClientWithResponsesInterface interface {
 
 	// RegisterManualBookSeriesWithResponse Register a paper bill book as an entry-only series
 	//
-	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (`manual_books`), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -18408,7 +18408,7 @@ func (c *ClientWithResponses) ListManualBookSeriesWithResponse(ctx context.Conte
 
 // RegisterManualBookSeriesWithBodyWithResponse Register a paper bill book as an entry-only series
 //
-// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (`manual_books`), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -18423,7 +18423,7 @@ func (c *ClientWithResponses) RegisterManualBookSeriesWithBodyWithResponse(ctx c
 
 // RegisterManualBookSeriesWithResponse Register a paper bill book as an entry-only series
 //
-// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (`manual_books`), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
