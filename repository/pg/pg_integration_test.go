@@ -222,6 +222,9 @@ func TestSchemaAndRoleLint(t *testing.T) {
 		"links": "two-party", "link_grants": "two-party", "link_amendments": "two-party", "link_activity": "two-party", "link_invitations": "two-party",
 		// vendor realm (directory tables; two policies)
 		"directory_organisations": "vendor-realm", "directory_registrations": "vendor-realm",
+		// platform class: vendor actions that concern no organisation (ADR-0013 V5 item 3). No tenant column and
+		// no row-level security by design; checked below for append-only grants and for holding no tenant data.
+		"platform_vendor_access_log": "platform",
 		// migrator-only bookkeeping
 		"schema_migrations": "migrator-only",
 	}
@@ -261,7 +264,7 @@ func TestSchemaAndRoleLint(t *testing.T) {
 			}
 		case !listed:
 			t.Errorf("table %s has no tenant_id and is not on the reviewed allowlist", x.name)
-		case class != "migrator-only" && (!x.rls || !x.force):
+		case class != "migrator-only" && class != "platform" && (!x.rls || !x.force):
 			t.Errorf("%s (%s): row-level security must be enabled and forced", x.name, class)
 		}
 	}
@@ -317,7 +320,7 @@ func TestSchemaAndRoleLint(t *testing.T) {
 	if g := grants(pgtest.App); strings.Contains(g, "DELETE") || strings.Contains(g, "TRUNCATE") {
 		t.Errorf("tenancy_app must have no DELETE: %s", g)
 	}
-	for _, appendOnly := range []string{"link_activity", "vendor_access_log", "outbox"} {
+	for _, appendOnly := range []string{"link_activity", "vendor_access_log", "outbox", "platform_vendor_access_log"} {
 		for _, p := range []string{"UPDATE", "DELETE"} {
 			if strings.Contains(grants(pgtest.App), appendOnly+":"+p) {
 				t.Errorf("tenancy_app can %s %s, which is append-only for it", p, appendOnly)
@@ -429,7 +432,7 @@ func TestTwoPartyAndDirectoryPolicies(t *testing.T) {
 // TST-23, AD5: link_activity and vendor_access_log are append-only for the application role.
 func TestAppendOnlyTables(t *testing.T) {
 	s := stack(t)
-	for _, tbl := range []string{"link_activity", "vendor_access_log", "outbox"} {
+	for _, tbl := range []string{"link_activity", "vendor_access_log", "outbox", "platform_vendor_access_log"} {
 		for _, stmt := range []string{`UPDATE ` + tbl + ` SET id = id`, `DELETE FROM ` + tbl} {
 			inTx(t, s.DB.App, tenantA, func(tx *sql.Tx) {
 				if _, err := tx.ExecContext(ctx, stmt); err == nil || !strings.Contains(err.Error(), "permission denied") {

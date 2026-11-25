@@ -2,11 +2,13 @@
 
 Every operationId of `api-specs/openapi/tenancy/v1/openapi.yaml` (commit recorded in `internal/gen/SPEC_VERSION`).
 Status is **implemented** in the service (`api` -> `service` -> `repository/pg`), in the test double (`double/`, same API and
-service over `repository/mem`) and covered by the shared contract suite (`contracttest`) or, where the stateless example
-suite cannot drive an operation, by a named scenario suite. **Not yet implemented: none.**
+service over `repository/mem`) and covered by the shared contract suite (`contracttest`) in the example world the spec declares for it
+(`SeedWorld`, `internal/seed/worlds.go`), on the real service and the double, with no operation skipped.
+**Not yet implemented: none.**
 
-Contract column: `C` = example-driven suite (both real service and double); `L` = link lifecycle scenario suite
-(`internal/httpsuite/links.go`, every response validated against the OpenAPI document, real service and double).
+Contract column: `C` = example-driven suite in the operation's example world (both real service and double); `L` = link
+lifecycle scenario suite (`internal/httpsuite/links.go`, every response validated against the OpenAPI document, real
+service and double), which goes beyond the single-state examples.
 
 | operationId | Method and path | Permission or caller | Status | Contract | Notes |
 |---|---|---|---|---|---|
@@ -22,8 +24,9 @@ Contract column: `C` = example-driven suite (both real service and double); `L` 
 | listTaxRegistrations | GET /v1/tax-registrations | tax_registration.read | implemented | C | |
 | createTaxRegistration | POST /v1/tax-registrations | tax_registration.manage (step-up) | implemented | C | GSTIN format, check character, state; neutral when another organisation holds the GSTIN |
 | getTaxRegistration | GET /v1/tax-registrations/{registration_id} | tax_registration.read | implemented | C | |
-| updateTaxRegistration | PATCH /v1/tax-registrations/{registration_id} | tax_registration.manage (step-up) | implemented | C | 409 `registration_fixed` once verified (a no-op still succeeds) |
-| listStates | GET /v1/states | authenticated | implemented | C | static reference table (`internal/states`) |
+| updateTaxRegistration | PATCH /v1/tax-registrations/{registration_id} | tax_registration.manage (step-up) | implemented | C | 409 `registration_fixed` once verified or closed (a no-op still succeeds) |
+| closeTaxRegistration | PUT /v1/tax-registrations/{registration_id}/closure | tax_registration.manage (step-up) | implemented | C | closes the registration and its dormant/active series; 409 `registration_in_use` while an active outlet references it; terminal, idempotent, no event; reason kept on the row, not in the body |
+| listStates | GET /v1/states | authenticated (go-auth `Authenticated`) | implemented | C | static reference table (`internal/states`) |
 | getOrganisationSettings | GET /v1/organisation-settings | settings.read | implemented | C | |
 | updateOrganisationSettings | PUT /v1/organisation-settings | settings.manage | implemented | C | publishes `tenancy.organisation.updated` (settings) only on change |
 | listDocumentSeries | GET /v1/document-series | series.read | implemented | C | outlet scoped; filter intersected with scope |
@@ -43,26 +46,28 @@ Contract column: `C` = example-driven suite (both real service and double); `L` 
 | listLinkActivity | GET /v1/links/{link_id}/activity | link.read | implemented (flag) | L | append-only |
 | issueDocumentSeries | POST /internal/v1/document-series-issuances | caller: identity | implemented | C | verified registration only; 200 per IST day; collision jump |
 | closeDeviceSeries | PUT /internal/v1/devices/{device_id}/series-closure | caller: identity | implemented | C | |
-| getLinkDecision | GET /internal/v1/link-decisions | caller: any service | implemented (flag) | L | `x-service-callers: ["*"]` expands to the configured service list |
+| getLinkDecision | GET /internal/v1/link-decisions | caller: any service (`auth.AnyCaller`) | implemented (flag) | C, L | service token only |
 | listOrganisationDirectory | GET /internal/v1/vendor/organisations | vendor admin.org.read, caller: admin | implemented | C | `tenancy_vendor` role; no audit row |
-| createOrganisation | POST /internal/v1/vendor/organisations | vendor admin.org.create, caller: admin | implemented | C (own pass) | one transaction; idempotent on the vendor's key |
+| createOrganisation | POST /internal/v1/vendor/organisations | vendor admin.org.create, caller: admin | implemented | C | one transaction; idempotent on the vendor's key; organisation-less route: audit row goes to `platform_vendor_access_log` (go-auth `PlatformAudit`, `WithPlatformAuditedTx`), also for a refused request |
 | getOrganisationDirectoryEntry | GET /internal/v1/vendor/organisations/{organisation_id} | vendor admin.org.read, caller: admin | implemented | C | ordinary role under that organisation's context |
-| verifyTaxRegistration | PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/verification | vendor admin.registration.verify, caller: admin | implemented | C | 409 `gstin_in_use`; allocator floor for a returning GSTIN |
+| verifyTaxRegistration | PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/verification | vendor admin.registration.verify, caller: admin | implemented | C | 409 `gstin_in_use`; allocator floor for a returning GSTIN; a rejected registration can be verified |
+| rejectTaxRegistration | PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection | vendor admin.registration.verify, caller: admin | implemented | C | only while unverified (409 `registration_verified` / `registration_closed`); idempotent; reason kept on the row, not in the body |
 
-38 of 38 operations implemented.
+40 of 40 operations implemented.
 
-## Not in the contract yet (reported to api-specs)
+## Known limits
 
-- A way to **reject** a registration (ADR-0003 A1.1 item 4, AC-TEN-20): the schema allows `rejected` and the database holds it,
-  but no operation sets it.
-- A way to **close** a registration and its series when a verified GSTIN has to change (A1.1 item 6).
-- `x-service-callers: ["*"]`, `x-permission: authenticated` and ULID ids are not representable in go-auth / the row-level
-  policy as written; see the report of this work package.
+- `closeTaxRegistration` closes every dormant or active series as plain `closed`. The spec asks for the unreconciled
+  marker on a series with an unreconciled tail, but tenancy keeps no record of a device's tail (sync does); the tenant
+  marks such series with `closeDocumentSeriesUnreconciled`. Needs a rule from the architect if tenancy must decide.
+- `createOrganisation` writes its audit row to the platform log (no tenant), so the new organisation's own
+  `vendor_access_log` starts empty; the platform row names the new organisation as its target.
 
-## Contract suite skips
+## Contract suite
 
-The example-driven suite is stateless and sends each operation once from the spec examples. It runs in two passes (the example
-world, and an empty platform for `createOrganisation`, whose example GSTIN is verified in the example world). The 13 link
-lifecycle operations other than `listLinks` are skipped there with a reason: their examples show one link id in six states and
-one invitation code, so no single seeded state satisfies them. `internal/httpsuite/links.go` covers each of them over HTTP
-against both the real service and the double, validating every response against the OpenAPI document.
+One run of `contracttest` per target (`double/contract_test.go`, `api/contract_integration_test.go`), 40 operations plus
+the unknown-route check, nothing skipped. Before each operation the harness calls `SeedWorld` with the operation's
+`x-example-world`; `double.SeedWorld` / `itest.Stack.SeedWorld` empty the store and load the world through the repository
+(`internal/seed/worlds.go`), and the suite authenticates as the world's caller (organisation 4a63 in the worlds where the
+caller is the invited party). `ExpectExamples` is not set: response ids and instants minted by the service (grant ids,
+activity ids, issue times) are not the spec's literal values; the response schemas are validated instead.

@@ -47,6 +47,17 @@ func factory(t *testing.T, links bool) *httpsuite.Target {
 			}
 			return out
 		},
+		PlatformAuditLog: func(testing.TB) []httpsuite.AuditRow {
+			var out []httpsuite.AuditRow
+			for _, r := range env.Store.PlatformLog() {
+				tt := "vendor"
+				if r.TokenType == "support" {
+					tt = "support"
+				}
+				out = append(out, httpsuite.AuditRow{ActionKey: r.ActionKey, Outcome: r.Outcome, TargetID: r.TargetID, TokenType: tt})
+			}
+			return out
+		},
 		SetAuditWritable: func(_ testing.TB, ok bool) { env.Store.FailAuditWrites(!ok) },
 		CloseRegistration: func(t testing.TB, tenant, reg ids.ID) {
 			ctx := tenancy.With(context.Background(), tenancy.Context{TenantID: tenant})
@@ -65,11 +76,12 @@ func factory(t *testing.T, links bool) *httpsuite.Target {
 	}
 }
 
-func TestDoubleIsolation(t *testing.T)   { httpsuite.Isolation(t, factory) }
-func TestDoubleOutletScope(t *testing.T) { httpsuite.OutletScope(t, factory) }
-func TestDoubleRealms(t *testing.T)      { httpsuite.Realms(t, factory) }
-func TestDoubleLinksOff(t *testing.T)    { httpsuite.LinksOff(t, factory) }
-func TestDoubleVendor(t *testing.T)      { httpsuite.Vendor(t, factory) }
-func TestDoubleDirectory(t *testing.T)   { httpsuite.Directory(t, factory) }
-func TestDoubleAudit(t *testing.T)       { httpsuite.Audit(t, factory) }
-func TestDoubleLinks(t *testing.T)       { httpsuite.Links(t, factory) }
+func TestDoubleIsolation(t *testing.T)     { httpsuite.Isolation(t, factory) }
+func TestDoubleOutletScope(t *testing.T)   { httpsuite.OutletScope(t, factory) }
+func TestDoubleRealms(t *testing.T)        { httpsuite.Realms(t, factory) }
+func TestDoubleLinksOff(t *testing.T)      { httpsuite.LinksOff(t, factory) }
+func TestDoubleVendor(t *testing.T)        { httpsuite.Vendor(t, factory) }
+func TestDoubleDirectory(t *testing.T)     { httpsuite.Directory(t, factory) }
+func TestDoubleAudit(t *testing.T)         { httpsuite.Audit(t, factory) }
+func TestDoubleLinks(t *testing.T)         { httpsuite.Links(t, factory) }
+func TestDoubleRegistrations(t *testing.T) { httpsuite.Registrations(t, factory) }

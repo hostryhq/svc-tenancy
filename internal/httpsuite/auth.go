@@ -102,6 +102,7 @@ func Realms(t *testing.T, mk Factory) {
 		}{
 			{"create registration", "POST", "/v1/tax-registrations", reg},
 			{"update registration", "PATCH", "/v1/tax-registrations/" + a.Registration.String(), obj{"legal_name": "Z"}},
+			{"close registration", "PUT", "/v1/tax-registrations/" + a.Registration.String() + "/closure", obj{"reason": "Moved to a new GSTIN."}},
 			{"propose link", "POST", "/v1/links", obj{"id": ids.New().String(), "template": "supplier_buyer", "grants": []obj{{"scope": "test.echo.read", "direction": "outbound"}}}},
 			{"accept link", "POST", "/v1/link-acceptances", obj{"invitation_code": "7QK3M9XD7QK3M9XD"}},
 			{"confirm link", "PUT", "/v1/links/" + ids.New().String() + "/confirmation", obj{"counterparty_organisation_id": seed.Other.Org.String()}},

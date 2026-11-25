@@ -31,9 +31,11 @@ type Target struct {
 	Events func(t testing.TB) []events.Envelope
 	// AuditLog returns the vendor_access_log rows of an organisation.
 	AuditLog func(t testing.TB, tenant ids.ID) []AuditRow
+	// PlatformAuditLog returns the platform_vendor_access_log rows: vendor actions that name no organisation.
+	PlatformAuditLog func(t testing.TB) []AuditRow
 	// SetAuditWritable makes the vendor access log writable or not, to prove fail-closed behaviour.
 	SetAuditWritable func(t testing.TB, ok bool)
-	// CloseRegistration closes a registration (no API does yet), to model a GSTIN that comes back.
+	// CloseRegistration closes a registration directly in the store, to model a GSTIN that comes back.
 	CloseRegistration func(t testing.TB, tenant, registration ids.ID)
 	// LinksEnabled reports whether the link routes were registered.
 	LinksEnabled bool

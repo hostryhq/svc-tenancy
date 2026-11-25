@@ -81,6 +81,7 @@ func Isolation(t *testing.T, mk Factory) {
 			{"update outlet", "PATCH", "/v1/outlets/" + a.Outlet.String(), obj{"name": "Hijacked"}},
 			{"get registration", "GET", "/v1/tax-registrations/" + a.Registration.String(), nil},
 			{"update registration", "PATCH", "/v1/tax-registrations/" + a.Registration.String(), obj{"legal_name": "Hijacked"}},
+			{"close registration", "PUT", "/v1/tax-registrations/" + a.Registration.String() + "/closure", reason},
 			{"close series", "PUT", series, reason},
 			{"get link", "GET", "/v1/links/" + linkID, nil},
 			{"link activity", "GET", "/v1/links/" + linkID + "/activity", nil},

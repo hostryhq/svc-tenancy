@@ -72,11 +72,29 @@ func pgFactory(t *testing.T, links bool) *httpsuite.Target {
 			}
 			return out
 		},
+		PlatformAuditLog: func(t testing.TB) []httpsuite.AuditRow {
+			rows, err := s.DB.Admin.QueryContext(context.Background(), `SELECT action_key, outcome, COALESCE(target_id, ''), token_type FROM platform_vendor_access_log ORDER BY occurred_at, id`)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer func() { _ = rows.Close() }()
+			var out []httpsuite.AuditRow
+			for rows.Next() {
+				var r httpsuite.AuditRow
+				if err := rows.Scan(&r.ActionKey, &r.Outcome, &r.TargetID, &r.TokenType); err != nil {
+					t.Fatal(err)
+				}
+				out = append(out, r)
+			}
+			return out
+		},
 		SetAuditWritable: func(t testing.TB, ok bool) {
-			if ok {
-				exec(t, `GRANT INSERT ON vendor_access_log TO tenancy_app`)
-			} else {
-				exec(t, `REVOKE INSERT ON vendor_access_log FROM tenancy_app`)
+			for _, tbl := range []string{"vendor_access_log", "platform_vendor_access_log"} {
+				if ok {
+					exec(t, `GRANT INSERT ON `+tbl+` TO tenancy_app`)
+				} else {
+					exec(t, `REVOKE INSERT ON `+tbl+` FROM tenancy_app`)
+				}
 			}
 		},
 		CloseRegistration: func(t testing.TB, tenant, reg ids.ID) {
@@ -86,11 +104,12 @@ func pgFactory(t *testing.T, links bool) *httpsuite.Target {
 	}
 }
 
-func TestPostgresIsolation(t *testing.T)   { httpsuite.Isolation(t, pgFactory) }
-func TestPostgresOutletScope(t *testing.T) { httpsuite.OutletScope(t, pgFactory) }
-func TestPostgresRealms(t *testing.T)      { httpsuite.Realms(t, pgFactory) }
-func TestPostgresLinksOff(t *testing.T)    { httpsuite.LinksOff(t, pgFactory) }
-func TestPostgresVendor(t *testing.T)      { httpsuite.Vendor(t, pgFactory) }
-func TestPostgresDirectory(t *testing.T)   { httpsuite.Directory(t, pgFactory) }
-func TestPostgresAudit(t *testing.T)       { httpsuite.Audit(t, pgFactory) }
-func TestPostgresLinks(t *testing.T)       { httpsuite.Links(t, pgFactory) }
+func TestPostgresIsolation(t *testing.T)     { httpsuite.Isolation(t, pgFactory) }
+func TestPostgresOutletScope(t *testing.T)   { httpsuite.OutletScope(t, pgFactory) }
+func TestPostgresRealms(t *testing.T)        { httpsuite.Realms(t, pgFactory) }
+func TestPostgresLinksOff(t *testing.T)      { httpsuite.LinksOff(t, pgFactory) }
+func TestPostgresVendor(t *testing.T)        { httpsuite.Vendor(t, pgFactory) }
+func TestPostgresDirectory(t *testing.T)     { httpsuite.Directory(t, pgFactory) }
+func TestPostgresAudit(t *testing.T)         { httpsuite.Audit(t, pgFactory) }
+func TestPostgresLinks(t *testing.T)         { httpsuite.Links(t, pgFactory) }
+func TestPostgresRegistrations(t *testing.T) { httpsuite.Registrations(t, pgFactory) }

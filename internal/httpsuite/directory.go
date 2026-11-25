@@ -168,19 +168,38 @@ func Audit(t *testing.T, mk Factory) {
 		r := g.Call(t, "POST", "/internal/v1/vendor/organisations", g.Vendor(), orgBody("Audited Foods", MakeGSTIN("33", 200)))
 		want(t, r, 201, "")
 		c := parseCreated(t, r)
-		rows := g.AuditLog(t, c.Org)
-		if len(rows) != 1 || rows[0].ActionKey != "vendor.organisation.created" || rows[0].Outcome != "ok" || rows[0].TargetID != c.Org.String() {
-			t.Fatalf("creation rows: %+v", rows)
+		// createOrganisation names no organisation in its path, so its one row goes to the platform log
+		// (no tenant), naming the new organisation as target; the organisation's own log starts empty.
+		if rows := g.AuditLog(t, c.Org); len(rows) != 0 {
+			t.Fatalf("creation wrote a tenant row: %+v", rows)
 		}
+		prows := g.PlatformAuditLog(t)
+		if last := prows[len(prows)-1]; last.ActionKey != "vendor.organisation.created" || last.Outcome != "ok" || last.TargetID != c.Org.String() || last.TokenType != "vendor" {
+			t.Fatalf("platform rows: %+v", prows)
+		}
+		rows := g.AuditLog(t, c.Org)
 		path := "/internal/v1/vendor/organisations/" + c.Org.String() + "/tax-registrations/" + c.Reg.String() + "/verification"
 		want(t, g.Call(t, "PUT", path, g.Vendor(), obj{"method": "other"}), 422, "validation") // handler error: no row
-		if n := len(g.AuditLog(t, c.Org)); n != 1 {
+		if n := len(g.AuditLog(t, c.Org)); n != 0 {
 			t.Fatalf("a failed action must leave no row, rows: %d", n)
 		}
 		want(t, g.Call(t, "PUT", path, g.Vendor(), obj{"method": "certificate_seen"}), 200, "")
 		rows = g.AuditLog(t, c.Org)
-		if len(rows) != 2 || rows[1].ActionKey != "vendor.registration.verified" || rows[1].TargetID != c.Reg.String() {
+		if len(rows) != 1 || rows[0].ActionKey != "vendor.registration.verified" || rows[0].TargetID != c.Reg.String() {
 			t.Fatalf("verification rows: %+v", rows)
+		}
+	})
+
+	t.Run("a refused organisation-less vendor request is recorded in the platform log, not dropped", func(t *testing.T) {
+		before := len(g.PlatformAuditLog(t))
+		// A vendor user without admin.org.create is refused by the guard before any organisation exists.
+		want(t, g.Call(t, "POST", "/internal/v1/vendor/organisations", g.Vendor("admin.org.read"), orgBody("Refused Foods", MakeGSTIN("33", 202))), 403, "")
+		rows := g.PlatformAuditLog(t)
+		if len(rows) != before+1 || rows[before].Outcome != "refused" || rows[before].ActionKey != "vendor.organisation.created" {
+			t.Fatalf("platform rows: %+v", rows)
+		}
+		if got := directory(t, g, "?q=Refused"); len(got) != 0 {
+			t.Fatalf("a refused creation left an organisation: %v", got)
 		}
 	})
 
