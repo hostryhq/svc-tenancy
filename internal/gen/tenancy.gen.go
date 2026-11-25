@@ -17,7 +17,50 @@ import (
 	"time"
 
 	"github.com/oapi-codegen/runtime"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
+
+// Defines values for ChargeKind.
+const (
+	ChargeKindExtra  ChargeKind = "extra"
+	ChargeKindPeriod ChargeKind = "period"
+)
+
+// Valid indicates whether the value is a known member of the ChargeKind enum.
+func (e ChargeKind) Valid() bool {
+	switch e {
+	case ChargeKindExtra:
+		return true
+	case ChargeKindPeriod:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ChargeStatus.
+const (
+	ChargeStatusCancelled ChargeStatus = "cancelled"
+	ChargeStatusOpen      ChargeStatus = "open"
+	ChargeStatusPaid      ChargeStatus = "paid"
+	ChargeStatusWaived    ChargeStatus = "waived"
+)
+
+// Valid indicates whether the value is a known member of the ChargeStatus enum.
+func (e ChargeStatus) Valid() bool {
+	switch e {
+	case ChargeStatusCancelled:
+		return true
+	case ChargeStatusOpen:
+		return true
+	case ChargeStatusPaid:
+		return true
+	case ChargeStatusWaived:
+		return true
+	default:
+		return false
+	}
+}
 
 // Defines values for CloseDeviceSeriesReason.
 const (
@@ -37,6 +80,27 @@ func (e CloseDeviceSeriesReason) Valid() bool {
 	case CloseDeviceSeriesReasonRestored:
 		return true
 	case CloseDeviceSeriesReasonRevoked:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for Cycle.
+const (
+	Annual  Cycle = "annual"
+	Monthly Cycle = "monthly"
+	None    Cycle = "none"
+)
+
+// Valid indicates whether the value is a known member of the Cycle enum.
+func (e Cycle) Valid() bool {
+	switch e {
+	case Annual:
+		return true
+	case Monthly:
+		return true
+	case None:
 		return true
 	default:
 		return false
@@ -178,6 +242,36 @@ func (e IssueSeriesState) Valid() bool {
 	case IssueSeriesStateActive:
 		return true
 	case IssueSeriesStateDormant:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for LedgerListKind.
+const (
+	ChargesToRaise                 LedgerListKind = "charges_to_raise"
+	ChargesWithoutInvoiceReference LedgerListKind = "charges_without_invoice_reference"
+	OutletsOverLimit               LedgerListKind = "outlets_over_limit"
+	OverdueCharges                 LedgerListKind = "overdue_charges"
+	PilotsEnding                   LedgerListKind = "pilots_ending"
+	RetiredVersionSubscriptions    LedgerListKind = "retired_version_subscriptions"
+)
+
+// Valid indicates whether the value is a known member of the LedgerListKind enum.
+func (e LedgerListKind) Valid() bool {
+	switch e {
+	case ChargesToRaise:
+		return true
+	case ChargesWithoutInvoiceReference:
+		return true
+	case OutletsOverLimit:
+		return true
+	case OverdueCharges:
+		return true
+	case PilotsEnding:
+		return true
+	case RetiredVersionSubscriptions:
 		return true
 	default:
 		return false
@@ -379,6 +473,39 @@ func (e LinkTemplate) Valid() bool {
 	}
 }
 
+// Defines values for ManualBookSeriesStatus.
+const (
+	ManualBookSeriesStatusActive ManualBookSeriesStatus = "active"
+	ManualBookSeriesStatusClosed ManualBookSeriesStatus = "closed"
+)
+
+// Valid indicates whether the value is a known member of the ManualBookSeriesStatus enum.
+func (e ManualBookSeriesStatus) Valid() bool {
+	switch e {
+	case ManualBookSeriesStatusActive:
+		return true
+	case ManualBookSeriesStatusClosed:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for MoneyCurrency.
+const (
+	INR MoneyCurrency = "INR"
+)
+
+// Valid indicates whether the value is a known member of the MoneyCurrency enum.
+func (e MoneyCurrency) Valid() bool {
+	switch e {
+	case INR:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for OrganisationStatus.
 const (
 	OrganisationStatusActive    OrganisationStatus = "active"
@@ -466,6 +593,90 @@ func (e OutletStatus) Valid() bool {
 	}
 }
 
+// Defines values for PaymentMethod.
+const (
+	BankTransfer PaymentMethod = "bank_transfer"
+	Cash         PaymentMethod = "cash"
+	Cheque       PaymentMethod = "cheque"
+	Upi          PaymentMethod = "upi"
+)
+
+// Valid indicates whether the value is a known member of the PaymentMethod enum.
+func (e PaymentMethod) Valid() bool {
+	switch e {
+	case BankTransfer:
+		return true
+	case Cash:
+		return true
+	case Cheque:
+		return true
+	case Upi:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PlanVersionState.
+const (
+	PlanVersionStateActive  PlanVersionState = "active"
+	PlanVersionStateDraft   PlanVersionState = "draft"
+	PlanVersionStateRetired PlanVersionState = "retired"
+)
+
+// Valid indicates whether the value is a known member of the PlanVersionState enum.
+func (e PlanVersionState) Valid() bool {
+	switch e {
+	case PlanVersionStateActive:
+		return true
+	case PlanVersionStateDraft:
+		return true
+	case PlanVersionStateRetired:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for RaiseChargeKind.
+const (
+	RaiseChargeKindExtra  RaiseChargeKind = "extra"
+	RaiseChargeKindPeriod RaiseChargeKind = "period"
+)
+
+// Valid indicates whether the value is a known member of the RaiseChargeKind enum.
+func (e RaiseChargeKind) Valid() bool {
+	switch e {
+	case RaiseChargeKindExtra:
+		return true
+	case RaiseChargeKindPeriod:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for SubscriptionState.
+const (
+	SubscriptionStateActive    SubscriptionState = "active"
+	SubscriptionStateCancelled SubscriptionState = "cancelled"
+	SubscriptionStatePilot     SubscriptionState = "pilot"
+)
+
+// Valid indicates whether the value is a known member of the SubscriptionState enum.
+func (e SubscriptionState) Valid() bool {
+	switch e {
+	case SubscriptionStateActive:
+		return true
+	case SubscriptionStateCancelled:
+		return true
+	case SubscriptionStatePilot:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for TaxRegime.
 const (
 	Composition  TaxRegime = "composition"
@@ -547,6 +758,30 @@ func (e VerificationMethod) Valid() bool {
 	}
 }
 
+// Defines values for ListChargesParamsStatus.
+const (
+	ListChargesParamsStatusCancelled ListChargesParamsStatus = "cancelled"
+	ListChargesParamsStatusOpen      ListChargesParamsStatus = "open"
+	ListChargesParamsStatusPaid      ListChargesParamsStatus = "paid"
+	ListChargesParamsStatusWaived    ListChargesParamsStatus = "waived"
+)
+
+// Valid indicates whether the value is a known member of the ListChargesParamsStatus enum.
+func (e ListChargesParamsStatus) Valid() bool {
+	switch e {
+	case ListChargesParamsStatusCancelled:
+		return true
+	case ListChargesParamsStatusOpen:
+		return true
+	case ListChargesParamsStatusPaid:
+		return true
+	case ListChargesParamsStatusWaived:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for ListDocumentSeriesParamsStatus.
 const (
 	ListDocumentSeriesParamsStatusActive             ListDocumentSeriesParamsStatus = "active"
@@ -582,6 +817,79 @@ type AcceptLink struct {
 	OutletIds *[]Id `json:"outlet_ids,omitempty"`
 }
 
+// Addon An add-on line, for example an extra outlet.
+type Addon struct {
+	// AgreedPrice Amount in integer paise. Never a float.
+	AgreedPrice Money `json:"agreed_price"`
+
+	// Name Add-on key.
+	//
+	// Example: extra_outlet
+	Name string `json:"name"`
+
+	// Quantity Quantity.
+	//
+	// Example: 1
+	Quantity int `json:"quantity"`
+}
+
+// BillingConfiguration Hostry's own GST configuration for charges, versioned and effective-dated (BR-A1-30). Hostry's GST invoices are issued from the founder's books; this only drives the GST shown on a charge. x-provisional: SAC and registration facts are CA-pending (A1-Q3).
+type BillingConfiguration struct {
+	// CreatedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	CreatedAt Timestamp `json:"created_at"`
+
+	// EffectiveFrom First date the configuration applies to charges raised.
+	//
+	// Example: 2026-11-24
+	EffectiveFrom openapi_types.Date `json:"effective_from"`
+
+	// GstRateBp GST rate in basis points (default 1800).
+	//
+	// Example: 1800
+	GstRateBp int `json:"gst_rate_bp"`
+
+	// GstRegistered When false no GST is added to a charge.
+	GstRegistered bool `json:"gst_registered"`
+
+	// HostryStateCode Two-digit GST state code from the platform state reference table.
+	//
+	// Example: 33
+	HostryStateCode StateCode `json:"hostry_state_code"`
+
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	Id Id `json:"id"`
+
+	// PaymentTermsDays Days from the first charge to its due date (default 7).
+	//
+	// Example: 7
+	PaymentTermsDays int `json:"payment_terms_days"`
+
+	// PaymentTolerancePaise A charge counts as paid within this many paise of the total (default 99).
+	//
+	// Example: 99
+	PaymentTolerancePaise int `json:"payment_tolerance_paise"`
+
+	// Sac SAC code; seeded 997331 as a placeholder until the CA answers.
+	//
+	// Example: 997331
+	Sac string `json:"sac"`
+}
+
+// BillingConfigurationPage defines model for BillingConfigurationPage.
+type BillingConfigurationPage struct {
+	// Items Items, in the order stated by the operation.
+	Items []BillingConfiguration `json:"items"`
+
+	// NextCursor Opaque cursor for the next page; absent when there are no more results.
+	//
+	// Example: eyJhZnRlciI6IjAxOTBhMWIyLWMzZDQtN2U1Zi04YTliLTBjMWQyZTNmNGE1YiJ9
+	NextCursor *string `json:"next_cursor,omitempty"`
+}
+
 // Brand A trading name inside an organisation, the scope for shared masters. The default brand is created automatically.
 type Brand struct {
 	// CreatedAt RFC 3339 instant in UTC.
@@ -589,7 +897,7 @@ type Brand struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -613,6 +921,157 @@ type BrandPage struct {
 	// NextCursor Opaque cursor for the next page; absent when there are no more results.
 	NextCursor *string `json:"next_cursor,omitempty"`
 }
+
+// CancelSubscription Record the owner's cancellation request.
+type CancelSubscription struct {
+	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
+	//
+	// Example: Owner phoned to report a lost tablet.
+	Reason *Reason `json:"reason,omitempty"`
+}
+
+// ChangeOutletTaxRegistration Move an outlet to another registration of the same organisation. The reason is the record for the auditor.
+type ChangeOutletTaxRegistration struct {
+	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
+	//
+	// Example: Owner phoned to report a lost tablet.
+	Reason Reason `json:"reason"`
+
+	// TaxRegistrationId The target registration.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	TaxRegistrationId Id `json:"tax_registration_id"`
+}
+
+// ChangeSubscription A plan or price change; takes effect from the next charge as a new row, no proration (BR-A1-23).
+type ChangeSubscription struct {
+	// Addons Add-on lines.
+	Addons *[]Addon `json:"addons,omitempty"`
+
+	// AgreedPrice Amount in integer paise. Never a float.
+	AgreedPrice *Money `json:"agreed_price,omitempty"`
+
+	// Cycle Billing cycle; none is the pilot.
+	//
+	// Example: monthly
+	Cycle Cycle `json:"cycle"`
+
+	// EffectiveFrom First day of the next charge period.
+	//
+	// Example: 2026-11-24
+	EffectiveFrom openapi_types.Date `json:"effective_from"`
+
+	// PlanKey Plan key.
+	//
+	// Example: table_service
+	PlanKey string `json:"plan_key"`
+
+	// PlanVersion Active version.
+	//
+	// Example: 1
+	PlanVersion int `json:"plan_version"`
+
+	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
+	//
+	// Example: Owner phoned to report a lost tablet.
+	Reason *Reason `json:"reason,omitempty"`
+}
+
+// Charge A charge, append-only (BR-A1-31). GST comes from the billing configuration at the moment it is raised and is stored here; there is no round-off and no invoice rendering.
+type Charge struct {
+	// Cgst Amount in integer paise. Never a float.
+	Cgst Money `json:"cgst"`
+
+	// CreatedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	CreatedAt Timestamp `json:"created_at"`
+
+	// DueDate Due date (BR-A1-33).
+	//
+	// Example: 2026-11-24
+	DueDate openapi_types.Date `json:"due_date"`
+
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	Id Id `json:"id"`
+
+	// Igst Amount in integer paise. Never a float.
+	Igst Money `json:"igst"`
+
+	// InvoiceReference Number and date of the invoice raised in the founder's books; set once, never edited; the panel does not check it (BR-A1-34).
+	InvoiceReference *InvoiceReference `json:"invoice_reference,omitempty"`
+
+	// Kind period or extra (an extra charge carries a reason).
+	//
+	// Example: period
+	Kind ChargeKind `json:"kind"`
+
+	// Note Free-text note for staff, at most 200 characters, no personal data.
+	Note *string `json:"note,omitempty"`
+
+	// OrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	OrganisationId Id `json:"organisation_id"`
+
+	// Outstanding Amount in integer paise. Never a float.
+	Outstanding Money `json:"outstanding"`
+
+	// PeriodEnd Last day covered.
+	//
+	// Example: 2026-11-24
+	PeriodEnd openapi_types.Date `json:"period_end"`
+
+	// PeriodStart First day covered.
+	//
+	// Example: 2026-11-24
+	PeriodStart openapi_types.Date `json:"period_start"`
+
+	// Reason Reason for an extra, waived or cancelled charge.
+	Reason *string `json:"reason,omitempty"`
+
+	// Sgst Amount in integer paise. Never a float.
+	Sgst Money `json:"sgst"`
+
+	// Status open, paid (derived from payments within tolerance), waived or cancelled (reversing rows).
+	//
+	// Example: open
+	Status ChargeStatus `json:"status"`
+
+	// SubscriptionId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	SubscriptionId Id `json:"subscription_id"`
+
+	// Taxable Amount in integer paise. Never a float.
+	Taxable Money `json:"taxable"`
+
+	// Total Amount in integer paise. Never a float.
+	Total Money `json:"total"`
+}
+
+// ChargeKind period or extra (an extra charge carries a reason).
+//
+// Example: period
+type ChargeKind string
+
+// ChargePage defines model for ChargePage.
+type ChargePage struct {
+	// Items Items, in the order stated by the operation.
+	Items []Charge `json:"items"`
+
+	// NextCursor Opaque cursor for the next page; absent when there are no more results.
+	//
+	// Example: eyJhZnRlciI6IjAxOTBhMWIyLWMzZDQtN2U1Zi04YTliLTBjMWQyZTNmNGE1YiJ9
+	NextCursor *string `json:"next_cursor,omitempty"`
+}
+
+// ChargeStatus open, paid (derived from payments within tolerance), waived or cancelled (reversing rows).
+//
+// Example: open
+type ChargeStatus string
 
 // CloseDeviceSeries Close a device's series when it is re-bound, reinstalled, restored or revoked.
 type CloseDeviceSeries struct {
@@ -645,7 +1104,7 @@ type CloseSeries struct {
 
 // ConfirmLink Confirm who accepted. The id must be the one shown to the proposer, so a swap between viewing and confirming is refused.
 type ConfirmLink struct {
-	// CounterpartyOrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// CounterpartyOrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	CounterpartyOrganisationId Id `json:"counterparty_organisation_id"`
@@ -674,9 +1133,45 @@ type CounterpartyRegistration struct {
 	StateCode StateCode `json:"state_code"`
 }
 
+// CreateBillingConfiguration A new configuration version.
+type CreateBillingConfiguration struct {
+	// EffectiveFrom First date the configuration applies to charges raised.
+	//
+	// Example: 2026-11-24
+	EffectiveFrom openapi_types.Date `json:"effective_from"`
+
+	// GstRateBp GST rate in basis points (default 1800).
+	//
+	// Example: 1800
+	GstRateBp int `json:"gst_rate_bp"`
+
+	// GstRegistered When false no GST is added to a charge.
+	GstRegistered bool `json:"gst_registered"`
+
+	// HostryStateCode Two-digit GST state code from the platform state reference table.
+	//
+	// Example: 33
+	HostryStateCode StateCode `json:"hostry_state_code"`
+
+	// PaymentTermsDays Days from the first charge to its due date (default 7).
+	//
+	// Example: 7
+	PaymentTermsDays int `json:"payment_terms_days"`
+
+	// PaymentTolerancePaise A charge counts as paid within this many paise of the total (default 99).
+	//
+	// Example: 99
+	PaymentTolerancePaise int `json:"payment_tolerance_paise"`
+
+	// Sac SAC code; seeded 997331 as a placeholder until the CA answers.
+	//
+	// Example: 997331
+	Sac string `json:"sac"`
+}
+
 // CreateBrand Create a brand.
 type CreateBrand struct {
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -706,12 +1201,12 @@ type CreateOrganisation struct {
 
 // CreateOutlet Create an outlet. The brand defaults to the default brand; the registration must belong to the organisation.
 type CreateOutlet struct {
-	// BrandId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// BrandId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	BrandId *Id `json:"brand_id,omitempty"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -721,7 +1216,7 @@ type CreateOutlet struct {
 	// Example: restaurant
 	Kind OutletKind `json:"kind"`
 
-	// LocatedInOutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// LocatedInOutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	LocatedInOutletId *Id `json:"located_in_outlet_id,omitempty"`
@@ -736,10 +1231,26 @@ type CreateOutlet struct {
 	// Example: 33
 	StateCode StateCode `json:"state_code"`
 
-	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	TaxRegistrationId Id `json:"tax_registration_id"`
+}
+
+// CreatePlan A new plan with its first draft version.
+type CreatePlan struct {
+	// Key Unique lower_snake key.
+	//
+	// Example: table_service
+	Key string `json:"key"`
+
+	// NameKey i18n key of the plan name.
+	//
+	// Example: plan.table_service
+	NameKey string `json:"name_key"`
+
+	// Version Content of a plan version. Plans, versions, prices and feature keys are data, never code (BR-A1-11).
+	Version PlanVersionDraft `json:"version"`
 }
 
 // CreateTaxRegistration Create a registration. A GSTIN already claimed by another organisation is accepted as unverified with the same response as any new registration; the tenant never learns who else holds it (ADR-0003 A1.1).
@@ -749,7 +1260,7 @@ type CreateTaxRegistration struct {
 	// Example: 33ABCDE1234F1Z7
 	Gstin *Gstin `json:"gstin,omitempty"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -770,6 +1281,11 @@ type CreateTaxRegistration struct {
 	StateCode StateCode `json:"state_code"`
 }
 
+// Cycle Billing cycle; none is the pilot.
+//
+// Example: monthly
+type Cycle string
+
 // DecideAmendment Accept or decline an amendment.
 type DecideAmendment struct {
 	// Decision Decision.
@@ -785,7 +1301,7 @@ type DecideAmendmentDecision string
 
 // DirectoryBrand Brand in the directory.
 type DirectoryBrand struct {
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -808,7 +1324,7 @@ type DirectoryOrganisation struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -831,7 +1347,7 @@ type DirectoryOrganisation struct {
 
 // DirectoryOutlet Outlet in the directory: name, kind, state only.
 type DirectoryOutlet struct {
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -873,7 +1389,7 @@ type DirectoryRegistration struct {
 	// Example: 33ABCDE1234F1Z7
 	Gstin *Gstin `json:"gstin,omitempty"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -931,7 +1447,7 @@ type DocumentSeries struct {
 	// Example: A7K
 	Code string `json:"code"`
 
-	// DeviceId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// DeviceId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	DeviceId Id `json:"device_id"`
@@ -941,7 +1457,7 @@ type DocumentSeries struct {
 	// Example: tax_invoice
 	DocType DocType `json:"doc_type"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -951,7 +1467,10 @@ type DocumentSeries struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	IssuedAt Timestamp `json:"issued_at"`
 
-	// OutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// LastNumber The last running number the device stated when it closed the series (control intent series.close, or its drain record). Empty at closure and until reconciled.
+	LastNumber *int `json:"last_number,omitempty"`
+
+	// OutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	OutletId Id `json:"outlet_id"`
@@ -961,7 +1480,12 @@ type DocumentSeries struct {
 	// Example: active
 	Status DocumentSeriesStatus `json:"status"`
 
-	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// TailConfirmedAt When billing confirmed that its register holds every number up to last_number (billing.series.reconciled). Empty at closure; a series that is closed and has no tail_confirmed_at reads "closed, awaiting device" (ADR-0014 A2.5 item 2).
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	TailConfirmedAt *Timestamp `json:"tail_confirmed_at,omitempty"`
+
+	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	TaxRegistrationId Id `json:"tax_registration_id"`
@@ -1007,14 +1531,27 @@ type GrantInputDirection string
 // Example: 33ABCDE1234F1Z7
 type Gstin = string
 
-// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 //
 // Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 type Id = string
 
+// InvoiceReference Number and date of the invoice raised in the founder's books; set once, never edited; the panel does not check it (BR-A1-34).
+type InvoiceReference struct {
+	// Date Invoice date.
+	//
+	// Example: 2026-11-24
+	Date openapi_types.Date `json:"date"`
+
+	// Number Invoice number as in the books.
+	//
+	// Example: HQ/2627/0042
+	Number string `json:"number"`
+}
+
 // IssueSeries Issue series codes for a device under the outlet's registration (identity is the only caller). The registration is read from the stored outlet, never from the request.
 type IssueSeries struct {
-	// DeviceId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// DeviceId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	DeviceId Id `json:"device_id"`
@@ -1022,7 +1559,7 @@ type IssueSeries struct {
 	// DocTypes Document types to issue.
 	DocTypes []DocType `json:"doc_types"`
 
-	// OutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// OutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	OutletId Id `json:"outlet_id"`
@@ -1037,6 +1574,147 @@ type IssueSeries struct {
 //
 // Example: active
 type IssueSeriesState string
+
+// LedgerListKind Work lists for staff; nothing is sent automatically (BR-A1-50).
+//
+// Example: overdue_charges
+type LedgerListKind string
+
+// LedgerListRow One row of a work list.
+type LedgerListRow struct {
+	// AgeDays Days past due, for the overdue list; buckets 1-7, 8-15, 16-30, over 30 are derived by the client.
+	//
+	// Example: 3
+	AgeDays *int `json:"age_days,omitempty"`
+
+	// Amount Amount in integer paise. Never a float.
+	Amount *Money `json:"amount,omitempty"`
+
+	// DueDate Due date or review date.
+	//
+	// Example: 2026-11-24
+	DueDate *openapi_types.Date `json:"due_date,omitempty"`
+
+	// OrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	OrganisationId Id `json:"organisation_id"`
+
+	// OrganisationName Organisation name from the directory.
+	//
+	// Example: Example Hospitality
+	OrganisationName string `json:"organisation_name"`
+
+	// SubjectId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	SubjectId *Id `json:"subject_id,omitempty"`
+}
+
+// LedgerListRowPage defines model for LedgerListRowPage.
+type LedgerListRowPage struct {
+	// Items Items, in the order stated by the operation.
+	Items []LedgerListRow `json:"items"`
+
+	// NextCursor Opaque cursor for the next page; absent when there are no more results.
+	//
+	// Example: eyJhZnRlciI6IjAxOTBhMWIyLWMzZDQtN2U1Zi04YTliLTBjMWQyZTNmNGE1YiJ9
+	NextCursor *string `json:"next_cursor,omitempty"`
+}
+
+// LedgerPayment A recorded payment, append-only and idempotent by key (BR-A1-43). A correction is a reversing row.
+type LedgerPayment struct {
+	// Amount Amount in integer paise. Never a float.
+	Amount Money `json:"amount"`
+
+	// ChargeId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	ChargeId Id `json:"charge_id"`
+
+	// CreatedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	CreatedAt Timestamp `json:"created_at"`
+
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	Id Id `json:"id"`
+
+	// Method Payment method; gateway_link is reserved and not available in A1.
+	//
+	// Example: upi
+	Method PaymentMethod `json:"method"`
+
+	// Reason Reason, for a reversing row.
+	Reason *string `json:"reason,omitempty"`
+
+	// ReceivedOn Date received, not in the future.
+	//
+	// Example: 2026-11-24
+	ReceivedOn openapi_types.Date `json:"received_on"`
+
+	// RecordedBy Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	RecordedBy Id `json:"recorded_by"`
+
+	// Reference UTR or cheque number, up to 40 characters.
+	//
+	// Example: UTR1234567890
+	Reference *string `json:"reference,omitempty"`
+
+	// ReversalOf Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	ReversalOf *Id `json:"reversal_of,omitempty"`
+}
+
+// LedgerPaymentPage defines model for LedgerPaymentPage.
+type LedgerPaymentPage struct {
+	// Items Items, in the order stated by the operation.
+	Items []LedgerPayment `json:"items"`
+
+	// NextCursor Opaque cursor for the next page; absent when there are no more results.
+	//
+	// Example: eyJhZnRlciI6IjAxOTBhMWIyLWMzZDQtN2U1Zi04YTliLTBjMWQyZTNmNGE1YiJ9
+	NextCursor *string `json:"next_cursor,omitempty"`
+}
+
+// LifecycleRequest Execution of an approved lifecycle action. The grant header carries the approval; the subject hash covers the organisation and the target status.
+type LifecycleRequest struct {
+	// OwnerExportOffered Close only: recorded confirmation that the owner was offered an export (BR-A1-72).
+	OwnerExportOffered *bool `json:"owner_export_offered,omitempty"`
+
+	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
+	//
+	// Example: Owner phoned to report a lost tablet.
+	Reason Reason `json:"reason"`
+
+	// Ticket Support ticket reference. Fixed pattern so it can travel in events without free text.
+	//
+	// Example: SUP-2041
+	Ticket TicketReference `json:"ticket"`
+}
+
+// LifecycleResult The organisation after the action.
+type LifecycleResult struct {
+	// ChangedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	ChangedAt Timestamp `json:"changed_at"`
+
+	// OrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	OrganisationId Id `json:"organisation_id"`
+
+	// Status Organisation lifecycle state. Phase 1 only reads and shows it; no operation changes it.
+	//
+	// Example: trial
+	Status OrganisationStatus `json:"status"`
+}
 
 // Link A consented, revocable relationship between two organisations. It never gives access to tables.
 type Link struct {
@@ -1053,7 +1731,7 @@ type Link struct {
 	// Counterparty The other organisation, shown only once it has accepted (or, to the acceptor, about the proposer). Contains no member, device or contact data.
 	Counterparty *LinkCounterparty `json:"counterparty,omitempty"`
 
-	// CounterpartyOrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// CounterpartyOrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	CounterpartyOrganisationId *Id `json:"counterparty_organisation_id,omitempty"`
@@ -1066,7 +1744,7 @@ type Link struct {
 	// Grants Grants of this link.
 	Grants []LinkGrant `json:"grants"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1104,12 +1782,12 @@ type LinkActivity struct {
 	// Example: link.confirmed
 	Action string `json:"action"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
 
-	// LinkId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// LinkId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	LinkId Id `json:"link_id"`
@@ -1169,12 +1847,12 @@ type LinkAmendment struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
 
-	// LinkId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// LinkId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	LinkId Id `json:"link_id"`
@@ -1195,7 +1873,7 @@ type LinkAmendmentInput struct {
 	// AddGrants Grants to add.
 	AddGrants []GrantInput `json:"add_grants"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1224,7 +1902,7 @@ type LinkDecision struct {
 	// Example: 30
 	CacheSeconds int `json:"cache_seconds"`
 
-	// DataOwnerOrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// DataOwnerOrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	DataOwnerOrganisationId *Id `json:"data_owner_organisation_id,omitempty"`
@@ -1250,7 +1928,7 @@ type LinkGrant struct {
 	// Example: outbound
 	Direction LinkGrantDirection `json:"direction"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1290,13 +1968,18 @@ type LinkPage struct {
 
 // LinkProposal The proposed link and its one-time invitation code.
 type LinkProposal struct {
-	// InvitationCode At least 80 bits from a CSPRNG (16 characters of a 32-symbol alphabet), single use, 14 days. Shown once; also the QR payload.
+	// InvitationCode At least 80 bits from a CSPRNG (16 characters of a 32-symbol alphabet), single use, 14 days. Shown once; also the QR payload. Absent on an idempotent replay and never stored, so a lost code is replaced with reissueLinkInvitation.
 	//
 	// Example: 7QK3M9XD7QK3M9XD
-	InvitationCode string `json:"invitation_code"`
+	InvitationCode *string `json:"invitation_code,omitempty"`
 
 	// Link A consented, revocable relationship between two organisations. It never gives access to tables.
 	Link Link `json:"link"`
+
+	// SecretWithheld True on a replay of the same Idempotency-Key, where the invitation code is withheld because it is never stored (ADR-0003 Note N1 R1); use reissueLinkInvitation for a new one. Absent on the first response. The contract harness compares a replay with every field except invitation_code and this flag.
+	//
+	// Example: true
+	SecretWithheld *bool `json:"secret_withheld,omitempty"`
 }
 
 // LinkReason Reason for a decline, suspension or revocation (kept in link activity without payload data).
@@ -1321,6 +2004,162 @@ type LinkStatus string
 //
 // Example: on_premises_outlet
 type LinkTemplate string
+
+// ManualBookSeries A paper bill book registered as an entry-only series of kind manual_book (ADR-0014 A1.6 item 4). Billing devices of the outlet receive it entry-only: numbers are typed, never allocated. One supply has one invoice number, so Hostry never gives a book page a second number. x-provisional: whether a paper book may run as a parallel series under the same GSTIN is a CA question (P2B-6).
+type ManualBookSeries struct {
+	// Code The book's own prefix, unique per GSTIN together with the device-series codes.
+	//
+	// Example: BKB
+	Code string `json:"code"`
+
+	// CreatedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	CreatedAt Timestamp `json:"created_at"`
+
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	Id Id `json:"id"`
+
+	// OutletIds Outlets whose billing devices may enter from this book.
+	OutletIds []Id `json:"outlet_ids"`
+
+	// Status active or closed.
+	//
+	// Example: active
+	Status ManualBookSeriesStatus `json:"status"`
+
+	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	TaxRegistrationId Id `json:"tax_registration_id"`
+}
+
+// ManualBookSeriesStatus active or closed.
+//
+// Example: active
+type ManualBookSeriesStatus string
+
+// ManualBookSeriesPage defines model for ManualBookSeriesPage.
+type ManualBookSeriesPage struct {
+	// Items Items, in the order stated by the operation.
+	Items []ManualBookSeries `json:"items"`
+
+	// NextCursor Opaque cursor for the next page; absent when there are no more results.
+	//
+	// Example: eyJhZnRlciI6IjAxOTBhMWIyLWMzZDQtN2U1Zi04YTliLTBjMWQyZTNmNGE1YiJ9
+	NextCursor *string `json:"next_cursor,omitempty"`
+}
+
+// Money Amount in integer paise. Never a float.
+type Money struct {
+	// AmountPaise Amount in paise (1 INR = 100 paise).
+	//
+	// Example: 12500
+	AmountPaise int64 `json:"amount_paise"`
+
+	// Currency ISO 4217 currency code.
+	//
+	// Example: INR
+	Currency MoneyCurrency `json:"currency"`
+}
+
+// MoneyCurrency ISO 4217 currency code.
+//
+// Example: INR
+type MoneyCurrency string
+
+// MyPlan The owner's read-only "My plan" screen (Could, BR-A1-90): the caller's own organisation only.
+type MyPlan struct {
+	// AgreedPrice Amount in integer paise. Never a float.
+	AgreedPrice Money `json:"agreed_price"`
+
+	// Charges Charges, newest first.
+	Charges []struct {
+		// DueDate Due date.
+		//
+		// Example: 2026-11-24
+		DueDate openapi_types.Date `json:"due_date"`
+
+		// InvoiceNumber Invoice number when set.
+		//
+		// Example: HQ/2627/0042
+		InvoiceNumber *string `json:"invoice_number,omitempty"`
+
+		// PeriodEnd Last day covered.
+		//
+		// Example: 2026-11-24
+		PeriodEnd openapi_types.Date `json:"period_end"`
+
+		// PeriodStart First day covered.
+		//
+		// Example: 2026-11-24
+		PeriodStart openapi_types.Date `json:"period_start"`
+
+		// Status open, paid (derived from payments within tolerance), waived or cancelled (reversing rows).
+		//
+		// Example: open
+		Status ChargeStatus `json:"status"`
+
+		// Total Amount in integer paise. Never a float.
+		Total Money `json:"total"`
+	} `json:"charges"`
+
+	// Cycle Billing cycle; none is the pilot.
+	//
+	// Example: monthly
+	Cycle Cycle `json:"cycle"`
+
+	// Overdue Shown to the owner as a label only; it gates nothing (ADR-0008 S5).
+	Overdue bool `json:"overdue"`
+
+	// PaidThrough Paid-through date or pilot review date.
+	//
+	// Example: 2026-11-24
+	PaidThrough *openapi_types.Date `json:"paid_through,omitempty"`
+
+	// Payments Payments, newest first.
+	Payments []struct {
+		// Amount Amount in integer paise. Never a float.
+		Amount Money `json:"amount"`
+
+		// Method Payment method; gateway_link is reserved and not available in A1.
+		//
+		// Example: upi
+		Method PaymentMethod `json:"method"`
+
+		// ReceivedOn Date received.
+		//
+		// Example: 2026-11-24
+		ReceivedOn openapi_types.Date `json:"received_on"`
+	} `json:"payments"`
+
+	// PlanKey Plan key.
+	//
+	// Example: table_service
+	PlanKey string `json:"plan_key"`
+
+	// PlanNameKey i18n key of the plan name.
+	//
+	// Example: plan.table_service
+	PlanNameKey string `json:"plan_name_key"`
+
+	// PlanVersion Version.
+	//
+	// Example: 1
+	PlanVersion int `json:"plan_version"`
+
+	// StartDate Start date.
+	//
+	// Example: 2026-11-24
+	StartDate openapi_types.Date `json:"start_date"`
+
+	// State Stored state: pilot, active or cancelled. overdue is derived and shown separately (BR-A1-26).
+	//
+	// Example: active
+	State SubscriptionState `json:"state"`
+}
 
 // NewOutlet The first outlet.
 type NewOutlet struct {
@@ -1365,7 +2204,7 @@ type Organisation struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1441,7 +2280,7 @@ type OrganisationStatus string
 
 // Outlet An outlet or property: one physical place with its own business date, devices, staff assignments and tax registration.
 type Outlet struct {
-	// BrandId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// BrandId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	BrandId Id `json:"brand_id"`
@@ -1451,7 +2290,7 @@ type Outlet struct {
 	// Example: 2026-11-24T13:05:11.120Z
 	CreatedAt Timestamp `json:"created_at"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1461,7 +2300,7 @@ type Outlet struct {
 	// Example: restaurant
 	Kind OutletKind `json:"kind"`
 
-	// LocatedInOutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// LocatedInOutletId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	LocatedInOutletId *Id `json:"located_in_outlet_id,omitempty"`
@@ -1481,7 +2320,7 @@ type Outlet struct {
 	// Example: active
 	Status OutletStatus `json:"status"`
 
-	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	TaxRegistrationId Id `json:"tax_registration_id"`
@@ -1515,6 +2354,120 @@ type OutletPage struct {
 //
 // Example: active
 type OutletStatus string
+
+// PageCursor Cursor pagination field shared by every list response (compose with allOf).
+type PageCursor struct {
+	// NextCursor Opaque cursor for the next page; absent when there are no more results.
+	//
+	// Example: eyJhZnRlciI6IjAxOTBhMWIyLWMzZDQtN2U1Zi04YTliLTBjMWQyZTNmNGE1YiJ9
+	NextCursor *string `json:"next_cursor,omitempty"`
+}
+
+// PaymentMethod Payment method; gateway_link is reserved and not available in A1.
+//
+// Example: upi
+type PaymentMethod string
+
+// Plan A plan: a key and its versions. Seeded drafts: pilot, table_service and an extra-outlet add-on become sellable only after the founder activates them (A1-Q1, A1-Q2).
+type Plan struct {
+	// CreatedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	CreatedAt Timestamp `json:"created_at"`
+
+	// Key Unique lower_snake key.
+	//
+	// Example: table_service
+	Key string `json:"key"`
+
+	// NameKey i18n key of the plan name.
+	//
+	// Example: plan.table_service
+	NameKey string `json:"name_key"`
+
+	// Versions Versions, newest first.
+	Versions []PlanVersion `json:"versions"`
+}
+
+// PlanPage defines model for PlanPage.
+type PlanPage struct {
+	// Items Items, in the order stated by the operation.
+	Items []Plan `json:"items"`
+
+	// NextCursor Opaque cursor for the next page; absent when there are no more results.
+	//
+	// Example: eyJhZnRlciI6IjAxOTBhMWIyLWMzZDQtN2U1Zi04YTliLTBjMWQyZTNmNGE1YiJ9
+	NextCursor *string `json:"next_cursor,omitempty"`
+}
+
+// PlanPrice A list price for one cycle, in paise excluding GST.
+type PlanPrice struct {
+	// Cycle Billing cycle; none is the pilot.
+	//
+	// Example: monthly
+	Cycle Cycle `json:"cycle"`
+
+	// ListPrice Amount in integer paise. Never a float.
+	ListPrice Money `json:"list_price"`
+}
+
+// PlanVersion defines model for PlanVersion.
+type PlanVersion struct {
+	// ActivatedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	ActivatedAt *Timestamp `json:"activated_at,omitempty"`
+
+	// CreatedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	CreatedAt Timestamp `json:"created_at"`
+
+	// FeatureKeys Feature keys granted; an app ignores a key it does not know.
+	FeatureKeys []string `json:"feature_keys"`
+
+	// IncludedOutlets Outlets included; the only metered quantity (BR-A1-13).
+	//
+	// Example: 1
+	IncludedOutlets int `json:"included_outlets"`
+
+	// Prices List price per cycle.
+	Prices []PlanPrice `json:"prices"`
+
+	// RetiredAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	RetiredAt *Timestamp `json:"retired_at,omitempty"`
+
+	// State draft is editable; active is immutable and sellable; retired stays on existing subscriptions (BR-A1-10, BR-A1-15).
+	//
+	// Example: draft
+	State PlanVersionState `json:"state"`
+
+	// Version Version number within the plan, from 1.
+	//
+	// Example: 1
+	Version int `json:"version"`
+}
+
+// PlanVersionDraft Content of a plan version. Plans, versions, prices and feature keys are data, never code (BR-A1-11).
+type PlanVersionDraft struct {
+	// FeatureKeys Feature keys granted; an app ignores a key it does not know.
+	FeatureKeys []string `json:"feature_keys"`
+
+	// IncludedOutlets Outlets included; the only metered quantity (BR-A1-13).
+	//
+	// Example: 1
+	IncludedOutlets int `json:"included_outlets"`
+
+	// Prices List price per cycle.
+	Prices []PlanPrice `json:"prices"`
+}
+
+// PlanVersionState draft is editable; active is immutable and sellable; retired stays on existing subscriptions (BR-A1-10, BR-A1-15).
+//
+// Example: draft
+type PlanVersionState string
 
 // Problem RFC 9457 problem details. `type` is a stable URI per error kind.
 type Problem struct {
@@ -1551,6 +2504,11 @@ type Problem struct {
 	// Example: /v1/resources/0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Instance *string `json:"instance,omitempty"`
 
+	// Reason Optional sub-code that refines `code`, for example approval_not_executable carries not_approved, lapsed, executed, not_approver or subject_changed.
+	//
+	// Example: not_approved
+	Reason *string `json:"reason,omitempty"`
+
 	// RequestId Request ID for log correlation.
 	//
 	// Example: req_0190a1b2c3d4
@@ -1577,7 +2535,7 @@ type ProposeLink struct {
 	// Grants Scopes offered and asked for.
 	Grants []GrantInput `json:"grants"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1591,10 +2549,89 @@ type ProposeLink struct {
 	Template LinkTemplate `json:"template"`
 }
 
+// RaiseCharge Raise a charge for the next period, or an extra charge.
+type RaiseCharge struct {
+	// Kind period or extra.
+	//
+	// Example: period
+	Kind RaiseChargeKind `json:"kind"`
+
+	// Note Staff note.
+	Note *string `json:"note,omitempty"`
+
+	// PeriodEnd Last day covered.
+	//
+	// Example: 2026-11-24
+	PeriodEnd openapi_types.Date `json:"period_end"`
+
+	// PeriodStart First day covered.
+	//
+	// Example: 2026-11-24
+	PeriodStart openapi_types.Date `json:"period_start"`
+
+	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
+	//
+	// Example: Owner phoned to report a lost tablet.
+	Reason *Reason `json:"reason,omitempty"`
+
+	// Taxable Amount in integer paise. Never a float.
+	Taxable *Money `json:"taxable,omitempty"`
+}
+
+// RaiseChargeKind period or extra.
+//
+// Example: period
+type RaiseChargeKind string
+
 // Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
 //
 // Example: Owner phoned to report a lost tablet.
 type Reason = string
+
+// ReasonBody A reason for an adjustment.
+type ReasonBody struct {
+	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
+	//
+	// Example: Owner phoned to report a lost tablet.
+	Reason Reason `json:"reason"`
+}
+
+// RecordPayment Record a payment by hand. A payment above the outstanding amount is refused 422 overpayment.
+type RecordPayment struct {
+	// Amount Amount in integer paise. Never a float.
+	Amount Money `json:"amount"`
+
+	// Method Payment method; gateway_link is reserved and not available in A1.
+	//
+	// Example: upi
+	Method PaymentMethod `json:"method"`
+
+	// ReceivedOn Date received.
+	//
+	// Example: 2026-11-24
+	ReceivedOn openapi_types.Date `json:"received_on"`
+
+	// Reference UTR or cheque number.
+	//
+	// Example: UTR1234567890
+	Reference *string `json:"reference,omitempty"`
+}
+
+// RegisterManualBook Register a bill book.
+type RegisterManualBook struct {
+	// Code The book's prefix.
+	//
+	// Example: BKB
+	Code string `json:"code"`
+
+	// OutletIds Outlets that may enter from it.
+	OutletIds []Id `json:"outlet_ids"`
+
+	// TaxRegistrationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	TaxRegistrationId Id `json:"tax_registration_id"`
+}
 
 // RejectRegistration Reject a registration. The reason is the record for the auditor.
 type RejectRegistration struct {
@@ -1616,6 +2653,51 @@ type SeriesClosure struct {
 type SeriesIssuance struct {
 	// Items Issued series.
 	Items []DocumentSeries `json:"items"`
+}
+
+// SetInvoiceReference The invoice reference from the books.
+type SetInvoiceReference struct {
+	// InvoiceReference Number and date of the invoice raised in the founder's books; set once, never edited; the panel does not check it (BR-A1-34).
+	InvoiceReference InvoiceReference `json:"invoice_reference"`
+}
+
+// StartSubscription Assign a plan version or a pilot. Below-list price needs admin.subscription.adjust and a reason; a pilot has no charge and a review date (default 90 days).
+type StartSubscription struct {
+	// Addons Add-on lines.
+	Addons *[]Addon `json:"addons,omitempty"`
+
+	// AgreedPrice Amount in integer paise. Never a float.
+	AgreedPrice *Money `json:"agreed_price,omitempty"`
+
+	// Cycle Billing cycle; none is the pilot.
+	//
+	// Example: monthly
+	Cycle Cycle `json:"cycle"`
+
+	// PlanKey Plan key.
+	//
+	// Example: table_service
+	PlanKey string `json:"plan_key"`
+
+	// PlanVersion Active version to assign.
+	//
+	// Example: 1
+	PlanVersion int `json:"plan_version"`
+
+	// Reason Free-text reason, 10 to 500 characters. Stays with the owning record; never placed in events.
+	//
+	// Example: Owner phoned to report a lost tablet.
+	Reason *Reason `json:"reason,omitempty"`
+
+	// ReviewDate Pilot review date.
+	//
+	// Example: 2026-11-24
+	ReviewDate *openapi_types.Date `json:"review_date,omitempty"`
+
+	// StartDate Start date.
+	//
+	// Example: 2026-11-24
+	StartDate openapi_types.Date `json:"start_date"`
 }
 
 // StateCode Two-digit GST state code from the platform state reference table.
@@ -1642,6 +2724,88 @@ type StateList struct {
 	Items []StateEntry `json:"items"`
 }
 
+// Subscription A subscription row. One is current per organisation; earlier rows are history. The ledger holds no personal data (BR-A1-27).
+type Subscription struct {
+	// Addons Add-on lines.
+	Addons []Addon `json:"addons"`
+
+	// AgreedPrice Amount in integer paise. Never a float.
+	AgreedPrice Money `json:"agreed_price"`
+
+	// CancelAtPeriodEnd Cancellation requested; no charge after paid_through.
+	CancelAtPeriodEnd bool `json:"cancel_at_period_end"`
+
+	// CreatedAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	CreatedAt Timestamp `json:"created_at"`
+
+	// Cycle Billing cycle; none is the pilot.
+	//
+	// Example: monthly
+	Cycle Cycle `json:"cycle"`
+
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	Id Id `json:"id"`
+
+	// OrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	OrganisationId Id `json:"organisation_id"`
+
+	// OutletsOverLimit Soft limit notice in Phase 2 (A1-Q9).
+	OutletsOverLimit *bool `json:"outlets_over_limit,omitempty"`
+
+	// Overdue Derived: an open charge past its due date.
+	Overdue bool `json:"overdue"`
+
+	// PaidThrough Paid-through date; for a pilot the review date.
+	//
+	// Example: 2026-11-24
+	PaidThrough *openapi_types.Date `json:"paid_through,omitempty"`
+
+	// PlanKey Plan key.
+	//
+	// Example: table_service
+	PlanKey string `json:"plan_key"`
+
+	// PlanVersion Plan version.
+	//
+	// Example: 1
+	PlanVersion int `json:"plan_version"`
+
+	// StartDate Start date.
+	//
+	// Example: 2026-11-24
+	StartDate openapi_types.Date `json:"start_date"`
+
+	// State Stored state: pilot, active or cancelled. overdue is derived and shown separately (BR-A1-26).
+	//
+	// Example: active
+	State SubscriptionState `json:"state"`
+
+	// SupersededAt RFC 3339 instant in UTC.
+	//
+	// Example: 2026-11-24T13:05:11.120Z
+	SupersededAt *Timestamp `json:"superseded_at,omitempty"`
+}
+
+// SubscriptionHistory The current subscription and the earlier rows.
+type SubscriptionHistory struct {
+	// Current A subscription row. One is current per organisation; earlier rows are history. The ledger holds no personal data (BR-A1-27).
+	Current *Subscription `json:"current,omitempty"`
+
+	// History Earlier rows, newest first.
+	History []Subscription `json:"history"`
+}
+
+// SubscriptionState Stored state: pilot, active or cancelled. overdue is derived and shown separately (BR-A1-26).
+//
+// Example: active
+type SubscriptionState string
+
 // TaxRegime GST regime.
 //
 // Example: regular
@@ -1659,7 +2823,7 @@ type TaxRegistration struct {
 	// Example: 33ABCDE1234F1Z7
 	Gstin *Gstin `json:"gstin,omitempty"`
 
-	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted).
+	// Id Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
@@ -1701,6 +2865,11 @@ type TaxRegistrationPage struct {
 	// NextCursor Opaque cursor for the next page; absent when there are no more results.
 	NextCursor *string `json:"next_cursor,omitempty"`
 }
+
+// TicketReference Support ticket reference. Fixed pattern so it can travel in events without free text.
+//
+// Example: SUP-2041
+type TicketReference = string
 
 // Timestamp RFC 3339 instant in UTC.
 //
@@ -1822,6 +2991,9 @@ type IdempotencyKey = string
 // Limit defines model for Limit.
 type Limit = int
 
+// VendorApprovalGrant defines model for VendorApprovalGrant.
+type VendorApprovalGrant = string
+
 // VendorClientAddress defines model for VendorClientAddress.
 type VendorClientAddress = string
 
@@ -1837,6 +3009,9 @@ type Conflict = Problem
 // Forbidden RFC 9457 problem details. `type` is a stable URI per error kind.
 type Forbidden = Problem
 
+// GrantRefused RFC 9457 problem details. `type` is a stable URI per error kind.
+type GrantRefused = Problem
+
 // GstinInUse RFC 9457 problem details. `type` is a stable URI per error kind.
 type GstinInUse = Problem
 
@@ -1845,6 +3020,12 @@ type LinkConflict = Problem
 
 // NotFound RFC 9457 problem details. `type` is a stable URI per error kind.
 type NotFound = Problem
+
+// OpenTradingDay RFC 9457 problem details. `type` is a stable URI per error kind.
+type OpenTradingDay = Problem
+
+// Overpayment RFC 9457 problem details. `type` is a stable URI per error kind.
+type Overpayment = Problem
 
 // RegistrationUnverified RFC 9457 problem details. `type` is a stable URI per error kind.
 type RegistrationUnverified = Problem
@@ -1857,6 +3038,9 @@ type SeriesCapReached = Problem
 
 // StepUpRequired RFC 9457 problem details. `type` is a stable URI per error kind.
 type StepUpRequired = Problem
+
+// StrongSessionRequired RFC 9457 problem details. `type` is a stable URI per error kind.
+type StrongSessionRequired = Problem
 
 // TooManyRequests RFC 9457 problem details. `type` is a stable URI per error kind.
 type TooManyRequests = Problem
@@ -1886,6 +3070,51 @@ type GetLinkDecisionParams struct {
 
 	// Scope Scope being exercised.
 	Scope LinkScope `form:"scope" json:"scope"`
+}
+
+// ListBillingConfigurationsParams defines parameters for ListBillingConfigurations.
+type ListBillingConfigurationsParams struct {
+	// Cursor Opaque cursor from a previous response's next_cursor.
+	Cursor *Cursor `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size for vendor lists (default 25, maximum 100).
+	Limit *VendorLimit `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+}
+
+// CreateBillingConfigurationParams defines parameters for CreateBillingConfiguration.
+type CreateBillingConfigurationParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// ExportLedgerParams defines parameters for ExportLedger.
+type ExportLedgerParams struct {
+	// From First charge due date.
+	From *openapi_types.Date `form:"from,omitempty" json:"from,omitempty"`
+
+	// To Last charge due date.
+	To *openapi_types.Date `form:"to,omitempty" json:"to,omitempty"`
+
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+}
+
+// ListLedgerEntriesParams defines parameters for ListLedgerEntries.
+type ListLedgerEntriesParams struct {
+	// Cursor Opaque cursor from a previous response's next_cursor.
+	Cursor *Cursor `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size for vendor lists (default 25, maximum 100).
+	Limit *VendorLimit `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
 }
 
 // ListOrganisationDirectoryParams defines parameters for ListOrganisationDirectory.
@@ -1924,6 +3153,165 @@ type GetOrganisationDirectoryEntryParams struct {
 	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
 }
 
+// ListChargesParams defines parameters for ListCharges.
+type ListChargesParams struct {
+	// Status Filter by status.
+	Status *ListChargesParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+
+	// Cursor Opaque cursor from a previous response's next_cursor.
+	Cursor *Cursor `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size for vendor lists (default 25, maximum 100).
+	Limit *VendorLimit `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+}
+
+// ListChargesParamsStatus defines parameters for ListCharges.
+type ListChargesParamsStatus string
+
+// RaiseChargeParams defines parameters for RaiseCharge.
+type RaiseChargeParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// GetChargeParams defines parameters for GetCharge.
+type GetChargeParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+}
+
+// CancelChargeParams defines parameters for CancelCharge.
+type CancelChargeParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// SetChargeInvoiceReferenceParams defines parameters for SetChargeInvoiceReference.
+type SetChargeInvoiceReferenceParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// ListChargePaymentsParams defines parameters for ListChargePayments.
+type ListChargePaymentsParams struct {
+	// Cursor Opaque cursor from a previous response's next_cursor.
+	Cursor *Cursor `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size for vendor lists (default 25, maximum 100).
+	Limit *VendorLimit `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+}
+
+// RecordPaymentParams defines parameters for RecordPayment.
+type RecordPaymentParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// ReversePaymentParams defines parameters for ReversePayment.
+type ReversePaymentParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// WaiveChargeParams defines parameters for WaiveCharge.
+type WaiveChargeParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// CloseOrganisationParams defines parameters for CloseOrganisation.
+type CloseOrganisationParams struct {
+	// HostryVendorApproval Signed, single-use vendor approval grant from identity (ADR-0014 A1.3, A2.6): a compact JWS, ES256, signed with identity's vendor-realm key (`kid` in the header), 5 minutes. Claims are in the schema VendorApprovalGrantClaims; the subject hash is defined there and checked by the shared vectors in common/vendor-grant.vectors.v1.json. The executing service verifies in this order: signature and kid; typ, realm and aud (the service itself); exp; kind (the one this operation executes); org (equals the path organisation, or absent); approver (equals the subject of the bearer vendor token, which holds the kind's approve permission); the subject hash, recomputed from the path and the service's own stored state, never from a value the caller sends; then jti is inserted into approval_grant_used in the action's own transaction. Refusals are 403 with code grant.required (no header), grant.invalid (signature, kid, typ, realm, aud, kind, org or approver), grant.expired (exp), grant.subject_mismatch or grant.used. The grant never reaches a browser. approval_id is a parameter of the admin facade only; an executing service takes it from the grant.
+	HostryVendorApproval VendorApprovalGrant `json:"Hostry-Vendor-Approval"`
+
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// ReinstateOrganisationParams defines parameters for ReinstateOrganisation.
+type ReinstateOrganisationParams struct {
+	// HostryVendorApproval Signed, single-use vendor approval grant from identity (ADR-0014 A1.3, A2.6): a compact JWS, ES256, signed with identity's vendor-realm key (`kid` in the header), 5 minutes. Claims are in the schema VendorApprovalGrantClaims; the subject hash is defined there and checked by the shared vectors in common/vendor-grant.vectors.v1.json. The executing service verifies in this order: signature and kid; typ, realm and aud (the service itself); exp; kind (the one this operation executes); org (equals the path organisation, or absent); approver (equals the subject of the bearer vendor token, which holds the kind's approve permission); the subject hash, recomputed from the path and the service's own stored state, never from a value the caller sends; then jti is inserted into approval_grant_used in the action's own transaction. Refusals are 403 with code grant.required (no header), grant.invalid (signature, kid, typ, realm, aud, kind, org or approver), grant.expired (exp), grant.subject_mismatch or grant.used. The grant never reaches a browser. approval_id is a parameter of the admin facade only; an executing service takes it from the grant.
+	HostryVendorApproval VendorApprovalGrant `json:"Hostry-Vendor-Approval"`
+
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// GetOrganisationSubscriptionParams defines parameters for GetOrganisationSubscription.
+type GetOrganisationSubscriptionParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+}
+
+// StartSubscriptionParams defines parameters for StartSubscription.
+type StartSubscriptionParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// ChangeSubscriptionParams defines parameters for ChangeSubscription.
+type ChangeSubscriptionParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// CancelSubscriptionParams defines parameters for CancelSubscription.
+type CancelSubscriptionParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// SuspendOrganisationParams defines parameters for SuspendOrganisation.
+type SuspendOrganisationParams struct {
+	// HostryVendorApproval Signed, single-use vendor approval grant from identity (ADR-0014 A1.3, A2.6): a compact JWS, ES256, signed with identity's vendor-realm key (`kid` in the header), 5 minutes. Claims are in the schema VendorApprovalGrantClaims; the subject hash is defined there and checked by the shared vectors in common/vendor-grant.vectors.v1.json. The executing service verifies in this order: signature and kid; typ, realm and aud (the service itself); exp; kind (the one this operation executes); org (equals the path organisation, or absent); approver (equals the subject of the bearer vendor token, which holds the kind's approve permission); the subject hash, recomputed from the path and the service's own stored state, never from a value the caller sends; then jti is inserted into approval_grant_used in the action's own transaction. Refusals are 403 with code grant.required (no header), grant.invalid (signature, kid, typ, realm, aud, kind, org or approver), grant.expired (exp), grant.subject_mismatch or grant.used. The grant never reaches a browser. approval_id is a parameter of the admin facade only; an executing service takes it from the grant.
+	HostryVendorApproval VendorApprovalGrant `json:"Hostry-Vendor-Approval"`
+
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
 // RejectTaxRegistrationParams defines parameters for RejectTaxRegistration.
 type RejectTaxRegistrationParams struct {
 	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
@@ -1935,6 +3323,60 @@ type RejectTaxRegistrationParams struct {
 
 // VerifyTaxRegistrationParams defines parameters for VerifyTaxRegistration.
 type VerifyTaxRegistrationParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// ListPlansParams defines parameters for ListPlans.
+type ListPlansParams struct {
+	// Cursor Opaque cursor from a previous response's next_cursor.
+	Cursor *Cursor `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size for vendor lists (default 25, maximum 100).
+	Limit *VendorLimit `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+}
+
+// CreatePlanParams defines parameters for CreatePlan.
+type CreatePlanParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// GetPlanParams defines parameters for GetPlan.
+type GetPlanParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+}
+
+// CreatePlanVersionParams defines parameters for CreatePlanVersion.
+type CreatePlanVersionParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// ActivatePlanVersionParams defines parameters for ActivatePlanVersion.
+type ActivatePlanVersionParams struct {
+	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
+	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
+
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// RetirePlanVersionParams defines parameters for RetirePlanVersion.
+type RetirePlanVersionParams struct {
 	// XVendorClientAddress Network address of the staff member's browser, passed down by the admin service. Trusted only together with the admin service token; used for the audit record alone.
 	XVendorClientAddress *VendorClientAddress `json:"X-Vendor-Client-Address,omitempty"`
 
@@ -2044,6 +3486,18 @@ type RemoveLinkGrantParams struct {
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
+// ReissueLinkInvitationParams defines parameters for ReissueLinkInvitation.
+type ReissueLinkInvitationParams struct {
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// ReacceptLinkParams defines parameters for ReacceptLink.
+type ReacceptLinkParams struct {
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
 // RevokeLinkParams defines parameters for RevokeLink.
 type RevokeLinkParams struct {
 	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
@@ -2058,6 +3512,21 @@ type ResumeLinkParams struct {
 
 // SuspendLinkParams defines parameters for SuspendLink.
 type SuspendLinkParams struct {
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
+// ListManualBookSeriesParams defines parameters for ListManualBookSeries.
+type ListManualBookSeriesParams struct {
+	// Cursor Opaque cursor from a previous response's next_cursor.
+	Cursor *Cursor `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size (default 50, maximum 200).
+	Limit *Limit `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// RegisterManualBookSeriesParams defines parameters for RegisterManualBookSeries.
+type RegisterManualBookSeriesParams struct {
 	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
@@ -2098,6 +3567,12 @@ type UpdateOutletParams struct {
 	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
 }
 
+// ChangeOutletTaxRegistrationParams defines parameters for ChangeOutletTaxRegistration.
+type ChangeOutletTaxRegistrationParams struct {
+	// IdempotencyKey Client-generated unique key, 1-128 visible ASCII characters (a UUIDv7 is recommended). A replay with the same key and request returns the original status and body without repeating the effect. The same key with a different request returns 422 (code idempotency.mismatch); the same key while the first request is still in progress returns 409 (code idempotency.in_progress); an invalid key returns 422 (code idempotency.key_invalid).
+	IdempotencyKey IdempotencyKey `json:"Idempotency-Key"`
+}
+
 // ListTaxRegistrationsParams defines parameters for ListTaxRegistrations.
 type ListTaxRegistrationsParams struct {
 	// Cursor Opaque cursor from a previous response's next_cursor.
@@ -2131,14 +3606,59 @@ type CloseDeviceSeriesJSONRequestBody = CloseDeviceSeries
 // IssueDocumentSeriesJSONRequestBody defines body for IssueDocumentSeries for application/json ContentType.
 type IssueDocumentSeriesJSONRequestBody = IssueSeries
 
+// CreateBillingConfigurationJSONRequestBody defines body for CreateBillingConfiguration for application/json ContentType.
+type CreateBillingConfigurationJSONRequestBody = CreateBillingConfiguration
+
 // CreateOrganisationJSONRequestBody defines body for CreateOrganisation for application/json ContentType.
 type CreateOrganisationJSONRequestBody = CreateOrganisation
+
+// RaiseChargeJSONRequestBody defines body for RaiseCharge for application/json ContentType.
+type RaiseChargeJSONRequestBody = RaiseCharge
+
+// CancelChargeJSONRequestBody defines body for CancelCharge for application/json ContentType.
+type CancelChargeJSONRequestBody = ReasonBody
+
+// SetChargeInvoiceReferenceJSONRequestBody defines body for SetChargeInvoiceReference for application/json ContentType.
+type SetChargeInvoiceReferenceJSONRequestBody = SetInvoiceReference
+
+// RecordPaymentJSONRequestBody defines body for RecordPayment for application/json ContentType.
+type RecordPaymentJSONRequestBody = RecordPayment
+
+// ReversePaymentJSONRequestBody defines body for ReversePayment for application/json ContentType.
+type ReversePaymentJSONRequestBody = ReasonBody
+
+// WaiveChargeJSONRequestBody defines body for WaiveCharge for application/json ContentType.
+type WaiveChargeJSONRequestBody = ReasonBody
+
+// CloseOrganisationJSONRequestBody defines body for CloseOrganisation for application/json ContentType.
+type CloseOrganisationJSONRequestBody = LifecycleRequest
+
+// ReinstateOrganisationJSONRequestBody defines body for ReinstateOrganisation for application/json ContentType.
+type ReinstateOrganisationJSONRequestBody = LifecycleRequest
+
+// StartSubscriptionJSONRequestBody defines body for StartSubscription for application/json ContentType.
+type StartSubscriptionJSONRequestBody = StartSubscription
+
+// ChangeSubscriptionJSONRequestBody defines body for ChangeSubscription for application/json ContentType.
+type ChangeSubscriptionJSONRequestBody = ChangeSubscription
+
+// CancelSubscriptionJSONRequestBody defines body for CancelSubscription for application/json ContentType.
+type CancelSubscriptionJSONRequestBody = CancelSubscription
+
+// SuspendOrganisationJSONRequestBody defines body for SuspendOrganisation for application/json ContentType.
+type SuspendOrganisationJSONRequestBody = LifecycleRequest
 
 // RejectTaxRegistrationJSONRequestBody defines body for RejectTaxRegistration for application/json ContentType.
 type RejectTaxRegistrationJSONRequestBody = RejectRegistration
 
 // VerifyTaxRegistrationJSONRequestBody defines body for VerifyTaxRegistration for application/json ContentType.
 type VerifyTaxRegistrationJSONRequestBody = VerifyRegistration
+
+// CreatePlanJSONRequestBody defines body for CreatePlan for application/json ContentType.
+type CreatePlanJSONRequestBody = CreatePlan
+
+// CreatePlanVersionJSONRequestBody defines body for CreatePlanVersion for application/json ContentType.
+type CreatePlanVersionJSONRequestBody = PlanVersionDraft
 
 // CreateBrandJSONRequestBody defines body for CreateBrand for application/json ContentType.
 type CreateBrandJSONRequestBody = CreateBrand
@@ -2170,6 +3690,9 @@ type RevokeLinkJSONRequestBody = LinkReason
 // SuspendLinkJSONRequestBody defines body for SuspendLink for application/json ContentType.
 type SuspendLinkJSONRequestBody = LinkReason
 
+// RegisterManualBookSeriesJSONRequestBody defines body for RegisterManualBookSeries for application/json ContentType.
+type RegisterManualBookSeriesJSONRequestBody = RegisterManualBook
+
 // UpdateOrganisationSettingsJSONRequestBody defines body for UpdateOrganisationSettings for application/json ContentType.
 type UpdateOrganisationSettingsJSONRequestBody = UpdateOrganisationSettings
 
@@ -2181,6 +3704,9 @@ type CreateOutletJSONRequestBody = CreateOutlet
 
 // UpdateOutletJSONRequestBody defines body for UpdateOutlet for application/json ContentType.
 type UpdateOutletJSONRequestBody = UpdateOutlet
+
+// ChangeOutletTaxRegistrationJSONRequestBody defines body for ChangeOutletTaxRegistration for application/json ContentType.
+type ChangeOutletTaxRegistrationJSONRequestBody = ChangeOutletTaxRegistration
 
 // CreateTaxRegistrationJSONRequestBody defines body for CreateTaxRegistration for application/json ContentType.
 type CreateTaxRegistrationJSONRequestBody = CreateTaxRegistration
@@ -2302,6 +3828,39 @@ type ClientInterface interface {
 	// Corresponds with GET /internal/v1/link-decisions (the `GetLinkDecision` operationId).
 	GetLinkDecision(ctx context.Context, params *GetLinkDecisionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListBillingConfigurations List Hostry GST configuration versions
+	//
+	// Corresponds with GET /internal/v1/vendor/billing-configurations (the `ListBillingConfigurations` operationId).
+	ListBillingConfigurations(ctx context.Context, params *ListBillingConfigurationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateBillingConfigurationWithBody Add a GST configuration version
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/billing-configurations (the `CreateBillingConfiguration` operationId).
+	CreateBillingConfigurationWithBody(ctx context.Context, params *CreateBillingConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateBillingConfiguration Add a GST configuration version
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/billing-configurations (the `CreateBillingConfiguration` operationId).
+	CreateBillingConfiguration(ctx context.Context, params *CreateBillingConfigurationParams, body CreateBillingConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ExportLedger Export the ledger as CSV
+	//
+	// Should (A1-Q12): organisation ids and names only, no GSTIN, phone or email (BR-A1-38). Audited per export.
+	//
+	// Corresponds with GET /internal/v1/vendor/ledger-exports (the `ExportLedger` operationId).
+	ExportLedger(ctx context.Context, params *ExportLedgerParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListLedgerEntries Work lists for billing staff
+	//
+	// overdue_charges (outstanding above tolerance and due before today IST), charges_to_raise (paid_through within 7 days or passed, no charge for the next period), charges_without_invoice_reference, pilots_ending (review date within 14 days), retired_version_subscriptions, outlets_over_limit. Derived on read; no scheduled tasks, nothing is sent.
+	//
+	// Corresponds with GET /internal/v1/vendor/ledger-lists/{list_kind} (the `ListLedgerEntries` operationId).
+	ListLedgerEntries(ctx context.Context, listKind LedgerListKind, params *ListLedgerEntriesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListOrganisationDirectory List and search the organisation directory
 	//
 	// Corresponds with GET /internal/v1/vendor/organisations (the `ListOrganisationDirectory` operationId).
@@ -2329,6 +3888,226 @@ type ClientInterface interface {
 	//
 	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id} (the `GetOrganisationDirectoryEntry` operationId).
 	GetOrganisationDirectoryEntry(ctx context.Context, organisationId Id, params *GetOrganisationDirectoryEntryParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListCharges List an organisation's charges
+	//
+	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges (the `ListCharges` operationId).
+	ListCharges(ctx context.Context, organisationId Id, params *ListChargesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RaiseChargeWithBody Raise a charge
+	//
+	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges (the `RaiseCharge` operationId).
+	RaiseChargeWithBody(ctx context.Context, organisationId Id, params *RaiseChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RaiseCharge Raise a charge
+	//
+	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges (the `RaiseCharge` operationId).
+	RaiseCharge(ctx context.Context, organisationId Id, params *RaiseChargeParams, body RaiseChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetCharge Read a charge (audited per read)
+	//
+	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id} (the `GetCharge` operationId).
+	GetCharge(ctx context.Context, organisationId Id, chargeId Id, params *GetChargeParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CancelChargeWithBody Cancel a charge
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation (the `CancelCharge` operationId).
+	CancelChargeWithBody(ctx context.Context, organisationId Id, chargeId Id, params *CancelChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CancelCharge Cancel a charge
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation (the `CancelCharge` operationId).
+	CancelCharge(ctx context.Context, organisationId Id, chargeId Id, params *CancelChargeParams, body CancelChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SetChargeInvoiceReferenceWithBody Set the invoice reference once
+	//
+	// Set once; a second reference on the same charge is refused 409 invoice_reference_set. A mistyped reference cannot be edited: an admin cancels the charge and raises it again (A1-Q8).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference (the `SetChargeInvoiceReference` operationId).
+	SetChargeInvoiceReferenceWithBody(ctx context.Context, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SetChargeInvoiceReference Set the invoice reference once
+	//
+	// Set once; a second reference on the same charge is refused 409 invoice_reference_set. A mistyped reference cannot be edited: an admin cancels the charge and raises it again (A1-Q8).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference (the `SetChargeInvoiceReference` operationId).
+	SetChargeInvoiceReference(ctx context.Context, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, body SetChargeInvoiceReferenceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListChargePayments List payments of a charge
+	//
+	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `ListChargePayments` operationId).
+	ListChargePayments(ctx context.Context, organisationId Id, chargeId Id, params *ListChargePaymentsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RecordPaymentWithBody Record a payment received by hand
+	//
+	// Partial payments are allowed; a payment above the outstanding amount is refused 422 overpayment; a duplicate reference on a different payment is a warning only (BR-A1-45).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `RecordPayment` operationId).
+	RecordPaymentWithBody(ctx context.Context, organisationId Id, chargeId Id, params *RecordPaymentParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RecordPayment Record a payment received by hand
+	//
+	// Partial payments are allowed; a payment above the outstanding amount is refused 422 overpayment; a duplicate reference on a different payment is a warning only (BR-A1-45).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `RecordPayment` operationId).
+	RecordPayment(ctx context.Context, organisationId Id, chargeId Id, params *RecordPaymentParams, body RecordPaymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReversePaymentWithBody Reverse a payment
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal (the `ReversePayment` operationId).
+	ReversePaymentWithBody(ctx context.Context, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReversePayment Reverse a payment
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal (the `ReversePayment` operationId).
+	ReversePayment(ctx context.Context, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, body ReversePaymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WaiveChargeWithBody Waive a charge
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver (the `WaiveCharge` operationId).
+	WaiveChargeWithBody(ctx context.Context, organisationId Id, chargeId Id, params *WaiveChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// WaiveCharge Waive a charge
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver (the `WaiveCharge` operationId).
+	WaiveCharge(ctx context.Context, organisationId Id, chargeId Id, params *WaiveChargeParams, body WaiveChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloseOrganisationWithBody Execute an approved closure
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_close (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/closure (the `CloseOrganisation` operationId).
+	CloseOrganisationWithBody(ctx context.Context, organisationId Id, params *CloseOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloseOrganisation Execute an approved closure
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_close (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/closure (the `CloseOrganisation` operationId).
+	CloseOrganisation(ctx context.Context, organisationId Id, params *CloseOrganisationParams, body CloseOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReinstateOrganisationWithBody Execute an approved reinstatement
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_reinstate (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Reinstatement is not guarded.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/reinstatement (the `ReinstateOrganisation` operationId).
+	ReinstateOrganisationWithBody(ctx context.Context, organisationId Id, params *ReinstateOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReinstateOrganisation Execute an approved reinstatement
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_reinstate (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Reinstatement is not guarded.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/reinstatement (the `ReinstateOrganisation` operationId).
+	ReinstateOrganisation(ctx context.Context, organisationId Id, params *ReinstateOrganisationParams, body ReinstateOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOrganisationSubscription Get the current subscription and history
+	//
+	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/subscription (the `GetOrganisationSubscription` operationId).
+	GetOrganisationSubscription(ctx context.Context, organisationId Id, params *GetOrganisationSubscriptionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// StartSubscriptionWithBody Assign a plan version or a pilot
+	//
+	// Changes the subscription row and the organisation's entitlement rows in one transaction (BR-A1-14, CB1). Entitlements carry no expiry. A price below list needs admin.subscription.adjust and a reason; a replay with the same key returns the same row. The first plan moves organisation status trial to active (BR-A1-74).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription (the `StartSubscription` operationId).
+	StartSubscriptionWithBody(ctx context.Context, organisationId Id, params *StartSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// StartSubscription Assign a plan version or a pilot
+	//
+	// Changes the subscription row and the organisation's entitlement rows in one transaction (BR-A1-14, CB1). Entitlements carry no expiry. A price below list needs admin.subscription.adjust and a reason; a replay with the same key returns the same row. The first plan moves organisation status trial to active (BR-A1-74).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription (the `StartSubscription` operationId).
+	StartSubscription(ctx context.Context, organisationId Id, params *StartSubscriptionParams, body StartSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ChangeSubscriptionWithBody Change plan, price or add-ons from the next charge
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/subscription (the `ChangeSubscription` operationId).
+	ChangeSubscriptionWithBody(ctx context.Context, organisationId Id, params *ChangeSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ChangeSubscription Change plan, price or add-ons from the next charge
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/subscription (the `ChangeSubscription` operationId).
+	ChangeSubscription(ctx context.Context, organisationId Id, params *ChangeSubscriptionParams, body ChangeSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CancelSubscriptionWithBody Record a cancellation at period end
+	//
+	// No further charge is raised after paid_through; no refund is modelled; closing the organisation is a separate lifecycle action.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation (the `CancelSubscription` operationId).
+	CancelSubscriptionWithBody(ctx context.Context, organisationId Id, params *CancelSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CancelSubscription Record a cancellation at period end
+	//
+	// No further charge is raised after paid_through; no refund is modelled; closing the organisation is a separate lifecycle action.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation (the `CancelSubscription` operationId).
+	CancelSubscription(ctx context.Context, organisationId Id, params *CancelSubscriptionParams, body CancelSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SuspendOrganisationWithBody Execute an approved suspension
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_suspend (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/suspension (the `SuspendOrganisation` operationId).
+	SuspendOrganisationWithBody(ctx context.Context, organisationId Id, params *SuspendOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SuspendOrganisation Execute an approved suspension
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_suspend (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/suspension (the `SuspendOrganisation` operationId).
+	SuspendOrganisation(ctx context.Context, organisationId Id, params *SuspendOrganisationParams, body SuspendOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// RejectTaxRegistrationWithBody Mark a registration rejected
 	//
@@ -2362,6 +4141,54 @@ type ClientInterface interface {
 	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/verification (the `VerifyTaxRegistration` operationId).
 	VerifyTaxRegistration(ctx context.Context, organisationId Id, registrationId Id, params *VerifyTaxRegistrationParams, body VerifyTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ListPlans List plans with their versions
+	//
+	// Corresponds with GET /internal/v1/vendor/plans (the `ListPlans` operationId).
+	ListPlans(ctx context.Context, params *ListPlansParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreatePlanWithBody Create a plan with a draft first version
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/plans (the `CreatePlan` operationId).
+	CreatePlanWithBody(ctx context.Context, params *CreatePlanParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreatePlan Create a plan with a draft first version
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/plans (the `CreatePlan` operationId).
+	CreatePlan(ctx context.Context, params *CreatePlanParams, body CreatePlanJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetPlan Get a plan
+	//
+	// Corresponds with GET /internal/v1/vendor/plans/{plan_key} (the `GetPlan` operationId).
+	GetPlan(ctx context.Context, planKey string, params *GetPlanParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreatePlanVersionWithBody Create a draft version (a price or content change is a new version)
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions (the `CreatePlanVersion` operationId).
+	CreatePlanVersionWithBody(ctx context.Context, planKey string, params *CreatePlanVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreatePlanVersion Create a draft version (a price or content change is a new version)
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions (the `CreatePlanVersion` operationId).
+	CreatePlanVersion(ctx context.Context, planKey string, params *CreatePlanVersionParams, body CreatePlanVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ActivatePlanVersion Activate a draft version (immutable from here)
+	//
+	// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/activation (the `ActivatePlanVersion` operationId).
+	ActivatePlanVersion(ctx context.Context, planKey string, version int, params *ActivatePlanVersionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RetirePlanVersion Retire an active version
+	//
+	// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/retirement (the `RetirePlanVersion` operationId).
+	RetirePlanVersion(ctx context.Context, planKey string, version int, params *RetirePlanVersionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListBrands List brands
 	//
 	// Corresponds with GET /v1/brands (the `ListBrands` operationId).
@@ -2393,12 +4220,16 @@ type ClientInterface interface {
 
 	// CloseDocumentSeriesUnreconciledWithBody Close a series with an unreconciled tail
 	//
+	// A person's terminal decision, with a reason, that the device will not come back (ADR-0003 section 1a). Offered only while tail_confirmed_at is empty (409 tail_confirmed after a device stated its tail). Numbers that arrive after either kind of closure are flagged and listed as "after closure". Publishes tenancy.series.closed with cause closed_unreconciled.
+	//
 	// Takes any type of body and a specified content type.
 	//
 	// Corresponds with PUT /v1/document-series/{series_id}/closure (the `CloseDocumentSeriesUnreconciled` operationId).
 	CloseDocumentSeriesUnreconciledWithBody(ctx context.Context, seriesId Id, params *CloseDocumentSeriesUnreconciledParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// CloseDocumentSeriesUnreconciled Close a series with an unreconciled tail
+	//
+	// A person's terminal decision, with a reason, that the device will not come back (ADR-0003 section 1a). Offered only while tail_confirmed_at is empty (409 tail_confirmed after a device stated its tail). Numbers that arrive after either kind of closure are flagged and listed as "after closure". Publishes tenancy.series.closed with cause closed_unreconciled.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -2478,12 +4309,16 @@ type ClientInterface interface {
 
 	// ConfirmLinkWithBody Proposer confirms the accepting organisation
 	//
+	// The details of the accepting organisation are re-checked against the snapshot taken at acceptance (ADR-0003 Note N1 R3). When they changed the answer is 409 counterparty_changed and the link stays accepted: the acceptor can refresh the snapshot with reacceptLink, or the proposer can decline the accepted link (declineLink) or ask for a new invitation after declining and proposing again; nothing else moves the link. A replay of a confirmed link returns it.
+	//
 	// Takes any type of body and a specified content type.
 	//
 	// Corresponds with PUT /v1/links/{link_id}/confirmation (the `ConfirmLink` operationId).
 	ConfirmLinkWithBody(ctx context.Context, linkId Id, params *ConfirmLinkParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ConfirmLink Proposer confirms the accepting organisation
+	//
+	// The details of the accepting organisation are re-checked against the snapshot taken at acceptance (ADR-0003 Note N1 R3). When they changed the answer is 409 counterparty_changed and the link stays accepted: the acceptor can refresh the snapshot with reacceptLink, or the proposer can decline the accepted link (declineLink) or ask for a new invitation after declining and proposing again; nothing else moves the link. A replay of a confirmed link returns it.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -2508,6 +4343,20 @@ type ClientInterface interface {
 	//
 	// Corresponds with DELETE /v1/links/{link_id}/grants/{grant_id} (the `RemoveLinkGrant` operationId).
 	RemoveLinkGrant(ctx context.Context, linkId Id, grantId Id, params *RemoveLinkGrantParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReissueLinkInvitation Issue a fresh invitation code for a proposed link
+	//
+	// ADR-0003 Note N1 R1. Only the proposer, only while the link is proposed (409 link_not_proposed otherwise). The previous code stops working at once. The new code is shown once in this response and is never stored readable; a replay of the same Idempotency-Key returns the link without a code, never the code again.
+	//
+	// Corresponds with POST /v1/links/{link_id}/invitations (the `ReissueLinkInvitation` operationId).
+	ReissueLinkInvitation(ctx context.Context, linkId Id, params *ReissueLinkInvitationParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReacceptLink Acceptor refreshes its details after counterparty_changed
+	//
+	// Only the acceptor, only while the link is accepted and not yet confirmed (409 link_not_accepted otherwise). Takes a new snapshot of the acceptor's details for the proposer to review (ADR-0003 Note N1 R3, never refreshed on its own), keeps the acceptance and its grants pending, and publishes tenancy.link.accepted again. The proposer then confirms or declines. Needs no invitation code: the code was used up at acceptance.
+	//
+	// Corresponds with PUT /v1/links/{link_id}/re-acceptance (the `ReacceptLink` operationId).
+	ReacceptLink(ctx context.Context, linkId Id, params *ReacceptLinkParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// RevokeLinkWithBody Revoke a link (either party)
 	//
@@ -2541,6 +4390,29 @@ type ClientInterface interface {
 	//
 	// Corresponds with PUT /v1/links/{link_id}/suspension (the `SuspendLink` operationId).
 	SuspendLink(ctx context.Context, linkId Id, params *SuspendLinkParams, body SuspendLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListManualBookSeries List registered bill books
+	//
+	// Corresponds with GET /v1/manual-book-series (the `ListManualBookSeries` operationId).
+	ListManualBookSeries(ctx context.Context, params *ListManualBookSeriesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RegisterManualBookSeriesWithBody Register a paper bill book as an entry-only series
+	//
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /v1/manual-book-series (the `RegisterManualBookSeries` operationId).
+	RegisterManualBookSeriesWithBody(ctx context.Context, params *RegisterManualBookSeriesParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// RegisterManualBookSeries Register a paper bill book as an entry-only series
+	//
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /v1/manual-book-series (the `RegisterManualBookSeries` operationId).
+	RegisterManualBookSeries(ctx context.Context, params *RegisterManualBookSeriesParams, body RegisterManualBookSeriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetOrganisationSettings Get organisation settings
 	//
@@ -2618,10 +4490,35 @@ type ClientInterface interface {
 	// Corresponds with PATCH /v1/outlets/{outlet_id} (the `UpdateOutlet` operationId).
 	UpdateOutlet(ctx context.Context, outletId Id, params *UpdateOutletParams, body UpdateOutletJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ChangeOutletTaxRegistrationWithBody Move an outlet to another tax registration
+	//
+	// ADR-0014 A2.5 item 1. The target must belong to the organisation, be open, and be verified or of regime unregistered (409 registration_not_eligible otherwise). Refused 409 open_trading_day while the outlet has a trading day in progress, so one business day has one registration. In one transaction the outlet points at the target and every series of that outlet under the old registration is closed (it then reads closed, awaiting device); tenancy.outlet.updated and tenancy.series.closed are published, ids and codes only. Identity issues codes under the new registration in the next pack. A device switches series only when it holds no day in progress; a bill an offline device makes later under the old series is flagged for the accountant, never rejected. Idempotent: the same target again returns the outlet.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /v1/outlets/{outlet_id}/tax-registration (the `ChangeOutletTaxRegistration` operationId).
+	ChangeOutletTaxRegistrationWithBody(ctx context.Context, outletId Id, params *ChangeOutletTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ChangeOutletTaxRegistration Move an outlet to another tax registration
+	//
+	// ADR-0014 A2.5 item 1. The target must belong to the organisation, be open, and be verified or of regime unregistered (409 registration_not_eligible otherwise). Refused 409 open_trading_day while the outlet has a trading day in progress, so one business day has one registration. In one transaction the outlet points at the target and every series of that outlet under the old registration is closed (it then reads closed, awaiting device); tenancy.outlet.updated and tenancy.series.closed are published, ids and codes only. Identity issues codes under the new registration in the next pack. A device switches series only when it holds no day in progress; a bill an offline device makes later under the old series is flagged for the accountant, never rejected. Idempotent: the same target again returns the outlet.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /v1/outlets/{outlet_id}/tax-registration (the `ChangeOutletTaxRegistration` operationId).
+	ChangeOutletTaxRegistration(ctx context.Context, outletId Id, params *ChangeOutletTaxRegistrationParams, body ChangeOutletTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListStates GST state reference table
 	//
 	// Corresponds with GET /v1/states (the `ListStates` operationId).
 	ListStates(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetMyPlan Owner's read-only "My plan"
+	//
+	// Could (BR-A1-90). Returns only the caller's own organisation; no vendor user ids, no notes. Overdue is a label and gates nothing (ADR-0008 S5).
+	//
+	// Corresponds with GET /v1/subscription (the `GetMyPlan` operationId).
+	GetMyPlan(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListTaxRegistrations List tax registrations
 	//
@@ -2667,7 +4564,7 @@ type ClientInterface interface {
 
 	// CloseTaxRegistrationWithBody Close a tax registration and its series
 	//
-	// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+	// ADR-0003 A1.1 item 6, ADR-0014 A2.5 item 1: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here together with all its series. Every open series becomes closed; this operation never sets closed_unreconciled, because tenancy cannot know what a device still holds. The series reads "closed, awaiting device" until the device states its last number (series.close) and billing publishes billing.series.reconciled, which fills tail_confirmed_at and last_number. 409 registration_in_use while an outlet still references the registration: move the outlet first with changeOutletTaxRegistration. Closing is terminal and idempotent. Publishes tenancy.series.closed for every series it closes.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -2676,7 +4573,7 @@ type ClientInterface interface {
 
 	// CloseTaxRegistration Close a tax registration and its series
 	//
-	// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+	// ADR-0003 A1.1 item 6, ADR-0014 A2.5 item 1: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here together with all its series. Every open series becomes closed; this operation never sets closed_unreconciled, because tenancy cannot know what a device still holds. The series reads "closed, awaiting device" until the device states its last number (series.close) and billing publishes billing.series.reconciled, which fills tail_confirmed_at and last_number. 409 registration_in_use while an outlet still references the registration: move the outlet first with changeOutletTaxRegistration. Closing is terminal and idempotent. Publishes tenancy.series.closed for every series it closes.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -2771,6 +4668,89 @@ func (c *Client) GetLinkDecision(ctx context.Context, params *GetLinkDecisionPar
 	return c.Client.Do(req)
 }
 
+// ListBillingConfigurations List Hostry GST configuration versions
+//
+// Corresponds with GET /internal/v1/vendor/billing-configurations (the `ListBillingConfigurations` operationId).
+func (c *Client) ListBillingConfigurations(ctx context.Context, params *ListBillingConfigurationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListBillingConfigurationsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateBillingConfigurationWithBody Add a GST configuration version
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/billing-configurations (the `CreateBillingConfiguration` operationId).
+func (c *Client) CreateBillingConfigurationWithBody(ctx context.Context, params *CreateBillingConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateBillingConfigurationRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateBillingConfiguration Add a GST configuration version
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/billing-configurations (the `CreateBillingConfiguration` operationId).
+func (c *Client) CreateBillingConfiguration(ctx context.Context, params *CreateBillingConfigurationParams, body CreateBillingConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateBillingConfigurationRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ExportLedger Export the ledger as CSV
+//
+// Should (A1-Q12): organisation ids and names only, no GSTIN, phone or email (BR-A1-38). Audited per export.
+//
+// Corresponds with GET /internal/v1/vendor/ledger-exports (the `ExportLedger` operationId).
+func (c *Client) ExportLedger(ctx context.Context, params *ExportLedgerParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExportLedgerRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListLedgerEntries Work lists for billing staff
+//
+// overdue_charges (outstanding above tolerance and due before today IST), charges_to_raise (paid_through within 7 days or passed, no charge for the next period), charges_without_invoice_reference, pilots_ending (review date within 14 days), retired_version_subscriptions, outlets_over_limit. Derived on read; no scheduled tasks, nothing is sent.
+//
+// Corresponds with GET /internal/v1/vendor/ledger-lists/{list_kind} (the `ListLedgerEntries` operationId).
+func (c *Client) ListLedgerEntries(ctx context.Context, listKind LedgerListKind, params *ListLedgerEntriesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListLedgerEntriesRequest(c.Server, listKind, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // ListOrganisationDirectory List and search the organisation directory
 //
 // Corresponds with GET /internal/v1/vendor/organisations (the `ListOrganisationDirectory` operationId).
@@ -2829,6 +4809,506 @@ func (c *Client) CreateOrganisation(ctx context.Context, params *CreateOrganisat
 // Corresponds with GET /internal/v1/vendor/organisations/{organisation_id} (the `GetOrganisationDirectoryEntry` operationId).
 func (c *Client) GetOrganisationDirectoryEntry(ctx context.Context, organisationId Id, params *GetOrganisationDirectoryEntryParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganisationDirectoryEntryRequest(c.Server, organisationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListCharges List an organisation's charges
+//
+// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges (the `ListCharges` operationId).
+func (c *Client) ListCharges(ctx context.Context, organisationId Id, params *ListChargesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListChargesRequest(c.Server, organisationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// RaiseChargeWithBody Raise a charge
+//
+// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges (the `RaiseCharge` operationId).
+func (c *Client) RaiseChargeWithBody(ctx context.Context, organisationId Id, params *RaiseChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRaiseChargeRequestWithBody(c.Server, organisationId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// RaiseCharge Raise a charge
+//
+// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges (the `RaiseCharge` operationId).
+func (c *Client) RaiseCharge(ctx context.Context, organisationId Id, params *RaiseChargeParams, body RaiseChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRaiseChargeRequest(c.Server, organisationId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetCharge Read a charge (audited per read)
+//
+// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id} (the `GetCharge` operationId).
+func (c *Client) GetCharge(ctx context.Context, organisationId Id, chargeId Id, params *GetChargeParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetChargeRequest(c.Server, organisationId, chargeId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CancelChargeWithBody Cancel a charge
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation (the `CancelCharge` operationId).
+func (c *Client) CancelChargeWithBody(ctx context.Context, organisationId Id, chargeId Id, params *CancelChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCancelChargeRequestWithBody(c.Server, organisationId, chargeId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CancelCharge Cancel a charge
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation (the `CancelCharge` operationId).
+func (c *Client) CancelCharge(ctx context.Context, organisationId Id, chargeId Id, params *CancelChargeParams, body CancelChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCancelChargeRequest(c.Server, organisationId, chargeId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// SetChargeInvoiceReferenceWithBody Set the invoice reference once
+//
+// Set once; a second reference on the same charge is refused 409 invoice_reference_set. A mistyped reference cannot be edited: an admin cancels the charge and raises it again (A1-Q8).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference (the `SetChargeInvoiceReference` operationId).
+func (c *Client) SetChargeInvoiceReferenceWithBody(ctx context.Context, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetChargeInvoiceReferenceRequestWithBody(c.Server, organisationId, chargeId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// SetChargeInvoiceReference Set the invoice reference once
+//
+// Set once; a second reference on the same charge is refused 409 invoice_reference_set. A mistyped reference cannot be edited: an admin cancels the charge and raises it again (A1-Q8).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference (the `SetChargeInvoiceReference` operationId).
+func (c *Client) SetChargeInvoiceReference(ctx context.Context, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, body SetChargeInvoiceReferenceJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSetChargeInvoiceReferenceRequest(c.Server, organisationId, chargeId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListChargePayments List payments of a charge
+//
+// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `ListChargePayments` operationId).
+func (c *Client) ListChargePayments(ctx context.Context, organisationId Id, chargeId Id, params *ListChargePaymentsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListChargePaymentsRequest(c.Server, organisationId, chargeId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// RecordPaymentWithBody Record a payment received by hand
+//
+// Partial payments are allowed; a payment above the outstanding amount is refused 422 overpayment; a duplicate reference on a different payment is a warning only (BR-A1-45).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `RecordPayment` operationId).
+func (c *Client) RecordPaymentWithBody(ctx context.Context, organisationId Id, chargeId Id, params *RecordPaymentParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRecordPaymentRequestWithBody(c.Server, organisationId, chargeId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// RecordPayment Record a payment received by hand
+//
+// Partial payments are allowed; a payment above the outstanding amount is refused 422 overpayment; a duplicate reference on a different payment is a warning only (BR-A1-45).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `RecordPayment` operationId).
+func (c *Client) RecordPayment(ctx context.Context, organisationId Id, chargeId Id, params *RecordPaymentParams, body RecordPaymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRecordPaymentRequest(c.Server, organisationId, chargeId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ReversePaymentWithBody Reverse a payment
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal (the `ReversePayment` operationId).
+func (c *Client) ReversePaymentWithBody(ctx context.Context, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReversePaymentRequestWithBody(c.Server, organisationId, chargeId, paymentId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ReversePayment Reverse a payment
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal (the `ReversePayment` operationId).
+func (c *Client) ReversePayment(ctx context.Context, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, body ReversePaymentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReversePaymentRequest(c.Server, organisationId, chargeId, paymentId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// WaiveChargeWithBody Waive a charge
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver (the `WaiveCharge` operationId).
+func (c *Client) WaiveChargeWithBody(ctx context.Context, organisationId Id, chargeId Id, params *WaiveChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWaiveChargeRequestWithBody(c.Server, organisationId, chargeId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// WaiveCharge Waive a charge
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver (the `WaiveCharge` operationId).
+func (c *Client) WaiveCharge(ctx context.Context, organisationId Id, chargeId Id, params *WaiveChargeParams, body WaiveChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewWaiveChargeRequest(c.Server, organisationId, chargeId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloseOrganisationWithBody Execute an approved closure
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_close (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/closure (the `CloseOrganisation` operationId).
+func (c *Client) CloseOrganisationWithBody(ctx context.Context, organisationId Id, params *CloseOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloseOrganisationRequestWithBody(c.Server, organisationId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloseOrganisation Execute an approved closure
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_close (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/closure (the `CloseOrganisation` operationId).
+func (c *Client) CloseOrganisation(ctx context.Context, organisationId Id, params *CloseOrganisationParams, body CloseOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloseOrganisationRequest(c.Server, organisationId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ReinstateOrganisationWithBody Execute an approved reinstatement
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_reinstate (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Reinstatement is not guarded.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/reinstatement (the `ReinstateOrganisation` operationId).
+func (c *Client) ReinstateOrganisationWithBody(ctx context.Context, organisationId Id, params *ReinstateOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReinstateOrganisationRequestWithBody(c.Server, organisationId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ReinstateOrganisation Execute an approved reinstatement
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_reinstate (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Reinstatement is not guarded.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/reinstatement (the `ReinstateOrganisation` operationId).
+func (c *Client) ReinstateOrganisation(ctx context.Context, organisationId Id, params *ReinstateOrganisationParams, body ReinstateOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReinstateOrganisationRequest(c.Server, organisationId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetOrganisationSubscription Get the current subscription and history
+//
+// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/subscription (the `GetOrganisationSubscription` operationId).
+func (c *Client) GetOrganisationSubscription(ctx context.Context, organisationId Id, params *GetOrganisationSubscriptionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganisationSubscriptionRequest(c.Server, organisationId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// StartSubscriptionWithBody Assign a plan version or a pilot
+//
+// Changes the subscription row and the organisation's entitlement rows in one transaction (BR-A1-14, CB1). Entitlements carry no expiry. A price below list needs admin.subscription.adjust and a reason; a replay with the same key returns the same row. The first plan moves organisation status trial to active (BR-A1-74).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription (the `StartSubscription` operationId).
+func (c *Client) StartSubscriptionWithBody(ctx context.Context, organisationId Id, params *StartSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewStartSubscriptionRequestWithBody(c.Server, organisationId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// StartSubscription Assign a plan version or a pilot
+//
+// Changes the subscription row and the organisation's entitlement rows in one transaction (BR-A1-14, CB1). Entitlements carry no expiry. A price below list needs admin.subscription.adjust and a reason; a replay with the same key returns the same row. The first plan moves organisation status trial to active (BR-A1-74).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription (the `StartSubscription` operationId).
+func (c *Client) StartSubscription(ctx context.Context, organisationId Id, params *StartSubscriptionParams, body StartSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewStartSubscriptionRequest(c.Server, organisationId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ChangeSubscriptionWithBody Change plan, price or add-ons from the next charge
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/subscription (the `ChangeSubscription` operationId).
+func (c *Client) ChangeSubscriptionWithBody(ctx context.Context, organisationId Id, params *ChangeSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewChangeSubscriptionRequestWithBody(c.Server, organisationId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ChangeSubscription Change plan, price or add-ons from the next charge
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/subscription (the `ChangeSubscription` operationId).
+func (c *Client) ChangeSubscription(ctx context.Context, organisationId Id, params *ChangeSubscriptionParams, body ChangeSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewChangeSubscriptionRequest(c.Server, organisationId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CancelSubscriptionWithBody Record a cancellation at period end
+//
+// No further charge is raised after paid_through; no refund is modelled; closing the organisation is a separate lifecycle action.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation (the `CancelSubscription` operationId).
+func (c *Client) CancelSubscriptionWithBody(ctx context.Context, organisationId Id, params *CancelSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCancelSubscriptionRequestWithBody(c.Server, organisationId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CancelSubscription Record a cancellation at period end
+//
+// No further charge is raised after paid_through; no refund is modelled; closing the organisation is a separate lifecycle action.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation (the `CancelSubscription` operationId).
+func (c *Client) CancelSubscription(ctx context.Context, organisationId Id, params *CancelSubscriptionParams, body CancelSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCancelSubscriptionRequest(c.Server, organisationId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// SuspendOrganisationWithBody Execute an approved suspension
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_suspend (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/suspension (the `SuspendOrganisation` operationId).
+func (c *Client) SuspendOrganisationWithBody(ctx context.Context, organisationId Id, params *SuspendOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSuspendOrganisationRequestWithBody(c.Server, organisationId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// SuspendOrganisation Execute an approved suspension
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_suspend (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/suspension (the `SuspendOrganisation` operationId).
+func (c *Client) SuspendOrganisation(ctx context.Context, organisationId Id, params *SuspendOrganisationParams, body SuspendOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSuspendOrganisationRequest(c.Server, organisationId, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -2901,6 +5381,134 @@ func (c *Client) VerifyTaxRegistrationWithBody(ctx context.Context, organisation
 // Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/verification (the `VerifyTaxRegistration` operationId).
 func (c *Client) VerifyTaxRegistration(ctx context.Context, organisationId Id, registrationId Id, params *VerifyTaxRegistrationParams, body VerifyTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewVerifyTaxRegistrationRequest(c.Server, organisationId, registrationId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListPlans List plans with their versions
+//
+// Corresponds with GET /internal/v1/vendor/plans (the `ListPlans` operationId).
+func (c *Client) ListPlans(ctx context.Context, params *ListPlansParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListPlansRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreatePlanWithBody Create a plan with a draft first version
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/plans (the `CreatePlan` operationId).
+func (c *Client) CreatePlanWithBody(ctx context.Context, params *CreatePlanParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreatePlanRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreatePlan Create a plan with a draft first version
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/plans (the `CreatePlan` operationId).
+func (c *Client) CreatePlan(ctx context.Context, params *CreatePlanParams, body CreatePlanJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreatePlanRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetPlan Get a plan
+//
+// Corresponds with GET /internal/v1/vendor/plans/{plan_key} (the `GetPlan` operationId).
+func (c *Client) GetPlan(ctx context.Context, planKey string, params *GetPlanParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetPlanRequest(c.Server, planKey, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreatePlanVersionWithBody Create a draft version (a price or content change is a new version)
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions (the `CreatePlanVersion` operationId).
+func (c *Client) CreatePlanVersionWithBody(ctx context.Context, planKey string, params *CreatePlanVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreatePlanVersionRequestWithBody(c.Server, planKey, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreatePlanVersion Create a draft version (a price or content change is a new version)
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions (the `CreatePlanVersion` operationId).
+func (c *Client) CreatePlanVersion(ctx context.Context, planKey string, params *CreatePlanVersionParams, body CreatePlanVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreatePlanVersionRequest(c.Server, planKey, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ActivatePlanVersion Activate a draft version (immutable from here)
+//
+// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/activation (the `ActivatePlanVersion` operationId).
+func (c *Client) ActivatePlanVersion(ctx context.Context, planKey string, version int, params *ActivatePlanVersionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewActivatePlanVersionRequest(c.Server, planKey, version, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// RetirePlanVersion Retire an active version
+//
+// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/retirement (the `RetirePlanVersion` operationId).
+func (c *Client) RetirePlanVersion(ctx context.Context, planKey string, version int, params *RetirePlanVersionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRetirePlanVersionRequest(c.Server, planKey, version, params)
 	if err != nil {
 		return nil, err
 	}
@@ -2992,6 +5600,8 @@ func (c *Client) ListDocumentSeries(ctx context.Context, params *ListDocumentSer
 
 // CloseDocumentSeriesUnreconciledWithBody Close a series with an unreconciled tail
 //
+// A person's terminal decision, with a reason, that the device will not come back (ADR-0003 section 1a). Offered only while tail_confirmed_at is empty (409 tail_confirmed after a device stated its tail). Numbers that arrive after either kind of closure are flagged and listed as "after closure". Publishes tenancy.series.closed with cause closed_unreconciled.
+//
 // Takes any type of body and a specified content type.
 //
 // Corresponds with PUT /v1/document-series/{series_id}/closure (the `CloseDocumentSeriesUnreconciled` operationId).
@@ -3008,6 +5618,8 @@ func (c *Client) CloseDocumentSeriesUnreconciledWithBody(ctx context.Context, se
 }
 
 // CloseDocumentSeriesUnreconciled Close a series with an unreconciled tail
+//
+// A person's terminal decision, with a reason, that the device will not come back (ADR-0003 section 1a). Offered only while tail_confirmed_at is empty (409 tail_confirmed after a device stated its tail). Numbers that arrive after either kind of closure are flagged and listed as "after closure". Publishes tenancy.series.closed with cause closed_unreconciled.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -3207,6 +5819,8 @@ func (c *Client) DecideLinkAmendment(ctx context.Context, linkId Id, amendmentId
 
 // ConfirmLinkWithBody Proposer confirms the accepting organisation
 //
+// The details of the accepting organisation are re-checked against the snapshot taken at acceptance (ADR-0003 Note N1 R3). When they changed the answer is 409 counterparty_changed and the link stays accepted: the acceptor can refresh the snapshot with reacceptLink, or the proposer can decline the accepted link (declineLink) or ask for a new invitation after declining and proposing again; nothing else moves the link. A replay of a confirmed link returns it.
+//
 // Takes any type of body and a specified content type.
 //
 // Corresponds with PUT /v1/links/{link_id}/confirmation (the `ConfirmLink` operationId).
@@ -3223,6 +5837,8 @@ func (c *Client) ConfirmLinkWithBody(ctx context.Context, linkId Id, params *Con
 }
 
 // ConfirmLink Proposer confirms the accepting organisation
+//
+// The details of the accepting organisation are re-checked against the snapshot taken at acceptance (ADR-0003 Note N1 R3). When they changed the answer is 409 counterparty_changed and the link stays accepted: the acceptor can refresh the snapshot with reacceptLink, or the proposer can decline the accepted link (declineLink) or ask for a new invitation after declining and proposing again; nothing else moves the link. A replay of a confirmed link returns it.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -3278,6 +5894,40 @@ func (c *Client) DeclineLink(ctx context.Context, linkId Id, params *DeclineLink
 // Corresponds with DELETE /v1/links/{link_id}/grants/{grant_id} (the `RemoveLinkGrant` operationId).
 func (c *Client) RemoveLinkGrant(ctx context.Context, linkId Id, grantId Id, params *RemoveLinkGrantParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewRemoveLinkGrantRequest(c.Server, linkId, grantId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ReissueLinkInvitation Issue a fresh invitation code for a proposed link
+//
+// ADR-0003 Note N1 R1. Only the proposer, only while the link is proposed (409 link_not_proposed otherwise). The previous code stops working at once. The new code is shown once in this response and is never stored readable; a replay of the same Idempotency-Key returns the link without a code, never the code again.
+//
+// Corresponds with POST /v1/links/{link_id}/invitations (the `ReissueLinkInvitation` operationId).
+func (c *Client) ReissueLinkInvitation(ctx context.Context, linkId Id, params *ReissueLinkInvitationParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReissueLinkInvitationRequest(c.Server, linkId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ReacceptLink Acceptor refreshes its details after counterparty_changed
+//
+// Only the acceptor, only while the link is accepted and not yet confirmed (409 link_not_accepted otherwise). Takes a new snapshot of the acceptor's details for the proposer to review (ADR-0003 Note N1 R3, never refreshed on its own), keeps the acceptance and its grants pending, and publishes tenancy.link.accepted again. The proposer then confirms or declines. Needs no invitation code: the code was used up at acceptance.
+//
+// Corresponds with PUT /v1/links/{link_id}/re-acceptance (the `ReacceptLink` operationId).
+func (c *Client) ReacceptLink(ctx context.Context, linkId Id, params *ReacceptLinkParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReacceptLinkRequest(c.Server, linkId, params)
 	if err != nil {
 		return nil, err
 	}
@@ -3361,6 +6011,59 @@ func (c *Client) SuspendLinkWithBody(ctx context.Context, linkId Id, params *Sus
 // Corresponds with PUT /v1/links/{link_id}/suspension (the `SuspendLink` operationId).
 func (c *Client) SuspendLink(ctx context.Context, linkId Id, params *SuspendLinkParams, body SuspendLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSuspendLinkRequest(c.Server, linkId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListManualBookSeries List registered bill books
+//
+// Corresponds with GET /v1/manual-book-series (the `ListManualBookSeries` operationId).
+func (c *Client) ListManualBookSeries(ctx context.Context, params *ListManualBookSeriesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListManualBookSeriesRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// RegisterManualBookSeriesWithBody Register a paper bill book as an entry-only series
+//
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /v1/manual-book-series (the `RegisterManualBookSeries` operationId).
+func (c *Client) RegisterManualBookSeriesWithBody(ctx context.Context, params *RegisterManualBookSeriesParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRegisterManualBookSeriesRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// RegisterManualBookSeries Register a paper bill book as an entry-only series
+//
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /v1/manual-book-series (the `RegisterManualBookSeries` operationId).
+func (c *Client) RegisterManualBookSeries(ctx context.Context, params *RegisterManualBookSeriesParams, body RegisterManualBookSeriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewRegisterManualBookSeriesRequest(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -3567,11 +6270,66 @@ func (c *Client) UpdateOutlet(ctx context.Context, outletId Id, params *UpdateOu
 	return c.Client.Do(req)
 }
 
+// ChangeOutletTaxRegistrationWithBody Move an outlet to another tax registration
+//
+// ADR-0014 A2.5 item 1. The target must belong to the organisation, be open, and be verified or of regime unregistered (409 registration_not_eligible otherwise). Refused 409 open_trading_day while the outlet has a trading day in progress, so one business day has one registration. In one transaction the outlet points at the target and every series of that outlet under the old registration is closed (it then reads closed, awaiting device); tenancy.outlet.updated and tenancy.series.closed are published, ids and codes only. Identity issues codes under the new registration in the next pack. A device switches series only when it holds no day in progress; a bill an offline device makes later under the old series is flagged for the accountant, never rejected. Idempotent: the same target again returns the outlet.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /v1/outlets/{outlet_id}/tax-registration (the `ChangeOutletTaxRegistration` operationId).
+func (c *Client) ChangeOutletTaxRegistrationWithBody(ctx context.Context, outletId Id, params *ChangeOutletTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewChangeOutletTaxRegistrationRequestWithBody(c.Server, outletId, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ChangeOutletTaxRegistration Move an outlet to another tax registration
+//
+// ADR-0014 A2.5 item 1. The target must belong to the organisation, be open, and be verified or of regime unregistered (409 registration_not_eligible otherwise). Refused 409 open_trading_day while the outlet has a trading day in progress, so one business day has one registration. In one transaction the outlet points at the target and every series of that outlet under the old registration is closed (it then reads closed, awaiting device); tenancy.outlet.updated and tenancy.series.closed are published, ids and codes only. Identity issues codes under the new registration in the next pack. A device switches series only when it holds no day in progress; a bill an offline device makes later under the old series is flagged for the accountant, never rejected. Idempotent: the same target again returns the outlet.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /v1/outlets/{outlet_id}/tax-registration (the `ChangeOutletTaxRegistration` operationId).
+func (c *Client) ChangeOutletTaxRegistration(ctx context.Context, outletId Id, params *ChangeOutletTaxRegistrationParams, body ChangeOutletTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewChangeOutletTaxRegistrationRequest(c.Server, outletId, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // ListStates GST state reference table
 //
 // Corresponds with GET /v1/states (the `ListStates` operationId).
 func (c *Client) ListStates(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListStatesRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetMyPlan Owner's read-only "My plan"
+//
+// Could (BR-A1-90). Returns only the caller's own organisation; no vendor user ids, no notes. Overdue is a label and gates nothing (ADR-0008 S5).
+//
+// Corresponds with GET /v1/subscription (the `GetMyPlan` operationId).
+func (c *Client) GetMyPlan(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetMyPlanRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -3686,7 +6444,7 @@ func (c *Client) UpdateTaxRegistration(ctx context.Context, registrationId Id, p
 
 // CloseTaxRegistrationWithBody Close a tax registration and its series
 //
-// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+// ADR-0003 A1.1 item 6, ADR-0014 A2.5 item 1: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here together with all its series. Every open series becomes closed; this operation never sets closed_unreconciled, because tenancy cannot know what a device still holds. The series reads "closed, awaiting device" until the device states its last number (series.close) and billing publishes billing.series.reconciled, which fills tail_confirmed_at and last_number. 409 registration_in_use while an outlet still references the registration: move the outlet first with changeOutletTaxRegistration. Closing is terminal and idempotent. Publishes tenancy.series.closed for every series it closes.
 //
 // Takes any type of body and a specified content type.
 //
@@ -3705,7 +6463,7 @@ func (c *Client) CloseTaxRegistrationWithBody(ctx context.Context, registrationI
 
 // CloseTaxRegistration Close a tax registration and its series
 //
-// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+// ADR-0003 A1.1 item 6, ADR-0014 A2.5 item 1: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here together with all its series. Every open series becomes closed; this operation never sets closed_unreconciled, because tenancy cannot know what a device still holds. The series reads "closed, awaiting device" until the device states its last number (series.close) and billing publishes billing.series.reconciled, which fills tail_confirmed_at and last_number. 409 registration_in_use while an outlet still references the registration: move the outlet first with changeOutletTaxRegistration. Closing is terminal and idempotent. Publishes tenancy.series.closed for every series it closes.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -3888,6 +6646,320 @@ func NewGetLinkDecisionRequest(server string, params *GetLinkDecisionParams) (*h
 	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
 	if err != nil {
 		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListBillingConfigurationsRequest constructs an http.Request for the ListBillingConfigurations method
+func NewListBillingConfigurationsRequest(server string, params *ListBillingConfigurationsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/billing-configurations"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
+// NewCreateBillingConfigurationRequest calls the generic CreateBillingConfiguration builder with application/json body
+func NewCreateBillingConfigurationRequest(server string, params *CreateBillingConfigurationParams, body CreateBillingConfigurationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateBillingConfigurationRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewCreateBillingConfigurationRequestWithBody constructs an http.Request for the CreateBillingConfiguration method, with any body, and a specified content type
+func NewCreateBillingConfigurationRequestWithBody(server string, params *CreateBillingConfigurationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/billing-configurations"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewExportLedgerRequest constructs an http.Request for the ExportLedger method
+func NewExportLedgerRequest(server string, params *ExportLedgerParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/ledger-exports"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.From != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "from", *params.From, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.To != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "to", *params.To, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
+// NewListLedgerEntriesRequest constructs an http.Request for the ListLedgerEntries method
+func NewListLedgerEntriesRequest(server string, listKind LedgerListKind, params *ListLedgerEntriesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "list_kind", listKind, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/ledger-lists/" + pathParam0
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
 	}
 
 	return req, nil
@@ -4123,6 +7195,1227 @@ func NewGetOrganisationDirectoryEntryRequest(server string, organisationId Id, p
 	return req, nil
 }
 
+// NewListChargesRequest constructs an http.Request for the ListCharges method
+func NewListChargesRequest(server string, organisationId Id, params *ListChargesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/charges"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "status", *params.Status, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
+// NewRaiseChargeRequest calls the generic RaiseCharge builder with application/json body
+func NewRaiseChargeRequest(server string, organisationId Id, params *RaiseChargeParams, body RaiseChargeJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRaiseChargeRequestWithBody(server, organisationId, params, "application/json", bodyReader)
+}
+
+// NewRaiseChargeRequestWithBody constructs an http.Request for the RaiseCharge method, with any body, and a specified content type
+func NewRaiseChargeRequestWithBody(server string, organisationId Id, params *RaiseChargeParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/charges"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewGetChargeRequest constructs an http.Request for the GetCharge method
+func NewGetChargeRequest(server string, organisationId Id, chargeId Id, params *GetChargeParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "charge_id", chargeId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/charges/" + pathParam1
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
+// NewCancelChargeRequest calls the generic CancelCharge builder with application/json body
+func NewCancelChargeRequest(server string, organisationId Id, chargeId Id, params *CancelChargeParams, body CancelChargeJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCancelChargeRequestWithBody(server, organisationId, chargeId, params, "application/json", bodyReader)
+}
+
+// NewCancelChargeRequestWithBody constructs an http.Request for the CancelCharge method, with any body, and a specified content type
+func NewCancelChargeRequestWithBody(server string, organisationId Id, chargeId Id, params *CancelChargeParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "charge_id", chargeId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/charges/" + pathParam1 + "/cancellation"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewSetChargeInvoiceReferenceRequest calls the generic SetChargeInvoiceReference builder with application/json body
+func NewSetChargeInvoiceReferenceRequest(server string, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, body SetChargeInvoiceReferenceJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSetChargeInvoiceReferenceRequestWithBody(server, organisationId, chargeId, params, "application/json", bodyReader)
+}
+
+// NewSetChargeInvoiceReferenceRequestWithBody constructs an http.Request for the SetChargeInvoiceReference method, with any body, and a specified content type
+func NewSetChargeInvoiceReferenceRequestWithBody(server string, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "charge_id", chargeId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/charges/" + pathParam1 + "/invoice-reference"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewListChargePaymentsRequest constructs an http.Request for the ListChargePayments method
+func NewListChargePaymentsRequest(server string, organisationId Id, chargeId Id, params *ListChargePaymentsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "charge_id", chargeId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/charges/" + pathParam1 + "/payments"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
+// NewRecordPaymentRequest calls the generic RecordPayment builder with application/json body
+func NewRecordPaymentRequest(server string, organisationId Id, chargeId Id, params *RecordPaymentParams, body RecordPaymentJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRecordPaymentRequestWithBody(server, organisationId, chargeId, params, "application/json", bodyReader)
+}
+
+// NewRecordPaymentRequestWithBody constructs an http.Request for the RecordPayment method, with any body, and a specified content type
+func NewRecordPaymentRequestWithBody(server string, organisationId Id, chargeId Id, params *RecordPaymentParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "charge_id", chargeId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/charges/" + pathParam1 + "/payments"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewReversePaymentRequest calls the generic ReversePayment builder with application/json body
+func NewReversePaymentRequest(server string, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, body ReversePaymentJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewReversePaymentRequestWithBody(server, organisationId, chargeId, paymentId, params, "application/json", bodyReader)
+}
+
+// NewReversePaymentRequestWithBody constructs an http.Request for the ReversePayment method, with any body, and a specified content type
+func NewReversePaymentRequestWithBody(server string, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "charge_id", chargeId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam2 string
+
+	pathParam2, err = runtime.StyleParamWithOptions("simple", false, "payment_id", paymentId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/charges/" + pathParam1 + "/payments/" + pathParam2 + "/reversal"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewWaiveChargeRequest calls the generic WaiveCharge builder with application/json body
+func NewWaiveChargeRequest(server string, organisationId Id, chargeId Id, params *WaiveChargeParams, body WaiveChargeJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewWaiveChargeRequestWithBody(server, organisationId, chargeId, params, "application/json", bodyReader)
+}
+
+// NewWaiveChargeRequestWithBody constructs an http.Request for the WaiveCharge method, with any body, and a specified content type
+func NewWaiveChargeRequestWithBody(server string, organisationId Id, chargeId Id, params *WaiveChargeParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "charge_id", chargeId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/charges/" + pathParam1 + "/waiver"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewCloseOrganisationRequest calls the generic CloseOrganisation builder with application/json body
+func NewCloseOrganisationRequest(server string, organisationId Id, params *CloseOrganisationParams, body CloseOrganisationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloseOrganisationRequestWithBody(server, organisationId, params, "application/json", bodyReader)
+}
+
+// NewCloseOrganisationRequestWithBody constructs an http.Request for the CloseOrganisation method, with any body, and a specified content type
+func NewCloseOrganisationRequestWithBody(server string, organisationId Id, params *CloseOrganisationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/closure"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "Hostry-Vendor-Approval", params.HostryVendorApproval, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Hostry-Vendor-Approval", headerParam0)
+
+		if params.XVendorClientAddress != nil {
+			var headerParam1 string
+
+			headerParam1, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam1)
+		}
+
+		var headerParam2 string
+
+		headerParam2, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam2)
+
+	}
+
+	return req, nil
+}
+
+// NewReinstateOrganisationRequest calls the generic ReinstateOrganisation builder with application/json body
+func NewReinstateOrganisationRequest(server string, organisationId Id, params *ReinstateOrganisationParams, body ReinstateOrganisationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewReinstateOrganisationRequestWithBody(server, organisationId, params, "application/json", bodyReader)
+}
+
+// NewReinstateOrganisationRequestWithBody constructs an http.Request for the ReinstateOrganisation method, with any body, and a specified content type
+func NewReinstateOrganisationRequestWithBody(server string, organisationId Id, params *ReinstateOrganisationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/reinstatement"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "Hostry-Vendor-Approval", params.HostryVendorApproval, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Hostry-Vendor-Approval", headerParam0)
+
+		if params.XVendorClientAddress != nil {
+			var headerParam1 string
+
+			headerParam1, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam1)
+		}
+
+		var headerParam2 string
+
+		headerParam2, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam2)
+
+	}
+
+	return req, nil
+}
+
+// NewGetOrganisationSubscriptionRequest constructs an http.Request for the GetOrganisationSubscription method
+func NewGetOrganisationSubscriptionRequest(server string, organisationId Id, params *GetOrganisationSubscriptionParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/subscription"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
+// NewStartSubscriptionRequest calls the generic StartSubscription builder with application/json body
+func NewStartSubscriptionRequest(server string, organisationId Id, params *StartSubscriptionParams, body StartSubscriptionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewStartSubscriptionRequestWithBody(server, organisationId, params, "application/json", bodyReader)
+}
+
+// NewStartSubscriptionRequestWithBody constructs an http.Request for the StartSubscription method, with any body, and a specified content type
+func NewStartSubscriptionRequestWithBody(server string, organisationId Id, params *StartSubscriptionParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/subscription"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewChangeSubscriptionRequest calls the generic ChangeSubscription builder with application/json body
+func NewChangeSubscriptionRequest(server string, organisationId Id, params *ChangeSubscriptionParams, body ChangeSubscriptionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewChangeSubscriptionRequestWithBody(server, organisationId, params, "application/json", bodyReader)
+}
+
+// NewChangeSubscriptionRequestWithBody constructs an http.Request for the ChangeSubscription method, with any body, and a specified content type
+func NewChangeSubscriptionRequestWithBody(server string, organisationId Id, params *ChangeSubscriptionParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/subscription"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewCancelSubscriptionRequest calls the generic CancelSubscription builder with application/json body
+func NewCancelSubscriptionRequest(server string, organisationId Id, params *CancelSubscriptionParams, body CancelSubscriptionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCancelSubscriptionRequestWithBody(server, organisationId, params, "application/json", bodyReader)
+}
+
+// NewCancelSubscriptionRequestWithBody constructs an http.Request for the CancelSubscription method, with any body, and a specified content type
+func NewCancelSubscriptionRequestWithBody(server string, organisationId Id, params *CancelSubscriptionParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/subscription/cancellation"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewSuspendOrganisationRequest calls the generic SuspendOrganisation builder with application/json body
+func NewSuspendOrganisationRequest(server string, organisationId Id, params *SuspendOrganisationParams, body SuspendOrganisationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewSuspendOrganisationRequestWithBody(server, organisationId, params, "application/json", bodyReader)
+}
+
+// NewSuspendOrganisationRequestWithBody constructs an http.Request for the SuspendOrganisation method, with any body, and a specified content type
+func NewSuspendOrganisationRequestWithBody(server string, organisationId Id, params *SuspendOrganisationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "organisation_id", organisationId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/organisations/" + pathParam0 + "/suspension"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "Hostry-Vendor-Approval", params.HostryVendorApproval, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Hostry-Vendor-Approval", headerParam0)
+
+		if params.XVendorClientAddress != nil {
+			var headerParam1 string
+
+			headerParam1, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam1)
+		}
+
+		var headerParam2 string
+
+		headerParam2, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam2)
+
+	}
+
+	return req, nil
+}
+
 // NewRejectTaxRegistrationRequest calls the generic RejectTaxRegistration builder with application/json body
 func NewRejectTaxRegistrationRequest(server string, organisationId Id, registrationId Id, params *RejectTaxRegistrationParams, body RejectTaxRegistrationJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -4251,6 +8544,401 @@ func NewVerifyTaxRegistrationRequestWithBody(server string, organisationId Id, r
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewListPlansRequest constructs an http.Request for the ListPlans method
+func NewListPlansRequest(server string, params *ListPlansParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/plans"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
+// NewCreatePlanRequest calls the generic CreatePlan builder with application/json body
+func NewCreatePlanRequest(server string, params *CreatePlanParams, body CreatePlanJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreatePlanRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewCreatePlanRequestWithBody constructs an http.Request for the CreatePlan method, with any body, and a specified content type
+func NewCreatePlanRequestWithBody(server string, params *CreatePlanParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/plans"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewGetPlanRequest constructs an http.Request for the GetPlan method
+func NewGetPlanRequest(server string, planKey string, params *GetPlanParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "plan_key", planKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/plans/" + pathParam0
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+	}
+
+	return req, nil
+}
+
+// NewCreatePlanVersionRequest calls the generic CreatePlanVersion builder with application/json body
+func NewCreatePlanVersionRequest(server string, planKey string, params *CreatePlanVersionParams, body CreatePlanVersionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreatePlanVersionRequestWithBody(server, planKey, params, "application/json", bodyReader)
+}
+
+// NewCreatePlanVersionRequestWithBody constructs an http.Request for the CreatePlanVersion method, with any body, and a specified content type
+func NewCreatePlanVersionRequestWithBody(server string, planKey string, params *CreatePlanVersionParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "plan_key", planKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/plans/" + pathParam0 + "/versions"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewActivatePlanVersionRequest constructs an http.Request for the ActivatePlanVersion method
+func NewActivatePlanVersionRequest(server string, planKey string, version int, params *ActivatePlanVersionParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "plan_key", planKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "version", version, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "integer", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/plans/" + pathParam0 + "/versions/" + pathParam1 + "/activation"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		if params.XVendorClientAddress != nil {
+			var headerParam0 string
+
+			headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-Vendor-Client-Address", *params.XVendorClientAddress, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+			if err != nil {
+				return nil, err
+			}
+
+			req.Header.Set("X-Vendor-Client-Address", headerParam0)
+		}
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewRetirePlanVersionRequest constructs an http.Request for the RetirePlanVersion method
+func NewRetirePlanVersionRequest(server string, planKey string, version int, params *RetirePlanVersionParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "plan_key", planKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "version", version, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "integer", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/vendor/plans/" + pathParam0 + "/versions/" + pathParam1 + "/retirement"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if params != nil {
 
@@ -5174,6 +9862,100 @@ func NewRemoveLinkGrantRequest(server string, linkId Id, grantId Id, params *Rem
 	return req, nil
 }
 
+// NewReissueLinkInvitationRequest constructs an http.Request for the ReissueLinkInvitation method
+func NewReissueLinkInvitationRequest(server string, linkId Id, params *ReissueLinkInvitationParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "link_id", linkId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/v1/links/" + pathParam0 + "/invitations"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam0)
+
+	}
+
+	return req, nil
+}
+
+// NewReacceptLinkRequest constructs an http.Request for the ReacceptLink method
+func NewReacceptLinkRequest(server string, linkId Id, params *ReacceptLinkParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "link_id", linkId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/v1/links/" + pathParam0 + "/re-acceptance"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam0)
+
+	}
+
+	return req, nil
+}
+
 // NewRevokeLinkRequest calls the generic RevokeLink builder with application/json body
 func NewRevokeLinkRequest(server string, linkId Id, params *RevokeLinkParams, body RevokeLinkJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -5319,6 +10101,125 @@ func NewSuspendLinkRequestWithBody(server string, linkId Id, params *SuspendLink
 	}
 
 	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam0)
+
+	}
+
+	return req, nil
+}
+
+// NewListManualBookSeriesRequest constructs an http.Request for the ListManualBookSeries method
+func NewListManualBookSeriesRequest(server string, params *ListManualBookSeriesParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/v1/manual-book-series"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewRegisterManualBookSeriesRequest calls the generic RegisterManualBookSeries builder with application/json body
+func NewRegisterManualBookSeriesRequest(server string, params *RegisterManualBookSeriesParams, body RegisterManualBookSeriesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewRegisterManualBookSeriesRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewRegisterManualBookSeriesRequestWithBody constructs an http.Request for the RegisterManualBookSeries method, with any body, and a specified content type
+func NewRegisterManualBookSeriesRequestWithBody(server string, params *RegisterManualBookSeriesParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/v1/manual-book-series"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -5726,6 +10627,66 @@ func NewUpdateOutletRequestWithBody(server string, outletId Id, params *UpdateOu
 	return req, nil
 }
 
+// NewChangeOutletTaxRegistrationRequest calls the generic ChangeOutletTaxRegistration builder with application/json body
+func NewChangeOutletTaxRegistrationRequest(server string, outletId Id, params *ChangeOutletTaxRegistrationParams, body ChangeOutletTaxRegistrationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewChangeOutletTaxRegistrationRequestWithBody(server, outletId, params, "application/json", bodyReader)
+}
+
+// NewChangeOutletTaxRegistrationRequestWithBody constructs an http.Request for the ChangeOutletTaxRegistration method, with any body, and a specified content type
+func NewChangeOutletTaxRegistrationRequestWithBody(server string, outletId Id, params *ChangeOutletTaxRegistrationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "outlet_id", outletId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/v1/outlets/" + pathParam0 + "/tax-registration"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "Idempotency-Key", params.IdempotencyKey, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("Idempotency-Key", headerParam0)
+
+	}
+
+	return req, nil
+}
+
 // NewListStatesRequest constructs an http.Request for the ListStates method
 func NewListStatesRequest(server string) (*http.Request, error) {
 	var err error
@@ -5736,6 +10697,33 @@ func NewListStatesRequest(server string) (*http.Request, error) {
 	}
 
 	operationPath := "/v1/states"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetMyPlanRequest constructs an http.Request for the GetMyPlan method
+func NewGetMyPlanRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/v1/subscription"
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -6109,6 +11097,45 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with GET /internal/v1/link-decisions (the `GetLinkDecision` operationId).
 	GetLinkDecisionWithResponse(ctx context.Context, params *GetLinkDecisionParams, reqEditors ...RequestEditorFn) (*GetLinkDecisionResponse, error)
 
+	// ListBillingConfigurationsWithResponse List Hostry GST configuration versions
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/vendor/billing-configurations (the `ListBillingConfigurations` operationId).
+	ListBillingConfigurationsWithResponse(ctx context.Context, params *ListBillingConfigurationsParams, reqEditors ...RequestEditorFn) (*ListBillingConfigurationsResponse, error)
+
+	// CreateBillingConfigurationWithBodyWithResponse Add a GST configuration version
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/billing-configurations (the `CreateBillingConfiguration` operationId).
+	CreateBillingConfigurationWithBodyWithResponse(ctx context.Context, params *CreateBillingConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateBillingConfigurationResponse, error)
+
+	// CreateBillingConfigurationWithResponse Add a GST configuration version
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/billing-configurations (the `CreateBillingConfiguration` operationId).
+	CreateBillingConfigurationWithResponse(ctx context.Context, params *CreateBillingConfigurationParams, body CreateBillingConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateBillingConfigurationResponse, error)
+
+	// ExportLedgerWithResponse Export the ledger as CSV
+	//
+	// Should (A1-Q12): organisation ids and names only, no GSTIN, phone or email (BR-A1-38). Audited per export.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/vendor/ledger-exports (the `ExportLedger` operationId).
+	ExportLedgerWithResponse(ctx context.Context, params *ExportLedgerParams, reqEditors ...RequestEditorFn) (*ExportLedgerResponse, error)
+
+	// ListLedgerEntriesWithResponse Work lists for billing staff
+	//
+	// overdue_charges (outstanding above tolerance and due before today IST), charges_to_raise (paid_through within 7 days or passed, no charge for the next period), charges_without_invoice_reference, pilots_ending (review date within 14 days), retired_version_subscriptions, outlets_over_limit. Derived on read; no scheduled tasks, nothing is sent.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/vendor/ledger-lists/{list_kind} (the `ListLedgerEntries` operationId).
+	ListLedgerEntriesWithResponse(ctx context.Context, listKind LedgerListKind, params *ListLedgerEntriesParams, reqEditors ...RequestEditorFn) (*ListLedgerEntriesResponse, error)
+
 	// ListOrganisationDirectoryWithResponse List and search the organisation directory
 	//
 	// Returns a wrapper object for the known response body format(s).
@@ -6141,6 +11168,234 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id} (the `GetOrganisationDirectoryEntry` operationId).
 	GetOrganisationDirectoryEntryWithResponse(ctx context.Context, organisationId Id, params *GetOrganisationDirectoryEntryParams, reqEditors ...RequestEditorFn) (*GetOrganisationDirectoryEntryResponse, error)
 
+	// ListChargesWithResponse List an organisation's charges
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges (the `ListCharges` operationId).
+	ListChargesWithResponse(ctx context.Context, organisationId Id, params *ListChargesParams, reqEditors ...RequestEditorFn) (*ListChargesResponse, error)
+
+	// RaiseChargeWithBodyWithResponse Raise a charge
+	//
+	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges (the `RaiseCharge` operationId).
+	RaiseChargeWithBodyWithResponse(ctx context.Context, organisationId Id, params *RaiseChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RaiseChargeResponse, error)
+
+	// RaiseChargeWithResponse Raise a charge
+	//
+	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges (the `RaiseCharge` operationId).
+	RaiseChargeWithResponse(ctx context.Context, organisationId Id, params *RaiseChargeParams, body RaiseChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*RaiseChargeResponse, error)
+
+	// GetChargeWithResponse Read a charge (audited per read)
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id} (the `GetCharge` operationId).
+	GetChargeWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *GetChargeParams, reqEditors ...RequestEditorFn) (*GetChargeResponse, error)
+
+	// CancelChargeWithBodyWithResponse Cancel a charge
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation (the `CancelCharge` operationId).
+	CancelChargeWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *CancelChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CancelChargeResponse, error)
+
+	// CancelChargeWithResponse Cancel a charge
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation (the `CancelCharge` operationId).
+	CancelChargeWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *CancelChargeParams, body CancelChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*CancelChargeResponse, error)
+
+	// SetChargeInvoiceReferenceWithBodyWithResponse Set the invoice reference once
+	//
+	// Set once; a second reference on the same charge is refused 409 invoice_reference_set. A mistyped reference cannot be edited: an admin cancels the charge and raises it again (A1-Q8).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference (the `SetChargeInvoiceReference` operationId).
+	SetChargeInvoiceReferenceWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetChargeInvoiceReferenceResponse, error)
+
+	// SetChargeInvoiceReferenceWithResponse Set the invoice reference once
+	//
+	// Set once; a second reference on the same charge is refused 409 invoice_reference_set. A mistyped reference cannot be edited: an admin cancels the charge and raises it again (A1-Q8).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference (the `SetChargeInvoiceReference` operationId).
+	SetChargeInvoiceReferenceWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, body SetChargeInvoiceReferenceJSONRequestBody, reqEditors ...RequestEditorFn) (*SetChargeInvoiceReferenceResponse, error)
+
+	// ListChargePaymentsWithResponse List payments of a charge
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `ListChargePayments` operationId).
+	ListChargePaymentsWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *ListChargePaymentsParams, reqEditors ...RequestEditorFn) (*ListChargePaymentsResponse, error)
+
+	// RecordPaymentWithBodyWithResponse Record a payment received by hand
+	//
+	// Partial payments are allowed; a payment above the outstanding amount is refused 422 overpayment; a duplicate reference on a different payment is a warning only (BR-A1-45).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `RecordPayment` operationId).
+	RecordPaymentWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *RecordPaymentParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RecordPaymentResponse, error)
+
+	// RecordPaymentWithResponse Record a payment received by hand
+	//
+	// Partial payments are allowed; a payment above the outstanding amount is refused 422 overpayment; a duplicate reference on a different payment is a warning only (BR-A1-45).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `RecordPayment` operationId).
+	RecordPaymentWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *RecordPaymentParams, body RecordPaymentJSONRequestBody, reqEditors ...RequestEditorFn) (*RecordPaymentResponse, error)
+
+	// ReversePaymentWithBodyWithResponse Reverse a payment
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal (the `ReversePayment` operationId).
+	ReversePaymentWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReversePaymentResponse, error)
+
+	// ReversePaymentWithResponse Reverse a payment
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal (the `ReversePayment` operationId).
+	ReversePaymentWithResponse(ctx context.Context, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, body ReversePaymentJSONRequestBody, reqEditors ...RequestEditorFn) (*ReversePaymentResponse, error)
+
+	// WaiveChargeWithBodyWithResponse Waive a charge
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver (the `WaiveCharge` operationId).
+	WaiveChargeWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *WaiveChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WaiveChargeResponse, error)
+
+	// WaiveChargeWithResponse Waive a charge
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver (the `WaiveCharge` operationId).
+	WaiveChargeWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *WaiveChargeParams, body WaiveChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*WaiveChargeResponse, error)
+
+	// CloseOrganisationWithBodyWithResponse Execute an approved closure
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_close (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/closure (the `CloseOrganisation` operationId).
+	CloseOrganisationWithBodyWithResponse(ctx context.Context, organisationId Id, params *CloseOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseOrganisationResponse, error)
+
+	// CloseOrganisationWithResponse Execute an approved closure
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_close (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/closure (the `CloseOrganisation` operationId).
+	CloseOrganisationWithResponse(ctx context.Context, organisationId Id, params *CloseOrganisationParams, body CloseOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*CloseOrganisationResponse, error)
+
+	// ReinstateOrganisationWithBodyWithResponse Execute an approved reinstatement
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_reinstate (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Reinstatement is not guarded.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/reinstatement (the `ReinstateOrganisation` operationId).
+	ReinstateOrganisationWithBodyWithResponse(ctx context.Context, organisationId Id, params *ReinstateOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReinstateOrganisationResponse, error)
+
+	// ReinstateOrganisationWithResponse Execute an approved reinstatement
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_reinstate (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Reinstatement is not guarded.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/reinstatement (the `ReinstateOrganisation` operationId).
+	ReinstateOrganisationWithResponse(ctx context.Context, organisationId Id, params *ReinstateOrganisationParams, body ReinstateOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*ReinstateOrganisationResponse, error)
+
+	// GetOrganisationSubscriptionWithResponse Get the current subscription and history
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/subscription (the `GetOrganisationSubscription` operationId).
+	GetOrganisationSubscriptionWithResponse(ctx context.Context, organisationId Id, params *GetOrganisationSubscriptionParams, reqEditors ...RequestEditorFn) (*GetOrganisationSubscriptionResponse, error)
+
+	// StartSubscriptionWithBodyWithResponse Assign a plan version or a pilot
+	//
+	// Changes the subscription row and the organisation's entitlement rows in one transaction (BR-A1-14, CB1). Entitlements carry no expiry. A price below list needs admin.subscription.adjust and a reason; a replay with the same key returns the same row. The first plan moves organisation status trial to active (BR-A1-74).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription (the `StartSubscription` operationId).
+	StartSubscriptionWithBodyWithResponse(ctx context.Context, organisationId Id, params *StartSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*StartSubscriptionResponse, error)
+
+	// StartSubscriptionWithResponse Assign a plan version or a pilot
+	//
+	// Changes the subscription row and the organisation's entitlement rows in one transaction (BR-A1-14, CB1). Entitlements carry no expiry. A price below list needs admin.subscription.adjust and a reason; a replay with the same key returns the same row. The first plan moves organisation status trial to active (BR-A1-74).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription (the `StartSubscription` operationId).
+	StartSubscriptionWithResponse(ctx context.Context, organisationId Id, params *StartSubscriptionParams, body StartSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*StartSubscriptionResponse, error)
+
+	// ChangeSubscriptionWithBodyWithResponse Change plan, price or add-ons from the next charge
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/subscription (the `ChangeSubscription` operationId).
+	ChangeSubscriptionWithBodyWithResponse(ctx context.Context, organisationId Id, params *ChangeSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ChangeSubscriptionResponse, error)
+
+	// ChangeSubscriptionWithResponse Change plan, price or add-ons from the next charge
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/subscription (the `ChangeSubscription` operationId).
+	ChangeSubscriptionWithResponse(ctx context.Context, organisationId Id, params *ChangeSubscriptionParams, body ChangeSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*ChangeSubscriptionResponse, error)
+
+	// CancelSubscriptionWithBodyWithResponse Record a cancellation at period end
+	//
+	// No further charge is raised after paid_through; no refund is modelled; closing the organisation is a separate lifecycle action.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation (the `CancelSubscription` operationId).
+	CancelSubscriptionWithBodyWithResponse(ctx context.Context, organisationId Id, params *CancelSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CancelSubscriptionResponse, error)
+
+	// CancelSubscriptionWithResponse Record a cancellation at period end
+	//
+	// No further charge is raised after paid_through; no refund is modelled; closing the organisation is a separate lifecycle action.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation (the `CancelSubscription` operationId).
+	CancelSubscriptionWithResponse(ctx context.Context, organisationId Id, params *CancelSubscriptionParams, body CancelSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*CancelSubscriptionResponse, error)
+
+	// SuspendOrganisationWithBodyWithResponse Execute an approved suspension
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_suspend (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/suspension (the `SuspendOrganisation` operationId).
+	SuspendOrganisationWithBodyWithResponse(ctx context.Context, organisationId Id, params *SuspendOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SuspendOrganisationResponse, error)
+
+	// SuspendOrganisationWithResponse Execute an approved suspension
+	//
+	// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_suspend (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/suspension (the `SuspendOrganisation` operationId).
+	SuspendOrganisationWithResponse(ctx context.Context, organisationId Id, params *SuspendOrganisationParams, body SuspendOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*SuspendOrganisationResponse, error)
+
 	// RejectTaxRegistrationWithBodyWithResponse Mark a registration rejected
 	//
 	// ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
@@ -6172,6 +11427,62 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/verification (the `VerifyTaxRegistration` operationId).
 	VerifyTaxRegistrationWithResponse(ctx context.Context, organisationId Id, registrationId Id, params *VerifyTaxRegistrationParams, body VerifyTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*VerifyTaxRegistrationResponse, error)
+
+	// ListPlansWithResponse List plans with their versions
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/vendor/plans (the `ListPlans` operationId).
+	ListPlansWithResponse(ctx context.Context, params *ListPlansParams, reqEditors ...RequestEditorFn) (*ListPlansResponse, error)
+
+	// CreatePlanWithBodyWithResponse Create a plan with a draft first version
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/plans (the `CreatePlan` operationId).
+	CreatePlanWithBodyWithResponse(ctx context.Context, params *CreatePlanParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePlanResponse, error)
+
+	// CreatePlanWithResponse Create a plan with a draft first version
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/plans (the `CreatePlan` operationId).
+	CreatePlanWithResponse(ctx context.Context, params *CreatePlanParams, body CreatePlanJSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePlanResponse, error)
+
+	// GetPlanWithResponse Get a plan
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/vendor/plans/{plan_key} (the `GetPlan` operationId).
+	GetPlanWithResponse(ctx context.Context, planKey string, params *GetPlanParams, reqEditors ...RequestEditorFn) (*GetPlanResponse, error)
+
+	// CreatePlanVersionWithBodyWithResponse Create a draft version (a price or content change is a new version)
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions (the `CreatePlanVersion` operationId).
+	CreatePlanVersionWithBodyWithResponse(ctx context.Context, planKey string, params *CreatePlanVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePlanVersionResponse, error)
+
+	// CreatePlanVersionWithResponse Create a draft version (a price or content change is a new version)
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions (the `CreatePlanVersion` operationId).
+	CreatePlanVersionWithResponse(ctx context.Context, planKey string, params *CreatePlanVersionParams, body CreatePlanVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePlanVersionResponse, error)
+
+	// ActivatePlanVersionWithResponse Activate a draft version (immutable from here)
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/activation (the `ActivatePlanVersion` operationId).
+	ActivatePlanVersionWithResponse(ctx context.Context, planKey string, version int, params *ActivatePlanVersionParams, reqEditors ...RequestEditorFn) (*ActivatePlanVersionResponse, error)
+
+	// RetirePlanVersionWithResponse Retire an active version
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/retirement (the `RetirePlanVersion` operationId).
+	RetirePlanVersionWithResponse(ctx context.Context, planKey string, version int, params *RetirePlanVersionParams, reqEditors ...RequestEditorFn) (*RetirePlanVersionResponse, error)
 
 	// ListBrandsWithResponse List brands
 	//
@@ -6210,12 +11521,16 @@ type ClientWithResponsesInterface interface {
 
 	// CloseDocumentSeriesUnreconciledWithBodyWithResponse Close a series with an unreconciled tail
 	//
+	// A person's terminal decision, with a reason, that the device will not come back (ADR-0003 section 1a). Offered only while tail_confirmed_at is empty (409 tail_confirmed after a device stated its tail). Numbers that arrive after either kind of closure are flagged and listed as "after closure". Publishes tenancy.series.closed with cause closed_unreconciled.
+	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with PUT /v1/document-series/{series_id}/closure (the `CloseDocumentSeriesUnreconciled` operationId).
 	CloseDocumentSeriesUnreconciledWithBodyWithResponse(ctx context.Context, seriesId Id, params *CloseDocumentSeriesUnreconciledParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseDocumentSeriesUnreconciledResponse, error)
 
 	// CloseDocumentSeriesUnreconciledWithResponse Close a series with an unreconciled tail
+	//
+	// A person's terminal decision, with a reason, that the device will not come back (ADR-0003 section 1a). Offered only while tail_confirmed_at is empty (409 tail_confirmed after a device stated its tail). Numbers that arrive after either kind of closure are flagged and listed as "after closure". Publishes tenancy.series.closed with cause closed_unreconciled.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -6301,12 +11616,16 @@ type ClientWithResponsesInterface interface {
 
 	// ConfirmLinkWithBodyWithResponse Proposer confirms the accepting organisation
 	//
+	// The details of the accepting organisation are re-checked against the snapshot taken at acceptance (ADR-0003 Note N1 R3). When they changed the answer is 409 counterparty_changed and the link stays accepted: the acceptor can refresh the snapshot with reacceptLink, or the proposer can decline the accepted link (declineLink) or ask for a new invitation after declining and proposing again; nothing else moves the link. A replay of a confirmed link returns it.
+	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with PUT /v1/links/{link_id}/confirmation (the `ConfirmLink` operationId).
 	ConfirmLinkWithBodyWithResponse(ctx context.Context, linkId Id, params *ConfirmLinkParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConfirmLinkResponse, error)
 
 	// ConfirmLinkWithResponse Proposer confirms the accepting organisation
+	//
+	// The details of the accepting organisation are re-checked against the snapshot taken at acceptance (ADR-0003 Note N1 R3). When they changed the answer is 409 counterparty_changed and the link stays accepted: the acceptor can refresh the snapshot with reacceptLink, or the proposer can decline the accepted link (declineLink) or ask for a new invitation after declining and proposing again; nothing else moves the link. A replay of a confirmed link returns it.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -6333,6 +11652,24 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with DELETE /v1/links/{link_id}/grants/{grant_id} (the `RemoveLinkGrant` operationId).
 	RemoveLinkGrantWithResponse(ctx context.Context, linkId Id, grantId Id, params *RemoveLinkGrantParams, reqEditors ...RequestEditorFn) (*RemoveLinkGrantResponse, error)
+
+	// ReissueLinkInvitationWithResponse Issue a fresh invitation code for a proposed link
+	//
+	// ADR-0003 Note N1 R1. Only the proposer, only while the link is proposed (409 link_not_proposed otherwise). The previous code stops working at once. The new code is shown once in this response and is never stored readable; a replay of the same Idempotency-Key returns the link without a code, never the code again.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /v1/links/{link_id}/invitations (the `ReissueLinkInvitation` operationId).
+	ReissueLinkInvitationWithResponse(ctx context.Context, linkId Id, params *ReissueLinkInvitationParams, reqEditors ...RequestEditorFn) (*ReissueLinkInvitationResponse, error)
+
+	// ReacceptLinkWithResponse Acceptor refreshes its details after counterparty_changed
+	//
+	// Only the acceptor, only while the link is accepted and not yet confirmed (409 link_not_accepted otherwise). Takes a new snapshot of the acceptor's details for the proposer to review (ADR-0003 Note N1 R3, never refreshed on its own), keeps the acceptance and its grants pending, and publishes tenancy.link.accepted again. The proposer then confirms or declines. Needs no invitation code: the code was used up at acceptance.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/links/{link_id}/re-acceptance (the `ReacceptLink` operationId).
+	ReacceptLinkWithResponse(ctx context.Context, linkId Id, params *ReacceptLinkParams, reqEditors ...RequestEditorFn) (*ReacceptLinkResponse, error)
 
 	// RevokeLinkWithBodyWithResponse Revoke a link (either party)
 	//
@@ -6368,6 +11705,31 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with PUT /v1/links/{link_id}/suspension (the `SuspendLink` operationId).
 	SuspendLinkWithResponse(ctx context.Context, linkId Id, params *SuspendLinkParams, body SuspendLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*SuspendLinkResponse, error)
+
+	// ListManualBookSeriesWithResponse List registered bill books
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/manual-book-series (the `ListManualBookSeries` operationId).
+	ListManualBookSeriesWithResponse(ctx context.Context, params *ListManualBookSeriesParams, reqEditors ...RequestEditorFn) (*ListManualBookSeriesResponse, error)
+
+	// RegisterManualBookSeriesWithBodyWithResponse Register a paper bill book as an entry-only series
+	//
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /v1/manual-book-series (the `RegisterManualBookSeries` operationId).
+	RegisterManualBookSeriesWithBodyWithResponse(ctx context.Context, params *RegisterManualBookSeriesParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RegisterManualBookSeriesResponse, error)
+
+	// RegisterManualBookSeriesWithResponse Register a paper bill book as an entry-only series
+	//
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /v1/manual-book-series (the `RegisterManualBookSeries` operationId).
+	RegisterManualBookSeriesWithResponse(ctx context.Context, params *RegisterManualBookSeriesParams, body RegisterManualBookSeriesJSONRequestBody, reqEditors ...RequestEditorFn) (*RegisterManualBookSeriesResponse, error)
 
 	// GetOrganisationSettingsWithResponse Get organisation settings
 	//
@@ -6453,12 +11815,39 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with PATCH /v1/outlets/{outlet_id} (the `UpdateOutlet` operationId).
 	UpdateOutletWithResponse(ctx context.Context, outletId Id, params *UpdateOutletParams, body UpdateOutletJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateOutletResponse, error)
 
+	// ChangeOutletTaxRegistrationWithBodyWithResponse Move an outlet to another tax registration
+	//
+	// ADR-0014 A2.5 item 1. The target must belong to the organisation, be open, and be verified or of regime unregistered (409 registration_not_eligible otherwise). Refused 409 open_trading_day while the outlet has a trading day in progress, so one business day has one registration. In one transaction the outlet points at the target and every series of that outlet under the old registration is closed (it then reads closed, awaiting device); tenancy.outlet.updated and tenancy.series.closed are published, ids and codes only. Identity issues codes under the new registration in the next pack. A device switches series only when it holds no day in progress; a bill an offline device makes later under the old series is flagged for the accountant, never rejected. Idempotent: the same target again returns the outlet.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/outlets/{outlet_id}/tax-registration (the `ChangeOutletTaxRegistration` operationId).
+	ChangeOutletTaxRegistrationWithBodyWithResponse(ctx context.Context, outletId Id, params *ChangeOutletTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ChangeOutletTaxRegistrationResponse, error)
+
+	// ChangeOutletTaxRegistrationWithResponse Move an outlet to another tax registration
+	//
+	// ADR-0014 A2.5 item 1. The target must belong to the organisation, be open, and be verified or of regime unregistered (409 registration_not_eligible otherwise). Refused 409 open_trading_day while the outlet has a trading day in progress, so one business day has one registration. In one transaction the outlet points at the target and every series of that outlet under the old registration is closed (it then reads closed, awaiting device); tenancy.outlet.updated and tenancy.series.closed are published, ids and codes only. Identity issues codes under the new registration in the next pack. A device switches series only when it holds no day in progress; a bill an offline device makes later under the old series is flagged for the accountant, never rejected. Idempotent: the same target again returns the outlet.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/outlets/{outlet_id}/tax-registration (the `ChangeOutletTaxRegistration` operationId).
+	ChangeOutletTaxRegistrationWithResponse(ctx context.Context, outletId Id, params *ChangeOutletTaxRegistrationParams, body ChangeOutletTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*ChangeOutletTaxRegistrationResponse, error)
+
 	// ListStatesWithResponse GST state reference table
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with GET /v1/states (the `ListStates` operationId).
 	ListStatesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListStatesResponse, error)
+
+	// GetMyPlanWithResponse Owner's read-only "My plan"
+	//
+	// Could (BR-A1-90). Returns only the caller's own organisation; no vendor user ids, no notes. Overdue is a label and gates nothing (ADR-0008 S5).
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/subscription (the `GetMyPlan` operationId).
+	GetMyPlanWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMyPlanResponse, error)
 
 	// ListTaxRegistrationsWithResponse List tax registrations
 	//
@@ -6508,7 +11897,7 @@ type ClientWithResponsesInterface interface {
 
 	// CloseTaxRegistrationWithBodyWithResponse Close a tax registration and its series
 	//
-	// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+	// ADR-0003 A1.1 item 6, ADR-0014 A2.5 item 1: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here together with all its series. Every open series becomes closed; this operation never sets closed_unreconciled, because tenancy cannot know what a device still holds. The series reads "closed, awaiting device" until the device states its last number (series.close) and billing publishes billing.series.reconciled, which fills tail_confirmed_at and last_number. 409 registration_in_use while an outlet still references the registration: move the outlet first with changeOutletTaxRegistration. Closing is terminal and idempotent. Publishes tenancy.series.closed for every series it closes.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -6517,7 +11906,7 @@ type ClientWithResponsesInterface interface {
 
 	// CloseTaxRegistrationWithResponse Close a tax registration and its series
 	//
-	// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+	// ADR-0003 A1.1 item 6, ADR-0014 A2.5 item 1: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here together with all its series. Every open series becomes closed; this operation never sets closed_unreconciled, because tenancy cannot know what a device still holds. The series reads "closed, awaiting device" until the device states its last number (series.close) and billing publishes billing.series.reconciled, which fills tail_confirmed_at and last_number. 409 registration_in_use while an outlet still references the registration: move the outlet first with changeOutletTaxRegistration. Closing is terminal and idempotent. Publishes tenancy.series.closed for every series it closes.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -6732,6 +12121,261 @@ func (r GetLinkDecisionResponse) ContentType() string {
 	return ""
 }
 
+type ListBillingConfigurationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *BillingConfigurationPage
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListBillingConfigurationsResponse) GetJSON200() *BillingConfigurationPage {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListBillingConfigurationsResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListBillingConfigurationsResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListBillingConfigurationsResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ListBillingConfigurationsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListBillingConfigurationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListBillingConfigurationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListBillingConfigurationsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateBillingConfigurationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *BillingConfiguration
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r CreateBillingConfigurationResponse) GetJSON201() *BillingConfiguration {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r CreateBillingConfigurationResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r CreateBillingConfigurationResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r CreateBillingConfigurationResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r CreateBillingConfigurationResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r CreateBillingConfigurationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateBillingConfigurationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateBillingConfigurationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateBillingConfigurationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ExportLedgerResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ExportLedgerResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ExportLedgerResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ExportLedgerResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ExportLedgerResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ExportLedgerResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ExportLedgerResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ExportLedgerResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListLedgerEntriesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *LedgerListRowPage
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListLedgerEntriesResponse) GetJSON200() *LedgerListRowPage {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListLedgerEntriesResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListLedgerEntriesResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ListLedgerEntriesResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListLedgerEntriesResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ListLedgerEntriesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListLedgerEntriesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListLedgerEntriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListLedgerEntriesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListOrganisationDirectoryResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -6925,6 +12569,1180 @@ func (r GetOrganisationDirectoryEntryResponse) ContentType() string {
 	return ""
 }
 
+type ListChargesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ChargePage
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListChargesResponse) GetJSON200() *ChargePage {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListChargesResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListChargesResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ListChargesResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListChargesResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ListChargesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListChargesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListChargesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListChargesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RaiseChargeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *Charge
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r RaiseChargeResponse) GetJSON201() *Charge {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r RaiseChargeResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r RaiseChargeResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r RaiseChargeResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r RaiseChargeResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r RaiseChargeResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r RaiseChargeResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r RaiseChargeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RaiseChargeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RaiseChargeResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetChargeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Charge
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetChargeResponse) GetJSON200() *Charge {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetChargeResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetChargeResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r GetChargeResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetBody returns the raw response body bytes
+func (r GetChargeResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetChargeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetChargeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetChargeResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CancelChargeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Charge
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CancelChargeResponse) GetJSON200() *Charge {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r CancelChargeResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r CancelChargeResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r CancelChargeResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r CancelChargeResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r CancelChargeResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r CancelChargeResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CancelChargeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CancelChargeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CancelChargeResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type SetChargeInvoiceReferenceResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Charge
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r SetChargeInvoiceReferenceResponse) GetJSON200() *Charge {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r SetChargeInvoiceReferenceResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r SetChargeInvoiceReferenceResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r SetChargeInvoiceReferenceResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r SetChargeInvoiceReferenceResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r SetChargeInvoiceReferenceResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r SetChargeInvoiceReferenceResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r SetChargeInvoiceReferenceResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SetChargeInvoiceReferenceResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r SetChargeInvoiceReferenceResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListChargePaymentsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *LedgerPaymentPage
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListChargePaymentsResponse) GetJSON200() *LedgerPaymentPage {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListChargePaymentsResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListChargePaymentsResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ListChargePaymentsResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListChargePaymentsResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ListChargePaymentsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListChargePaymentsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListChargePaymentsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListChargePaymentsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RecordPaymentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *LedgerPayment
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Overpayment
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r RecordPaymentResponse) GetJSON201() *LedgerPayment {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r RecordPaymentResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r RecordPaymentResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r RecordPaymentResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r RecordPaymentResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r RecordPaymentResponse) GetApplicationproblemJSON422() *Overpayment {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r RecordPaymentResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r RecordPaymentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RecordPaymentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RecordPaymentResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ReversePaymentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *LedgerPayment
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r ReversePaymentResponse) GetJSON201() *LedgerPayment {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ReversePaymentResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ReversePaymentResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ReversePaymentResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ReversePaymentResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ReversePaymentResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ReversePaymentResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ReversePaymentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReversePaymentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ReversePaymentResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type WaiveChargeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Charge
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r WaiveChargeResponse) GetJSON200() *Charge {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r WaiveChargeResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r WaiveChargeResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r WaiveChargeResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r WaiveChargeResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r WaiveChargeResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r WaiveChargeResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r WaiveChargeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r WaiveChargeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r WaiveChargeResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloseOrganisationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *LifecycleResult
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *GrantRefused
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *OpenTradingDay
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloseOrganisationResponse) GetJSON200() *LifecycleResult {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r CloseOrganisationResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r CloseOrganisationResponse) GetApplicationproblemJSON403() *GrantRefused {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r CloseOrganisationResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r CloseOrganisationResponse) GetApplicationproblemJSON409() *OpenTradingDay {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r CloseOrganisationResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r CloseOrganisationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloseOrganisationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloseOrganisationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloseOrganisationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ReinstateOrganisationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *LifecycleResult
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *GrantRefused
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ReinstateOrganisationResponse) GetJSON200() *LifecycleResult {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ReinstateOrganisationResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ReinstateOrganisationResponse) GetApplicationproblemJSON403() *GrantRefused {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ReinstateOrganisationResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ReinstateOrganisationResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ReinstateOrganisationResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ReinstateOrganisationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ReinstateOrganisationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReinstateOrganisationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ReinstateOrganisationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetOrganisationSubscriptionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SubscriptionHistory
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetOrganisationSubscriptionResponse) GetJSON200() *SubscriptionHistory {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetOrganisationSubscriptionResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetOrganisationSubscriptionResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r GetOrganisationSubscriptionResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetBody returns the raw response body bytes
+func (r GetOrganisationSubscriptionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganisationSubscriptionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganisationSubscriptionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetOrganisationSubscriptionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type StartSubscriptionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *Subscription
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r StartSubscriptionResponse) GetJSON201() *Subscription {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r StartSubscriptionResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r StartSubscriptionResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r StartSubscriptionResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r StartSubscriptionResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r StartSubscriptionResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r StartSubscriptionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r StartSubscriptionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r StartSubscriptionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r StartSubscriptionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ChangeSubscriptionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Subscription
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ChangeSubscriptionResponse) GetJSON200() *Subscription {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ChangeSubscriptionResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ChangeSubscriptionResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ChangeSubscriptionResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ChangeSubscriptionResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ChangeSubscriptionResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ChangeSubscriptionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ChangeSubscriptionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ChangeSubscriptionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ChangeSubscriptionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CancelSubscriptionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Subscription
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CancelSubscriptionResponse) GetJSON200() *Subscription {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r CancelSubscriptionResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r CancelSubscriptionResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r CancelSubscriptionResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r CancelSubscriptionResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r CancelSubscriptionResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r CancelSubscriptionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CancelSubscriptionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CancelSubscriptionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CancelSubscriptionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type SuspendOrganisationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *LifecycleResult
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *GrantRefused
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *OpenTradingDay
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r SuspendOrganisationResponse) GetJSON200() *LifecycleResult {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r SuspendOrganisationResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r SuspendOrganisationResponse) GetApplicationproblemJSON403() *GrantRefused {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r SuspendOrganisationResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r SuspendOrganisationResponse) GetApplicationproblemJSON409() *OpenTradingDay {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r SuspendOrganisationResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r SuspendOrganisationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r SuspendOrganisationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SuspendOrganisationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r SuspendOrganisationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type RejectTaxRegistrationResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -7064,6 +13882,413 @@ func (r VerifyTaxRegistrationResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r VerifyTaxRegistrationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListPlansResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *PlanPage
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListPlansResponse) GetJSON200() *PlanPage {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListPlansResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListPlansResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListPlansResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ListPlansResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListPlansResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListPlansResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListPlansResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreatePlanResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *Plan
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r CreatePlanResponse) GetJSON201() *Plan {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r CreatePlanResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r CreatePlanResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r CreatePlanResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r CreatePlanResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r CreatePlanResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CreatePlanResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreatePlanResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreatePlanResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetPlanResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Plan
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetPlanResponse) GetJSON200() *Plan {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetPlanResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetPlanResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r GetPlanResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetBody returns the raw response body bytes
+func (r GetPlanResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetPlanResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetPlanResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetPlanResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreatePlanVersionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *PlanVersion
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r CreatePlanVersionResponse) GetJSON201() *PlanVersion {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r CreatePlanVersionResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r CreatePlanVersionResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r CreatePlanVersionResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r CreatePlanVersionResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r CreatePlanVersionResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r CreatePlanVersionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CreatePlanVersionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreatePlanVersionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreatePlanVersionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ActivatePlanVersionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *PlanVersion
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ActivatePlanVersionResponse) GetJSON200() *PlanVersion {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ActivatePlanVersionResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ActivatePlanVersionResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ActivatePlanVersionResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ActivatePlanVersionResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetBody returns the raw response body bytes
+func (r ActivatePlanVersionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ActivatePlanVersionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ActivatePlanVersionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ActivatePlanVersionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RetirePlanVersionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *PlanVersion
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r RetirePlanVersionResponse) GetJSON200() *PlanVersion {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r RetirePlanVersionResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r RetirePlanVersionResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r RetirePlanVersionResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r RetirePlanVersionResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetBody returns the raw response body bytes
+func (r RetirePlanVersionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r RetirePlanVersionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RetirePlanVersionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RetirePlanVersionResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -8049,6 +15274,158 @@ func (r RemoveLinkGrantResponse) ContentType() string {
 	return ""
 }
 
+// ReissueLinkInvitationResponse429Headers the declared response headers of an HTTP 429 response for ReissueLinkInvitation
+type ReissueLinkInvitationResponse429Headers struct {
+	RetryAfter *int
+}
+
+type ReissueLinkInvitationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *LinkProposal
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *StepUpRequired
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON429 the response for an HTTP 429 `application/problem+json` response
+	ApplicationproblemJSON429 *TooManyRequests
+	// Headers429 the parsed response headers for an HTTP 429 response
+	Headers429 *ReissueLinkInvitationResponse429Headers
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ReissueLinkInvitationResponse) GetJSON200() *LinkProposal {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ReissueLinkInvitationResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ReissueLinkInvitationResponse) GetApplicationproblemJSON403() *StepUpRequired {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ReissueLinkInvitationResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ReissueLinkInvitationResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON429 returns the response for an HTTP 429 `application/problem+json` response
+func (r ReissueLinkInvitationResponse) GetApplicationproblemJSON429() *TooManyRequests {
+	return r.ApplicationproblemJSON429
+}
+
+// GetBody returns the raw response body bytes
+func (r ReissueLinkInvitationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ReissueLinkInvitationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReissueLinkInvitationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ReissueLinkInvitationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ReacceptLinkResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Link
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *StepUpRequired
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ReacceptLinkResponse) GetJSON200() *Link {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ReacceptLinkResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ReacceptLinkResponse) GetApplicationproblemJSON403() *StepUpRequired {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ReacceptLinkResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ReacceptLinkResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetBody returns the raw response body bytes
+func (r ReacceptLinkResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ReacceptLinkResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReacceptLinkResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ReacceptLinkResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type RevokeLinkResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -8243,6 +15620,137 @@ func (r SuspendLinkResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r SuspendLinkResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListManualBookSeriesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ManualBookSeriesPage
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListManualBookSeriesResponse) GetJSON200() *ManualBookSeriesPage {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListManualBookSeriesResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListManualBookSeriesResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetBody returns the raw response body bytes
+func (r ListManualBookSeriesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListManualBookSeriesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListManualBookSeriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListManualBookSeriesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type RegisterManualBookSeriesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *ManualBookSeries
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *StrongSessionRequired
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r RegisterManualBookSeriesResponse) GetJSON201() *ManualBookSeries {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r RegisterManualBookSeriesResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r RegisterManualBookSeriesResponse) GetApplicationproblemJSON403() *StrongSessionRequired {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r RegisterManualBookSeriesResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r RegisterManualBookSeriesResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r RegisterManualBookSeriesResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r RegisterManualBookSeriesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r RegisterManualBookSeriesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r RegisterManualBookSeriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r RegisterManualBookSeriesResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -8738,6 +16246,82 @@ func (r UpdateOutletResponse) ContentType() string {
 	return ""
 }
 
+type ChangeOutletTaxRegistrationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Outlet
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *StepUpRequired
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Conflict
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *ValidationFailed
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ChangeOutletTaxRegistrationResponse) GetJSON200() *Outlet {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ChangeOutletTaxRegistrationResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ChangeOutletTaxRegistrationResponse) GetApplicationproblemJSON403() *StepUpRequired {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ChangeOutletTaxRegistrationResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ChangeOutletTaxRegistrationResponse) GetApplicationproblemJSON409() *Conflict {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ChangeOutletTaxRegistrationResponse) GetApplicationproblemJSON422() *ValidationFailed {
+	return r.ApplicationproblemJSON422
+}
+
+// GetBody returns the raw response body bytes
+func (r ChangeOutletTaxRegistrationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ChangeOutletTaxRegistrationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ChangeOutletTaxRegistrationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ChangeOutletTaxRegistrationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListStatesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -8780,6 +16364,68 @@ func (r ListStatesResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ListStatesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetMyPlanResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *MyPlan
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetMyPlanResponse) GetJSON200() *MyPlan {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetMyPlanResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetMyPlanResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r GetMyPlanResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetBody returns the raw response body bytes
+func (r GetMyPlanResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetMyPlanResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetMyPlanResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetMyPlanResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -9186,6 +16832,75 @@ func (c *ClientWithResponses) GetLinkDecisionWithResponse(ctx context.Context, p
 	return ParseGetLinkDecisionResponse(rsp)
 }
 
+// ListBillingConfigurationsWithResponse List Hostry GST configuration versions
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/vendor/billing-configurations (the `ListBillingConfigurations` operationId).
+func (c *ClientWithResponses) ListBillingConfigurationsWithResponse(ctx context.Context, params *ListBillingConfigurationsParams, reqEditors ...RequestEditorFn) (*ListBillingConfigurationsResponse, error) {
+	rsp, err := c.ListBillingConfigurations(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListBillingConfigurationsResponse(rsp)
+}
+
+// CreateBillingConfigurationWithBodyWithResponse Add a GST configuration version
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/billing-configurations (the `CreateBillingConfiguration` operationId).
+func (c *ClientWithResponses) CreateBillingConfigurationWithBodyWithResponse(ctx context.Context, params *CreateBillingConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateBillingConfigurationResponse, error) {
+	rsp, err := c.CreateBillingConfigurationWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateBillingConfigurationResponse(rsp)
+}
+
+// CreateBillingConfigurationWithResponse Add a GST configuration version
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/billing-configurations (the `CreateBillingConfiguration` operationId).
+func (c *ClientWithResponses) CreateBillingConfigurationWithResponse(ctx context.Context, params *CreateBillingConfigurationParams, body CreateBillingConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateBillingConfigurationResponse, error) {
+	rsp, err := c.CreateBillingConfiguration(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateBillingConfigurationResponse(rsp)
+}
+
+// ExportLedgerWithResponse Export the ledger as CSV
+//
+// Should (A1-Q12): organisation ids and names only, no GSTIN, phone or email (BR-A1-38). Audited per export.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/vendor/ledger-exports (the `ExportLedger` operationId).
+func (c *ClientWithResponses) ExportLedgerWithResponse(ctx context.Context, params *ExportLedgerParams, reqEditors ...RequestEditorFn) (*ExportLedgerResponse, error) {
+	rsp, err := c.ExportLedger(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExportLedgerResponse(rsp)
+}
+
+// ListLedgerEntriesWithResponse Work lists for billing staff
+//
+// overdue_charges (outstanding above tolerance and due before today IST), charges_to_raise (paid_through within 7 days or passed, no charge for the next period), charges_without_invoice_reference, pilots_ending (review date within 14 days), retired_version_subscriptions, outlets_over_limit. Derived on read; no scheduled tasks, nothing is sent.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/vendor/ledger-lists/{list_kind} (the `ListLedgerEntries` operationId).
+func (c *ClientWithResponses) ListLedgerEntriesWithResponse(ctx context.Context, listKind LedgerListKind, params *ListLedgerEntriesParams, reqEditors ...RequestEditorFn) (*ListLedgerEntriesResponse, error) {
+	rsp, err := c.ListLedgerEntries(ctx, listKind, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListLedgerEntriesResponse(rsp)
+}
+
 // ListOrganisationDirectoryWithResponse List and search the organisation directory
 //
 // Returns a wrapper object for the known response body format(s).
@@ -9242,6 +16957,402 @@ func (c *ClientWithResponses) GetOrganisationDirectoryEntryWithResponse(ctx cont
 	return ParseGetOrganisationDirectoryEntryResponse(rsp)
 }
 
+// ListChargesWithResponse List an organisation's charges
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges (the `ListCharges` operationId).
+func (c *ClientWithResponses) ListChargesWithResponse(ctx context.Context, organisationId Id, params *ListChargesParams, reqEditors ...RequestEditorFn) (*ListChargesResponse, error) {
+	rsp, err := c.ListCharges(ctx, organisationId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListChargesResponse(rsp)
+}
+
+// RaiseChargeWithBodyWithResponse Raise a charge
+//
+// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges (the `RaiseCharge` operationId).
+func (c *ClientWithResponses) RaiseChargeWithBodyWithResponse(ctx context.Context, organisationId Id, params *RaiseChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RaiseChargeResponse, error) {
+	rsp, err := c.RaiseChargeWithBody(ctx, organisationId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRaiseChargeResponse(rsp)
+}
+
+// RaiseChargeWithResponse Raise a charge
+//
+// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges (the `RaiseCharge` operationId).
+func (c *ClientWithResponses) RaiseChargeWithResponse(ctx context.Context, organisationId Id, params *RaiseChargeParams, body RaiseChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*RaiseChargeResponse, error) {
+	rsp, err := c.RaiseCharge(ctx, organisationId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRaiseChargeResponse(rsp)
+}
+
+// GetChargeWithResponse Read a charge (audited per read)
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id} (the `GetCharge` operationId).
+func (c *ClientWithResponses) GetChargeWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *GetChargeParams, reqEditors ...RequestEditorFn) (*GetChargeResponse, error) {
+	rsp, err := c.GetCharge(ctx, organisationId, chargeId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetChargeResponse(rsp)
+}
+
+// CancelChargeWithBodyWithResponse Cancel a charge
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation (the `CancelCharge` operationId).
+func (c *ClientWithResponses) CancelChargeWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *CancelChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CancelChargeResponse, error) {
+	rsp, err := c.CancelChargeWithBody(ctx, organisationId, chargeId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCancelChargeResponse(rsp)
+}
+
+// CancelChargeWithResponse Cancel a charge
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation (the `CancelCharge` operationId).
+func (c *ClientWithResponses) CancelChargeWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *CancelChargeParams, body CancelChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*CancelChargeResponse, error) {
+	rsp, err := c.CancelCharge(ctx, organisationId, chargeId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCancelChargeResponse(rsp)
+}
+
+// SetChargeInvoiceReferenceWithBodyWithResponse Set the invoice reference once
+//
+// Set once; a second reference on the same charge is refused 409 invoice_reference_set. A mistyped reference cannot be edited: an admin cancels the charge and raises it again (A1-Q8).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference (the `SetChargeInvoiceReference` operationId).
+func (c *ClientWithResponses) SetChargeInvoiceReferenceWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SetChargeInvoiceReferenceResponse, error) {
+	rsp, err := c.SetChargeInvoiceReferenceWithBody(ctx, organisationId, chargeId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetChargeInvoiceReferenceResponse(rsp)
+}
+
+// SetChargeInvoiceReferenceWithResponse Set the invoice reference once
+//
+// Set once; a second reference on the same charge is refused 409 invoice_reference_set. A mistyped reference cannot be edited: an admin cancels the charge and raises it again (A1-Q8).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference (the `SetChargeInvoiceReference` operationId).
+func (c *ClientWithResponses) SetChargeInvoiceReferenceWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *SetChargeInvoiceReferenceParams, body SetChargeInvoiceReferenceJSONRequestBody, reqEditors ...RequestEditorFn) (*SetChargeInvoiceReferenceResponse, error) {
+	rsp, err := c.SetChargeInvoiceReference(ctx, organisationId, chargeId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSetChargeInvoiceReferenceResponse(rsp)
+}
+
+// ListChargePaymentsWithResponse List payments of a charge
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `ListChargePayments` operationId).
+func (c *ClientWithResponses) ListChargePaymentsWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *ListChargePaymentsParams, reqEditors ...RequestEditorFn) (*ListChargePaymentsResponse, error) {
+	rsp, err := c.ListChargePayments(ctx, organisationId, chargeId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListChargePaymentsResponse(rsp)
+}
+
+// RecordPaymentWithBodyWithResponse Record a payment received by hand
+//
+// Partial payments are allowed; a payment above the outstanding amount is refused 422 overpayment; a duplicate reference on a different payment is a warning only (BR-A1-45).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `RecordPayment` operationId).
+func (c *ClientWithResponses) RecordPaymentWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *RecordPaymentParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RecordPaymentResponse, error) {
+	rsp, err := c.RecordPaymentWithBody(ctx, organisationId, chargeId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRecordPaymentResponse(rsp)
+}
+
+// RecordPaymentWithResponse Record a payment received by hand
+//
+// Partial payments are allowed; a payment above the outstanding amount is refused 422 overpayment; a duplicate reference on a different payment is a warning only (BR-A1-45).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments (the `RecordPayment` operationId).
+func (c *ClientWithResponses) RecordPaymentWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *RecordPaymentParams, body RecordPaymentJSONRequestBody, reqEditors ...RequestEditorFn) (*RecordPaymentResponse, error) {
+	rsp, err := c.RecordPayment(ctx, organisationId, chargeId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRecordPaymentResponse(rsp)
+}
+
+// ReversePaymentWithBodyWithResponse Reverse a payment
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal (the `ReversePayment` operationId).
+func (c *ClientWithResponses) ReversePaymentWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReversePaymentResponse, error) {
+	rsp, err := c.ReversePaymentWithBody(ctx, organisationId, chargeId, paymentId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReversePaymentResponse(rsp)
+}
+
+// ReversePaymentWithResponse Reverse a payment
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal (the `ReversePayment` operationId).
+func (c *ClientWithResponses) ReversePaymentWithResponse(ctx context.Context, organisationId Id, chargeId Id, paymentId Id, params *ReversePaymentParams, body ReversePaymentJSONRequestBody, reqEditors ...RequestEditorFn) (*ReversePaymentResponse, error) {
+	rsp, err := c.ReversePayment(ctx, organisationId, chargeId, paymentId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReversePaymentResponse(rsp)
+}
+
+// WaiveChargeWithBodyWithResponse Waive a charge
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver (the `WaiveCharge` operationId).
+func (c *ClientWithResponses) WaiveChargeWithBodyWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *WaiveChargeParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*WaiveChargeResponse, error) {
+	rsp, err := c.WaiveChargeWithBody(ctx, organisationId, chargeId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWaiveChargeResponse(rsp)
+}
+
+// WaiveChargeWithResponse Waive a charge
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver (the `WaiveCharge` operationId).
+func (c *ClientWithResponses) WaiveChargeWithResponse(ctx context.Context, organisationId Id, chargeId Id, params *WaiveChargeParams, body WaiveChargeJSONRequestBody, reqEditors ...RequestEditorFn) (*WaiveChargeResponse, error) {
+	rsp, err := c.WaiveCharge(ctx, organisationId, chargeId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseWaiveChargeResponse(rsp)
+}
+
+// CloseOrganisationWithBodyWithResponse Execute an approved closure
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_close (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/closure (the `CloseOrganisation` operationId).
+func (c *ClientWithResponses) CloseOrganisationWithBodyWithResponse(ctx context.Context, organisationId Id, params *CloseOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseOrganisationResponse, error) {
+	rsp, err := c.CloseOrganisationWithBody(ctx, organisationId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloseOrganisationResponse(rsp)
+}
+
+// CloseOrganisationWithResponse Execute an approved closure
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_close (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/closure (the `CloseOrganisation` operationId).
+func (c *ClientWithResponses) CloseOrganisationWithResponse(ctx context.Context, organisationId Id, params *CloseOrganisationParams, body CloseOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*CloseOrganisationResponse, error) {
+	rsp, err := c.CloseOrganisation(ctx, organisationId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloseOrganisationResponse(rsp)
+}
+
+// ReinstateOrganisationWithBodyWithResponse Execute an approved reinstatement
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_reinstate (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Reinstatement is not guarded.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/reinstatement (the `ReinstateOrganisation` operationId).
+func (c *ClientWithResponses) ReinstateOrganisationWithBodyWithResponse(ctx context.Context, organisationId Id, params *ReinstateOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ReinstateOrganisationResponse, error) {
+	rsp, err := c.ReinstateOrganisationWithBody(ctx, organisationId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReinstateOrganisationResponse(rsp)
+}
+
+// ReinstateOrganisationWithResponse Execute an approved reinstatement
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_reinstate (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Reinstatement is not guarded.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/reinstatement (the `ReinstateOrganisation` operationId).
+func (c *ClientWithResponses) ReinstateOrganisationWithResponse(ctx context.Context, organisationId Id, params *ReinstateOrganisationParams, body ReinstateOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*ReinstateOrganisationResponse, error) {
+	rsp, err := c.ReinstateOrganisation(ctx, organisationId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReinstateOrganisationResponse(rsp)
+}
+
+// GetOrganisationSubscriptionWithResponse Get the current subscription and history
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/vendor/organisations/{organisation_id}/subscription (the `GetOrganisationSubscription` operationId).
+func (c *ClientWithResponses) GetOrganisationSubscriptionWithResponse(ctx context.Context, organisationId Id, params *GetOrganisationSubscriptionParams, reqEditors ...RequestEditorFn) (*GetOrganisationSubscriptionResponse, error) {
+	rsp, err := c.GetOrganisationSubscription(ctx, organisationId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOrganisationSubscriptionResponse(rsp)
+}
+
+// StartSubscriptionWithBodyWithResponse Assign a plan version or a pilot
+//
+// Changes the subscription row and the organisation's entitlement rows in one transaction (BR-A1-14, CB1). Entitlements carry no expiry. A price below list needs admin.subscription.adjust and a reason; a replay with the same key returns the same row. The first plan moves organisation status trial to active (BR-A1-74).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription (the `StartSubscription` operationId).
+func (c *ClientWithResponses) StartSubscriptionWithBodyWithResponse(ctx context.Context, organisationId Id, params *StartSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*StartSubscriptionResponse, error) {
+	rsp, err := c.StartSubscriptionWithBody(ctx, organisationId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseStartSubscriptionResponse(rsp)
+}
+
+// StartSubscriptionWithResponse Assign a plan version or a pilot
+//
+// Changes the subscription row and the organisation's entitlement rows in one transaction (BR-A1-14, CB1). Entitlements carry no expiry. A price below list needs admin.subscription.adjust and a reason; a replay with the same key returns the same row. The first plan moves organisation status trial to active (BR-A1-74).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription (the `StartSubscription` operationId).
+func (c *ClientWithResponses) StartSubscriptionWithResponse(ctx context.Context, organisationId Id, params *StartSubscriptionParams, body StartSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*StartSubscriptionResponse, error) {
+	rsp, err := c.StartSubscription(ctx, organisationId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseStartSubscriptionResponse(rsp)
+}
+
+// ChangeSubscriptionWithBodyWithResponse Change plan, price or add-ons from the next charge
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/subscription (the `ChangeSubscription` operationId).
+func (c *ClientWithResponses) ChangeSubscriptionWithBodyWithResponse(ctx context.Context, organisationId Id, params *ChangeSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ChangeSubscriptionResponse, error) {
+	rsp, err := c.ChangeSubscriptionWithBody(ctx, organisationId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseChangeSubscriptionResponse(rsp)
+}
+
+// ChangeSubscriptionWithResponse Change plan, price or add-ons from the next charge
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /internal/v1/vendor/organisations/{organisation_id}/subscription (the `ChangeSubscription` operationId).
+func (c *ClientWithResponses) ChangeSubscriptionWithResponse(ctx context.Context, organisationId Id, params *ChangeSubscriptionParams, body ChangeSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*ChangeSubscriptionResponse, error) {
+	rsp, err := c.ChangeSubscription(ctx, organisationId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseChangeSubscriptionResponse(rsp)
+}
+
+// CancelSubscriptionWithBodyWithResponse Record a cancellation at period end
+//
+// No further charge is raised after paid_through; no refund is modelled; closing the organisation is a separate lifecycle action.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation (the `CancelSubscription` operationId).
+func (c *ClientWithResponses) CancelSubscriptionWithBodyWithResponse(ctx context.Context, organisationId Id, params *CancelSubscriptionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CancelSubscriptionResponse, error) {
+	rsp, err := c.CancelSubscriptionWithBody(ctx, organisationId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCancelSubscriptionResponse(rsp)
+}
+
+// CancelSubscriptionWithResponse Record a cancellation at period end
+//
+// No further charge is raised after paid_through; no refund is modelled; closing the organisation is a separate lifecycle action.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation (the `CancelSubscription` operationId).
+func (c *ClientWithResponses) CancelSubscriptionWithResponse(ctx context.Context, organisationId Id, params *CancelSubscriptionParams, body CancelSubscriptionJSONRequestBody, reqEditors ...RequestEditorFn) (*CancelSubscriptionResponse, error) {
+	rsp, err := c.CancelSubscription(ctx, organisationId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCancelSubscriptionResponse(rsp)
+}
+
+// SuspendOrganisationWithBodyWithResponse Execute an approved suspension
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_suspend (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/suspension (the `SuspendOrganisation` operationId).
+func (c *ClientWithResponses) SuspendOrganisationWithBodyWithResponse(ctx context.Context, organisationId Id, params *SuspendOrganisationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*SuspendOrganisationResponse, error) {
+	rsp, err := c.SuspendOrganisationWithBody(ctx, organisationId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSuspendOrganisationResponse(rsp)
+}
+
+// SuspendOrganisationWithResponse Execute an approved suspension
+//
+// Executed with the approver's token, the admin service token and a vendor approval grant of kind org_suspend (ADR-0014 A1.3): the grant is verified, its subject hash (organisation and target status) recomputed, its id recorded as used in this transaction, and the audit row written with the "show to owner" marker (V7). Refused 409 open_trading_day while any outlet has a day in progress (open, dated today or yesterday IST); the approval stays approved and a fresh grant may be issued until the request lapses.  Suspended means read and export only after the grace period; it never wipes devices and never blocks a trading day in progress; the device rule is the guarantee (A1.2 item 5).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/organisations/{organisation_id}/suspension (the `SuspendOrganisation` operationId).
+func (c *ClientWithResponses) SuspendOrganisationWithResponse(ctx context.Context, organisationId Id, params *SuspendOrganisationParams, body SuspendOrganisationJSONRequestBody, reqEditors ...RequestEditorFn) (*SuspendOrganisationResponse, error) {
+	rsp, err := c.SuspendOrganisation(ctx, organisationId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSuspendOrganisationResponse(rsp)
+}
+
 // RejectTaxRegistrationWithBodyWithResponse Mark a registration rejected
 //
 // ADR-0003 A1.1 item 4 (AC-TEN-20): vendor staff reject a registration whose GSTIN could not be proven. Allowed only while the registration is unverified (409 otherwise). A rejected registration can get no series and its GSTIN can be corrected or the registration closed by the tenant. The reason is kept in the vendor audit log and the tenant audit log, never in the registration body. Idempotent.
@@ -9296,6 +17407,110 @@ func (c *ClientWithResponses) VerifyTaxRegistrationWithResponse(ctx context.Cont
 		return nil, err
 	}
 	return ParseVerifyTaxRegistrationResponse(rsp)
+}
+
+// ListPlansWithResponse List plans with their versions
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/vendor/plans (the `ListPlans` operationId).
+func (c *ClientWithResponses) ListPlansWithResponse(ctx context.Context, params *ListPlansParams, reqEditors ...RequestEditorFn) (*ListPlansResponse, error) {
+	rsp, err := c.ListPlans(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListPlansResponse(rsp)
+}
+
+// CreatePlanWithBodyWithResponse Create a plan with a draft first version
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/plans (the `CreatePlan` operationId).
+func (c *ClientWithResponses) CreatePlanWithBodyWithResponse(ctx context.Context, params *CreatePlanParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePlanResponse, error) {
+	rsp, err := c.CreatePlanWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreatePlanResponse(rsp)
+}
+
+// CreatePlanWithResponse Create a plan with a draft first version
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/plans (the `CreatePlan` operationId).
+func (c *ClientWithResponses) CreatePlanWithResponse(ctx context.Context, params *CreatePlanParams, body CreatePlanJSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePlanResponse, error) {
+	rsp, err := c.CreatePlan(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreatePlanResponse(rsp)
+}
+
+// GetPlanWithResponse Get a plan
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/vendor/plans/{plan_key} (the `GetPlan` operationId).
+func (c *ClientWithResponses) GetPlanWithResponse(ctx context.Context, planKey string, params *GetPlanParams, reqEditors ...RequestEditorFn) (*GetPlanResponse, error) {
+	rsp, err := c.GetPlan(ctx, planKey, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetPlanResponse(rsp)
+}
+
+// CreatePlanVersionWithBodyWithResponse Create a draft version (a price or content change is a new version)
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions (the `CreatePlanVersion` operationId).
+func (c *ClientWithResponses) CreatePlanVersionWithBodyWithResponse(ctx context.Context, planKey string, params *CreatePlanVersionParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreatePlanVersionResponse, error) {
+	rsp, err := c.CreatePlanVersionWithBody(ctx, planKey, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreatePlanVersionResponse(rsp)
+}
+
+// CreatePlanVersionWithResponse Create a draft version (a price or content change is a new version)
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions (the `CreatePlanVersion` operationId).
+func (c *ClientWithResponses) CreatePlanVersionWithResponse(ctx context.Context, planKey string, params *CreatePlanVersionParams, body CreatePlanVersionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreatePlanVersionResponse, error) {
+	rsp, err := c.CreatePlanVersion(ctx, planKey, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreatePlanVersionResponse(rsp)
+}
+
+// ActivatePlanVersionWithResponse Activate a draft version (immutable from here)
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/activation (the `ActivatePlanVersion` operationId).
+func (c *ClientWithResponses) ActivatePlanVersionWithResponse(ctx context.Context, planKey string, version int, params *ActivatePlanVersionParams, reqEditors ...RequestEditorFn) (*ActivatePlanVersionResponse, error) {
+	rsp, err := c.ActivatePlanVersion(ctx, planKey, version, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseActivatePlanVersionResponse(rsp)
+}
+
+// RetirePlanVersionWithResponse Retire an active version
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/retirement (the `RetirePlanVersion` operationId).
+func (c *ClientWithResponses) RetirePlanVersionWithResponse(ctx context.Context, planKey string, version int, params *RetirePlanVersionParams, reqEditors ...RequestEditorFn) (*RetirePlanVersionResponse, error) {
+	rsp, err := c.RetirePlanVersion(ctx, planKey, version, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRetirePlanVersionResponse(rsp)
 }
 
 // ListBrandsWithResponse List brands
@@ -9365,6 +17580,8 @@ func (c *ClientWithResponses) ListDocumentSeriesWithResponse(ctx context.Context
 
 // CloseDocumentSeriesUnreconciledWithBodyWithResponse Close a series with an unreconciled tail
 //
+// A person's terminal decision, with a reason, that the device will not come back (ADR-0003 section 1a). Offered only while tail_confirmed_at is empty (409 tail_confirmed after a device stated its tail). Numbers that arrive after either kind of closure are flagged and listed as "after closure". Publishes tenancy.series.closed with cause closed_unreconciled.
+//
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
 // Corresponds with PUT /v1/document-series/{series_id}/closure (the `CloseDocumentSeriesUnreconciled` operationId).
@@ -9377,6 +17594,8 @@ func (c *ClientWithResponses) CloseDocumentSeriesUnreconciledWithBodyWithRespons
 }
 
 // CloseDocumentSeriesUnreconciledWithResponse Close a series with an unreconciled tail
+//
+// A person's terminal decision, with a reason, that the device will not come back (ADR-0003 section 1a). Offered only while tail_confirmed_at is empty (409 tail_confirmed after a device stated its tail). Numbers that arrive after either kind of closure are flagged and listed as "after closure". Publishes tenancy.series.closed with cause closed_unreconciled.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -9534,6 +17753,8 @@ func (c *ClientWithResponses) DecideLinkAmendmentWithResponse(ctx context.Contex
 
 // ConfirmLinkWithBodyWithResponse Proposer confirms the accepting organisation
 //
+// The details of the accepting organisation are re-checked against the snapshot taken at acceptance (ADR-0003 Note N1 R3). When they changed the answer is 409 counterparty_changed and the link stays accepted: the acceptor can refresh the snapshot with reacceptLink, or the proposer can decline the accepted link (declineLink) or ask for a new invitation after declining and proposing again; nothing else moves the link. A replay of a confirmed link returns it.
+//
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
 // Corresponds with PUT /v1/links/{link_id}/confirmation (the `ConfirmLink` operationId).
@@ -9546,6 +17767,8 @@ func (c *ClientWithResponses) ConfirmLinkWithBodyWithResponse(ctx context.Contex
 }
 
 // ConfirmLinkWithResponse Proposer confirms the accepting organisation
+//
+// The details of the accepting organisation are re-checked against the snapshot taken at acceptance (ADR-0003 Note N1 R3). When they changed the answer is 409 counterparty_changed and the link stays accepted: the acceptor can refresh the snapshot with reacceptLink, or the proposer can decline the accepted link (declineLink) or ask for a new invitation after declining and proposing again; nothing else moves the link. A replay of a confirmed link returns it.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -9595,6 +17818,36 @@ func (c *ClientWithResponses) RemoveLinkGrantWithResponse(ctx context.Context, l
 		return nil, err
 	}
 	return ParseRemoveLinkGrantResponse(rsp)
+}
+
+// ReissueLinkInvitationWithResponse Issue a fresh invitation code for a proposed link
+//
+// ADR-0003 Note N1 R1. Only the proposer, only while the link is proposed (409 link_not_proposed otherwise). The previous code stops working at once. The new code is shown once in this response and is never stored readable; a replay of the same Idempotency-Key returns the link without a code, never the code again.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /v1/links/{link_id}/invitations (the `ReissueLinkInvitation` operationId).
+func (c *ClientWithResponses) ReissueLinkInvitationWithResponse(ctx context.Context, linkId Id, params *ReissueLinkInvitationParams, reqEditors ...RequestEditorFn) (*ReissueLinkInvitationResponse, error) {
+	rsp, err := c.ReissueLinkInvitation(ctx, linkId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReissueLinkInvitationResponse(rsp)
+}
+
+// ReacceptLinkWithResponse Acceptor refreshes its details after counterparty_changed
+//
+// Only the acceptor, only while the link is accepted and not yet confirmed (409 link_not_accepted otherwise). Takes a new snapshot of the acceptor's details for the proposer to review (ADR-0003 Note N1 R3, never refreshed on its own), keeps the acceptance and its grants pending, and publishes tenancy.link.accepted again. The proposer then confirms or declines. Needs no invitation code: the code was used up at acceptance.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/links/{link_id}/re-acceptance (the `ReacceptLink` operationId).
+func (c *ClientWithResponses) ReacceptLinkWithResponse(ctx context.Context, linkId Id, params *ReacceptLinkParams, reqEditors ...RequestEditorFn) (*ReacceptLinkResponse, error) {
+	rsp, err := c.ReacceptLink(ctx, linkId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReacceptLinkResponse(rsp)
 }
 
 // RevokeLinkWithBodyWithResponse Revoke a link (either party)
@@ -9660,6 +17913,49 @@ func (c *ClientWithResponses) SuspendLinkWithResponse(ctx context.Context, linkI
 		return nil, err
 	}
 	return ParseSuspendLinkResponse(rsp)
+}
+
+// ListManualBookSeriesWithResponse List registered bill books
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/manual-book-series (the `ListManualBookSeries` operationId).
+func (c *ClientWithResponses) ListManualBookSeriesWithResponse(ctx context.Context, params *ListManualBookSeriesParams, reqEditors ...RequestEditorFn) (*ListManualBookSeriesResponse, error) {
+	rsp, err := c.ListManualBookSeries(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListManualBookSeriesResponse(rsp)
+}
+
+// RegisterManualBookSeriesWithBodyWithResponse Register a paper bill book as an entry-only series
+//
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /v1/manual-book-series (the `RegisterManualBookSeries` operationId).
+func (c *ClientWithResponses) RegisterManualBookSeriesWithBodyWithResponse(ctx context.Context, params *RegisterManualBookSeriesParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*RegisterManualBookSeriesResponse, error) {
+	rsp, err := c.RegisterManualBookSeriesWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRegisterManualBookSeriesResponse(rsp)
+}
+
+// RegisterManualBookSeriesWithResponse Register a paper bill book as an entry-only series
+//
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /v1/manual-book-series (the `RegisterManualBookSeries` operationId).
+func (c *ClientWithResponses) RegisterManualBookSeriesWithResponse(ctx context.Context, params *RegisterManualBookSeriesParams, body RegisterManualBookSeriesJSONRequestBody, reqEditors ...RequestEditorFn) (*RegisterManualBookSeriesResponse, error) {
+	rsp, err := c.RegisterManualBookSeries(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseRegisterManualBookSeriesResponse(rsp)
 }
 
 // GetOrganisationSettingsWithResponse Get organisation settings
@@ -9818,6 +18114,36 @@ func (c *ClientWithResponses) UpdateOutletWithResponse(ctx context.Context, outl
 	return ParseUpdateOutletResponse(rsp)
 }
 
+// ChangeOutletTaxRegistrationWithBodyWithResponse Move an outlet to another tax registration
+//
+// ADR-0014 A2.5 item 1. The target must belong to the organisation, be open, and be verified or of regime unregistered (409 registration_not_eligible otherwise). Refused 409 open_trading_day while the outlet has a trading day in progress, so one business day has one registration. In one transaction the outlet points at the target and every series of that outlet under the old registration is closed (it then reads closed, awaiting device); tenancy.outlet.updated and tenancy.series.closed are published, ids and codes only. Identity issues codes under the new registration in the next pack. A device switches series only when it holds no day in progress; a bill an offline device makes later under the old series is flagged for the accountant, never rejected. Idempotent: the same target again returns the outlet.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/outlets/{outlet_id}/tax-registration (the `ChangeOutletTaxRegistration` operationId).
+func (c *ClientWithResponses) ChangeOutletTaxRegistrationWithBodyWithResponse(ctx context.Context, outletId Id, params *ChangeOutletTaxRegistrationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ChangeOutletTaxRegistrationResponse, error) {
+	rsp, err := c.ChangeOutletTaxRegistrationWithBody(ctx, outletId, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseChangeOutletTaxRegistrationResponse(rsp)
+}
+
+// ChangeOutletTaxRegistrationWithResponse Move an outlet to another tax registration
+//
+// ADR-0014 A2.5 item 1. The target must belong to the organisation, be open, and be verified or of regime unregistered (409 registration_not_eligible otherwise). Refused 409 open_trading_day while the outlet has a trading day in progress, so one business day has one registration. In one transaction the outlet points at the target and every series of that outlet under the old registration is closed (it then reads closed, awaiting device); tenancy.outlet.updated and tenancy.series.closed are published, ids and codes only. Identity issues codes under the new registration in the next pack. A device switches series only when it holds no day in progress; a bill an offline device makes later under the old series is flagged for the accountant, never rejected. Idempotent: the same target again returns the outlet.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/outlets/{outlet_id}/tax-registration (the `ChangeOutletTaxRegistration` operationId).
+func (c *ClientWithResponses) ChangeOutletTaxRegistrationWithResponse(ctx context.Context, outletId Id, params *ChangeOutletTaxRegistrationParams, body ChangeOutletTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*ChangeOutletTaxRegistrationResponse, error) {
+	rsp, err := c.ChangeOutletTaxRegistration(ctx, outletId, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseChangeOutletTaxRegistrationResponse(rsp)
+}
+
 // ListStatesWithResponse GST state reference table
 //
 // Returns a wrapper object for the known response body format(s).
@@ -9829,6 +18155,21 @@ func (c *ClientWithResponses) ListStatesWithResponse(ctx context.Context, reqEdi
 		return nil, err
 	}
 	return ParseListStatesResponse(rsp)
+}
+
+// GetMyPlanWithResponse Owner's read-only "My plan"
+//
+// Could (BR-A1-90). Returns only the caller's own organisation; no vendor user ids, no notes. Overdue is a label and gates nothing (ADR-0008 S5).
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/subscription (the `GetMyPlan` operationId).
+func (c *ClientWithResponses) GetMyPlanWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetMyPlanResponse, error) {
+	rsp, err := c.GetMyPlan(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetMyPlanResponse(rsp)
 }
 
 // ListTaxRegistrationsWithResponse List tax registrations
@@ -9915,7 +18256,7 @@ func (c *ClientWithResponses) UpdateTaxRegistrationWithResponse(ctx context.Cont
 
 // CloseTaxRegistrationWithBodyWithResponse Close a tax registration and its series
 //
-// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+// ADR-0003 A1.1 item 6, ADR-0014 A2.5 item 1: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here together with all its series. Every open series becomes closed; this operation never sets closed_unreconciled, because tenancy cannot know what a device still holds. The series reads "closed, awaiting device" until the device states its last number (series.close) and billing publishes billing.series.reconciled, which fills tail_confirmed_at and last_number. 409 registration_in_use while an outlet still references the registration: move the outlet first with changeOutletTaxRegistration. Closing is terminal and idempotent. Publishes tenancy.series.closed for every series it closes.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -9930,7 +18271,7 @@ func (c *ClientWithResponses) CloseTaxRegistrationWithBodyWithResponse(ctx conte
 
 // CloseTaxRegistrationWithResponse Close a tax registration and its series
 //
-// ADR-0003 A1.1 item 6: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here, together with all its series (status closed; a series with an unreconciled tail is closed with the unreconciled marker instead). 409 registration_in_use while an active outlet still references the registration. Closing is terminal and idempotent. Publishes no event in v1.
+// ADR-0003 A1.1 item 6, ADR-0014 A2.5 item 1: a verified GSTIN is fixed, so a different GSTIN is a new registration and the old one is closed here together with all its series. Every open series becomes closed; this operation never sets closed_unreconciled, because tenancy cannot know what a device still holds. The series reads "closed, awaiting device" until the device states its last number (series.close) and billing publishes billing.series.reconciled, which fills tail_confirmed_at and last_number. 409 registration_in_use while an outlet still references the registration: move the outlet first with changeOutletTaxRegistration. Closing is terminal and idempotent. Publishes tenancy.series.closed for every series it closes.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -10105,6 +18446,201 @@ func ParseGetLinkDecisionResponse(rsp *http.Response) (*GetLinkDecisionResponse,
 	return response, nil
 }
 
+// ParseListBillingConfigurationsResponse parses an HTTP response from a ListBillingConfigurationsWithResponse call
+func ParseListBillingConfigurationsResponse(rsp *http.Response) (*ListBillingConfigurationsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListBillingConfigurationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest BillingConfigurationPage
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateBillingConfigurationResponse parses an HTTP response from a CreateBillingConfigurationWithResponse call
+func ParseCreateBillingConfigurationResponse(rsp *http.Response) (*CreateBillingConfigurationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateBillingConfigurationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest BillingConfiguration
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseExportLedgerResponse parses an HTTP response from a ExportLedgerWithResponse call
+func ParseExportLedgerResponse(rsp *http.Response) (*ExportLedgerResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ExportLedgerResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListLedgerEntriesResponse parses an HTTP response from a ListLedgerEntriesWithResponse call
+func ParseListLedgerEntriesResponse(rsp *http.Response) (*ListLedgerEntriesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListLedgerEntriesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest LedgerListRowPage
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListOrganisationDirectoryResponse parses an HTTP response from a ListOrganisationDirectoryWithResponse call
 func ParseListOrganisationDirectoryResponse(rsp *http.Response) (*ListOrganisationDirectoryResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -10253,6 +18789,940 @@ func ParseGetOrganisationDirectoryEntryResponse(rsp *http.Response) (*GetOrganis
 	return response, nil
 }
 
+// ParseListChargesResponse parses an HTTP response from a ListChargesWithResponse call
+func ParseListChargesResponse(rsp *http.Response) (*ListChargesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListChargesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ChargePage
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRaiseChargeResponse parses an HTTP response from a RaiseChargeWithResponse call
+func ParseRaiseChargeResponse(rsp *http.Response) (*RaiseChargeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RaiseChargeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Charge
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetChargeResponse parses an HTTP response from a GetChargeWithResponse call
+func ParseGetChargeResponse(rsp *http.Response) (*GetChargeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetChargeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Charge
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCancelChargeResponse parses an HTTP response from a CancelChargeWithResponse call
+func ParseCancelChargeResponse(rsp *http.Response) (*CancelChargeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CancelChargeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Charge
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSetChargeInvoiceReferenceResponse parses an HTTP response from a SetChargeInvoiceReferenceWithResponse call
+func ParseSetChargeInvoiceReferenceResponse(rsp *http.Response) (*SetChargeInvoiceReferenceResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SetChargeInvoiceReferenceResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Charge
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListChargePaymentsResponse parses an HTTP response from a ListChargePaymentsWithResponse call
+func ParseListChargePaymentsResponse(rsp *http.Response) (*ListChargePaymentsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListChargePaymentsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest LedgerPaymentPage
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRecordPaymentResponse parses an HTTP response from a RecordPaymentWithResponse call
+func ParseRecordPaymentResponse(rsp *http.Response) (*RecordPaymentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RecordPaymentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest LedgerPayment
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Overpayment
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseReversePaymentResponse parses an HTTP response from a ReversePaymentWithResponse call
+func ParseReversePaymentResponse(rsp *http.Response) (*ReversePaymentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReversePaymentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest LedgerPayment
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseWaiveChargeResponse parses an HTTP response from a WaiveChargeWithResponse call
+func ParseWaiveChargeResponse(rsp *http.Response) (*WaiveChargeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &WaiveChargeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Charge
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloseOrganisationResponse parses an HTTP response from a CloseOrganisationWithResponse call
+func ParseCloseOrganisationResponse(rsp *http.Response) (*CloseOrganisationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloseOrganisationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest LifecycleResult
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest GrantRefused
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest OpenTradingDay
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseReinstateOrganisationResponse parses an HTTP response from a ReinstateOrganisationWithResponse call
+func ParseReinstateOrganisationResponse(rsp *http.Response) (*ReinstateOrganisationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReinstateOrganisationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest LifecycleResult
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest GrantRefused
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrganisationSubscriptionResponse parses an HTTP response from a GetOrganisationSubscriptionWithResponse call
+func ParseGetOrganisationSubscriptionResponse(rsp *http.Response) (*GetOrganisationSubscriptionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganisationSubscriptionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SubscriptionHistory
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseStartSubscriptionResponse parses an HTTP response from a StartSubscriptionWithResponse call
+func ParseStartSubscriptionResponse(rsp *http.Response) (*StartSubscriptionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &StartSubscriptionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Subscription
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseChangeSubscriptionResponse parses an HTTP response from a ChangeSubscriptionWithResponse call
+func ParseChangeSubscriptionResponse(rsp *http.Response) (*ChangeSubscriptionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ChangeSubscriptionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Subscription
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCancelSubscriptionResponse parses an HTTP response from a CancelSubscriptionWithResponse call
+func ParseCancelSubscriptionResponse(rsp *http.Response) (*CancelSubscriptionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CancelSubscriptionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Subscription
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSuspendOrganisationResponse parses an HTTP response from a SuspendOrganisationWithResponse call
+func ParseSuspendOrganisationResponse(rsp *http.Response) (*SuspendOrganisationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SuspendOrganisationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest LifecycleResult
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest GrantRefused
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest OpenTradingDay
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseRejectTaxRegistrationResponse parses an HTTP response from a RejectTaxRegistrationWithResponse call
 func ParseRejectTaxRegistrationResponse(rsp *http.Response) (*RejectTaxRegistrationResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -10358,6 +19828,323 @@ func ParseVerifyTaxRegistrationResponse(rsp *http.Response) (*VerifyTaxRegistrat
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
 		var dest GstinInUse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListPlansResponse parses an HTTP response from a ListPlansWithResponse call
+func ParseListPlansResponse(rsp *http.Response) (*ListPlansResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListPlansResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PlanPage
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreatePlanResponse parses an HTTP response from a CreatePlanWithResponse call
+func ParseCreatePlanResponse(rsp *http.Response) (*CreatePlanResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreatePlanResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Plan
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetPlanResponse parses an HTTP response from a GetPlanWithResponse call
+func ParseGetPlanResponse(rsp *http.Response) (*GetPlanResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetPlanResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Plan
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreatePlanVersionResponse parses an HTTP response from a CreatePlanVersionWithResponse call
+func ParseCreatePlanVersionResponse(rsp *http.Response) (*CreatePlanVersionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreatePlanVersionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest PlanVersion
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseActivatePlanVersionResponse parses an HTTP response from a ActivatePlanVersionWithResponse call
+func ParseActivatePlanVersionResponse(rsp *http.Response) (*ActivatePlanVersionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ActivatePlanVersionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PlanVersion
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRetirePlanVersionResponse parses an HTTP response from a RetirePlanVersionWithResponse call
+func ParseRetirePlanVersionResponse(rsp *http.Response) (*RetirePlanVersionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RetirePlanVersionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PlanVersion
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
 		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -11137,6 +20924,134 @@ func ParseRemoveLinkGrantResponse(rsp *http.Response) (*RemoveLinkGrantResponse,
 	return response, nil
 }
 
+// ParseReissueLinkInvitationResponse parses an HTTP response from a ReissueLinkInvitationWithResponse call
+func ParseReissueLinkInvitationResponse(rsp *http.Response) (*ReissueLinkInvitationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReissueLinkInvitationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest LinkProposal
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest StepUpRequired
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest TooManyRequests
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON429 = &dest
+
+	}
+
+	switch {
+	case rsp.StatusCode == 429:
+		var headers ReissueLinkInvitationResponse429Headers
+		if values := rsp.Header.Values("Retry-After"); len(values) > 0 {
+			var value int
+			if err := runtime.BindStyledParameterWithOptions("simple", "Retry-After", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.RetryAfter = &value
+		}
+		response.Headers429 = &headers
+	}
+
+	return response, nil
+}
+
+// ParseReacceptLinkResponse parses an HTTP response from a ReacceptLinkWithResponse call
+func ParseReacceptLinkResponse(rsp *http.Response) (*ReacceptLinkResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReacceptLinkResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Link
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest StepUpRequired
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseRevokeLinkResponse parses an HTTP response from a RevokeLinkWithResponse call
 func ParseRevokeLinkResponse(rsp *http.Response) (*RevokeLinkResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -11286,6 +21201,107 @@ func ParseSuspendLinkResponse(rsp *http.Response) (*SuspendLinkResponse, error) 
 			return nil, err
 		}
 		response.ApplicationproblemJSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListManualBookSeriesResponse parses an HTTP response from a ListManualBookSeriesWithResponse call
+func ParseListManualBookSeriesResponse(rsp *http.Response) (*ListManualBookSeriesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListManualBookSeriesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManualBookSeriesPage
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseRegisterManualBookSeriesResponse parses an HTTP response from a RegisterManualBookSeriesWithResponse call
+func ParseRegisterManualBookSeriesResponse(rsp *http.Response) (*RegisterManualBookSeriesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &RegisterManualBookSeriesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ManualBookSeries
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest StrongSessionRequired
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
 
 	}
 
@@ -11661,6 +21677,67 @@ func ParseUpdateOutletResponse(rsp *http.Response) (*UpdateOutletResponse, error
 	return response, nil
 }
 
+// ParseChangeOutletTaxRegistrationResponse parses an HTTP response from a ChangeOutletTaxRegistrationWithResponse call
+func ParseChangeOutletTaxRegistrationResponse(rsp *http.Response) (*ChangeOutletTaxRegistrationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ChangeOutletTaxRegistrationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Outlet
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest StepUpRequired
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Conflict
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest ValidationFailed
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListStatesResponse parses an HTTP response from a ListStatesWithResponse call
 func ParseListStatesResponse(rsp *http.Response) (*ListStatesResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -11688,6 +21765,53 @@ func ParseListStatesResponse(rsp *http.Response) (*ListStatesResponse, error) {
 			return nil, err
 		}
 		response.ApplicationproblemJSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetMyPlanResponse parses an HTTP response from a GetMyPlanWithResponse call
+func ParseGetMyPlanResponse(rsp *http.Response) (*GetMyPlanResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetMyPlanResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MyPlan
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
 
 	}
 
@@ -11961,6 +22085,18 @@ type ServerInterface interface {
 	// GetLinkDecision Link decision for go-auth
 	// (GET /internal/v1/link-decisions)
 	GetLinkDecision(w http.ResponseWriter, r *http.Request, params GetLinkDecisionParams)
+	// ListBillingConfigurations List Hostry GST configuration versions
+	// (GET /internal/v1/vendor/billing-configurations)
+	ListBillingConfigurations(w http.ResponseWriter, r *http.Request, params ListBillingConfigurationsParams)
+	// CreateBillingConfiguration Add a GST configuration version
+	// (POST /internal/v1/vendor/billing-configurations)
+	CreateBillingConfiguration(w http.ResponseWriter, r *http.Request, params CreateBillingConfigurationParams)
+	// ExportLedger Export the ledger as CSV
+	// (GET /internal/v1/vendor/ledger-exports)
+	ExportLedger(w http.ResponseWriter, r *http.Request, params ExportLedgerParams)
+	// ListLedgerEntries Work lists for billing staff
+	// (GET /internal/v1/vendor/ledger-lists/{list_kind})
+	ListLedgerEntries(w http.ResponseWriter, r *http.Request, listKind LedgerListKind, params ListLedgerEntriesParams)
 	// ListOrganisationDirectory List and search the organisation directory
 	// (GET /internal/v1/vendor/organisations)
 	ListOrganisationDirectory(w http.ResponseWriter, r *http.Request, params ListOrganisationDirectoryParams)
@@ -11970,12 +22106,78 @@ type ServerInterface interface {
 	// GetOrganisationDirectoryEntry Organisation detail: structure only
 	// (GET /internal/v1/vendor/organisations/{organisation_id})
 	GetOrganisationDirectoryEntry(w http.ResponseWriter, r *http.Request, organisationId Id, params GetOrganisationDirectoryEntryParams)
+	// ListCharges List an organisation's charges
+	// (GET /internal/v1/vendor/organisations/{organisation_id}/charges)
+	ListCharges(w http.ResponseWriter, r *http.Request, organisationId Id, params ListChargesParams)
+	// RaiseCharge Raise a charge
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/charges)
+	RaiseCharge(w http.ResponseWriter, r *http.Request, organisationId Id, params RaiseChargeParams)
+	// GetCharge Read a charge (audited per read)
+	// (GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id})
+	GetCharge(w http.ResponseWriter, r *http.Request, organisationId Id, chargeId Id, params GetChargeParams)
+	// CancelCharge Cancel a charge
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation)
+	CancelCharge(w http.ResponseWriter, r *http.Request, organisationId Id, chargeId Id, params CancelChargeParams)
+	// SetChargeInvoiceReference Set the invoice reference once
+	// (PUT /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference)
+	SetChargeInvoiceReference(w http.ResponseWriter, r *http.Request, organisationId Id, chargeId Id, params SetChargeInvoiceReferenceParams)
+	// ListChargePayments List payments of a charge
+	// (GET /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments)
+	ListChargePayments(w http.ResponseWriter, r *http.Request, organisationId Id, chargeId Id, params ListChargePaymentsParams)
+	// RecordPayment Record a payment received by hand
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments)
+	RecordPayment(w http.ResponseWriter, r *http.Request, organisationId Id, chargeId Id, params RecordPaymentParams)
+	// ReversePayment Reverse a payment
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal)
+	ReversePayment(w http.ResponseWriter, r *http.Request, organisationId Id, chargeId Id, paymentId Id, params ReversePaymentParams)
+	// WaiveCharge Waive a charge
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver)
+	WaiveCharge(w http.ResponseWriter, r *http.Request, organisationId Id, chargeId Id, params WaiveChargeParams)
+	// CloseOrganisation Execute an approved closure
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/closure)
+	CloseOrganisation(w http.ResponseWriter, r *http.Request, organisationId Id, params CloseOrganisationParams)
+	// ReinstateOrganisation Execute an approved reinstatement
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/reinstatement)
+	ReinstateOrganisation(w http.ResponseWriter, r *http.Request, organisationId Id, params ReinstateOrganisationParams)
+	// GetOrganisationSubscription Get the current subscription and history
+	// (GET /internal/v1/vendor/organisations/{organisation_id}/subscription)
+	GetOrganisationSubscription(w http.ResponseWriter, r *http.Request, organisationId Id, params GetOrganisationSubscriptionParams)
+	// StartSubscription Assign a plan version or a pilot
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/subscription)
+	StartSubscription(w http.ResponseWriter, r *http.Request, organisationId Id, params StartSubscriptionParams)
+	// ChangeSubscription Change plan, price or add-ons from the next charge
+	// (PUT /internal/v1/vendor/organisations/{organisation_id}/subscription)
+	ChangeSubscription(w http.ResponseWriter, r *http.Request, organisationId Id, params ChangeSubscriptionParams)
+	// CancelSubscription Record a cancellation at period end
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation)
+	CancelSubscription(w http.ResponseWriter, r *http.Request, organisationId Id, params CancelSubscriptionParams)
+	// SuspendOrganisation Execute an approved suspension
+	// (POST /internal/v1/vendor/organisations/{organisation_id}/suspension)
+	SuspendOrganisation(w http.ResponseWriter, r *http.Request, organisationId Id, params SuspendOrganisationParams)
 	// RejectTaxRegistration Mark a registration rejected
 	// (PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection)
 	RejectTaxRegistration(w http.ResponseWriter, r *http.Request, organisationId Id, registrationId Id, params RejectTaxRegistrationParams)
 	// VerifyTaxRegistration Mark a registration verified
 	// (PUT /internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/verification)
 	VerifyTaxRegistration(w http.ResponseWriter, r *http.Request, organisationId Id, registrationId Id, params VerifyTaxRegistrationParams)
+	// ListPlans List plans with their versions
+	// (GET /internal/v1/vendor/plans)
+	ListPlans(w http.ResponseWriter, r *http.Request, params ListPlansParams)
+	// CreatePlan Create a plan with a draft first version
+	// (POST /internal/v1/vendor/plans)
+	CreatePlan(w http.ResponseWriter, r *http.Request, params CreatePlanParams)
+	// GetPlan Get a plan
+	// (GET /internal/v1/vendor/plans/{plan_key})
+	GetPlan(w http.ResponseWriter, r *http.Request, planKey string, params GetPlanParams)
+	// CreatePlanVersion Create a draft version (a price or content change is a new version)
+	// (POST /internal/v1/vendor/plans/{plan_key}/versions)
+	CreatePlanVersion(w http.ResponseWriter, r *http.Request, planKey string, params CreatePlanVersionParams)
+	// ActivatePlanVersion Activate a draft version (immutable from here)
+	// (POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/activation)
+	ActivatePlanVersion(w http.ResponseWriter, r *http.Request, planKey string, version int, params ActivatePlanVersionParams)
+	// RetirePlanVersion Retire an active version
+	// (POST /internal/v1/vendor/plans/{plan_key}/versions/{version}/retirement)
+	RetirePlanVersion(w http.ResponseWriter, r *http.Request, planKey string, version int, params RetirePlanVersionParams)
 	// ListBrands List brands
 	// (GET /v1/brands)
 	ListBrands(w http.ResponseWriter, r *http.Request, params ListBrandsParams)
@@ -12021,6 +22223,12 @@ type ServerInterface interface {
 	// RemoveLinkGrant Remove a grant (unilateral, immediate)
 	// (DELETE /v1/links/{link_id}/grants/{grant_id})
 	RemoveLinkGrant(w http.ResponseWriter, r *http.Request, linkId Id, grantId Id, params RemoveLinkGrantParams)
+	// ReissueLinkInvitation Issue a fresh invitation code for a proposed link
+	// (POST /v1/links/{link_id}/invitations)
+	ReissueLinkInvitation(w http.ResponseWriter, r *http.Request, linkId Id, params ReissueLinkInvitationParams)
+	// ReacceptLink Acceptor refreshes its details after counterparty_changed
+	// (PUT /v1/links/{link_id}/re-acceptance)
+	ReacceptLink(w http.ResponseWriter, r *http.Request, linkId Id, params ReacceptLinkParams)
 	// RevokeLink Revoke a link (either party)
 	// (PUT /v1/links/{link_id}/revocation)
 	RevokeLink(w http.ResponseWriter, r *http.Request, linkId Id, params RevokeLinkParams)
@@ -12030,6 +22238,12 @@ type ServerInterface interface {
 	// SuspendLink Suspend a link (either party, immediate)
 	// (PUT /v1/links/{link_id}/suspension)
 	SuspendLink(w http.ResponseWriter, r *http.Request, linkId Id, params SuspendLinkParams)
+	// ListManualBookSeries List registered bill books
+	// (GET /v1/manual-book-series)
+	ListManualBookSeries(w http.ResponseWriter, r *http.Request, params ListManualBookSeriesParams)
+	// RegisterManualBookSeries Register a paper bill book as an entry-only series
+	// (POST /v1/manual-book-series)
+	RegisterManualBookSeries(w http.ResponseWriter, r *http.Request, params RegisterManualBookSeriesParams)
 	// GetOrganisationSettings Get organisation settings
 	// (GET /v1/organisation-settings)
 	GetOrganisationSettings(w http.ResponseWriter, r *http.Request)
@@ -12054,9 +22268,15 @@ type ServerInterface interface {
 	// UpdateOutlet Change an outlet
 	// (PATCH /v1/outlets/{outlet_id})
 	UpdateOutlet(w http.ResponseWriter, r *http.Request, outletId Id, params UpdateOutletParams)
+	// ChangeOutletTaxRegistration Move an outlet to another tax registration
+	// (PUT /v1/outlets/{outlet_id}/tax-registration)
+	ChangeOutletTaxRegistration(w http.ResponseWriter, r *http.Request, outletId Id, params ChangeOutletTaxRegistrationParams)
 	// ListStates GST state reference table
 	// (GET /v1/states)
 	ListStates(w http.ResponseWriter, r *http.Request)
+	// GetMyPlan Owner's read-only "My plan"
+	// (GET /v1/subscription)
+	GetMyPlan(w http.ResponseWriter, r *http.Request)
 	// ListTaxRegistrations List tax registrations
 	// (GET /v1/tax-registrations)
 	ListTaxRegistrations(w http.ResponseWriter, r *http.Request, params ListTaxRegistrationsParams)
@@ -12219,6 +22439,280 @@ func (siw *ServerInterfaceWrapper) GetLinkDecision(w http.ResponseWriter, r *htt
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetLinkDecision(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListBillingConfigurations operation middleware
+func (siw *ServerInterfaceWrapper) ListBillingConfigurations(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListBillingConfigurationsParams
+
+	// ------------- Optional query parameter "cursor" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "cursor", r.URL.Query(), &params.Cursor, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "cursor"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "cursor", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListBillingConfigurations(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CreateBillingConfiguration operation middleware
+func (siw *ServerInterfaceWrapper) CreateBillingConfiguration(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CreateBillingConfigurationParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CreateBillingConfiguration(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ExportLedger operation middleware
+func (siw *ServerInterfaceWrapper) ExportLedger(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ExportLedgerParams
+
+	// ------------- Optional query parameter "from" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "from", r.URL.Query(), &params.From, runtime.BindQueryParameterOptions{Type: "string", Format: "date"})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "from"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "from", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "to" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "to", r.URL.Query(), &params.To, runtime.BindQueryParameterOptions{Type: "string", Format: "date"})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "to"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "to", Err: err})
+		}
+		return
+	}
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ExportLedger(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListLedgerEntries operation middleware
+func (siw *ServerInterfaceWrapper) ListLedgerEntries(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "list_kind" -------------
+	var listKind LedgerListKind
+
+	err = runtime.BindStyledParameterWithOptions("simple", "list_kind", r.PathValue("list_kind"), &listKind, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "list_kind", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListLedgerEntriesParams
+
+	// ------------- Optional query parameter "cursor" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "cursor", r.URL.Query(), &params.Cursor, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "cursor"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "cursor", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListLedgerEntries(w, r, listKind, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -12448,6 +22942,1288 @@ func (siw *ServerInterfaceWrapper) GetOrganisationDirectoryEntry(w http.Response
 	handler.ServeHTTP(w, r)
 }
 
+// ListCharges operation middleware
+func (siw *ServerInterfaceWrapper) ListCharges(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListChargesParams
+
+	// ------------- Optional query parameter "status" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "status", r.URL.Query(), &params.Status, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "status"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "status", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "cursor" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "cursor", r.URL.Query(), &params.Cursor, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "cursor"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "cursor", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListCharges(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RaiseCharge operation middleware
+func (siw *ServerInterfaceWrapper) RaiseCharge(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params RaiseChargeParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RaiseCharge(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetCharge operation middleware
+func (siw *ServerInterfaceWrapper) GetCharge(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "charge_id" -------------
+	var chargeId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "charge_id", r.PathValue("charge_id"), &chargeId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "charge_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetChargeParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetCharge(w, r, organisationId, chargeId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CancelCharge operation middleware
+func (siw *ServerInterfaceWrapper) CancelCharge(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "charge_id" -------------
+	var chargeId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "charge_id", r.PathValue("charge_id"), &chargeId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "charge_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CancelChargeParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CancelCharge(w, r, organisationId, chargeId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// SetChargeInvoiceReference operation middleware
+func (siw *ServerInterfaceWrapper) SetChargeInvoiceReference(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "charge_id" -------------
+	var chargeId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "charge_id", r.PathValue("charge_id"), &chargeId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "charge_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params SetChargeInvoiceReferenceParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SetChargeInvoiceReference(w, r, organisationId, chargeId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListChargePayments operation middleware
+func (siw *ServerInterfaceWrapper) ListChargePayments(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "charge_id" -------------
+	var chargeId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "charge_id", r.PathValue("charge_id"), &chargeId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "charge_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListChargePaymentsParams
+
+	// ------------- Optional query parameter "cursor" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "cursor", r.URL.Query(), &params.Cursor, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "cursor"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "cursor", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListChargePayments(w, r, organisationId, chargeId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RecordPayment operation middleware
+func (siw *ServerInterfaceWrapper) RecordPayment(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "charge_id" -------------
+	var chargeId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "charge_id", r.PathValue("charge_id"), &chargeId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "charge_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params RecordPaymentParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RecordPayment(w, r, organisationId, chargeId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ReversePayment operation middleware
+func (siw *ServerInterfaceWrapper) ReversePayment(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "charge_id" -------------
+	var chargeId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "charge_id", r.PathValue("charge_id"), &chargeId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "charge_id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "payment_id" -------------
+	var paymentId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "payment_id", r.PathValue("payment_id"), &paymentId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "payment_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ReversePaymentParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ReversePayment(w, r, organisationId, chargeId, paymentId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// WaiveCharge operation middleware
+func (siw *ServerInterfaceWrapper) WaiveCharge(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "charge_id" -------------
+	var chargeId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "charge_id", r.PathValue("charge_id"), &chargeId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "charge_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params WaiveChargeParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.WaiveCharge(w, r, organisationId, chargeId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CloseOrganisation operation middleware
+func (siw *ServerInterfaceWrapper) CloseOrganisation(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CloseOrganisationParams
+
+	headers := r.Header
+
+	// ------------- Required header parameter "Hostry-Vendor-Approval" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Hostry-Vendor-Approval")]; found {
+		var HostryVendorApproval VendorApprovalGrant
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Hostry-Vendor-Approval", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Hostry-Vendor-Approval", valueList[0], &HostryVendorApproval, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Hostry-Vendor-Approval", Err: err})
+			return
+		}
+
+		params.HostryVendorApproval = HostryVendorApproval
+
+	} else {
+		err := fmt.Errorf("Header parameter Hostry-Vendor-Approval is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Hostry-Vendor-Approval", Err: err})
+		return
+	}
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CloseOrganisation(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ReinstateOrganisation operation middleware
+func (siw *ServerInterfaceWrapper) ReinstateOrganisation(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ReinstateOrganisationParams
+
+	headers := r.Header
+
+	// ------------- Required header parameter "Hostry-Vendor-Approval" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Hostry-Vendor-Approval")]; found {
+		var HostryVendorApproval VendorApprovalGrant
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Hostry-Vendor-Approval", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Hostry-Vendor-Approval", valueList[0], &HostryVendorApproval, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Hostry-Vendor-Approval", Err: err})
+			return
+		}
+
+		params.HostryVendorApproval = HostryVendorApproval
+
+	} else {
+		err := fmt.Errorf("Header parameter Hostry-Vendor-Approval is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Hostry-Vendor-Approval", Err: err})
+		return
+	}
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ReinstateOrganisation(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetOrganisationSubscription operation middleware
+func (siw *ServerInterfaceWrapper) GetOrganisationSubscription(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetOrganisationSubscriptionParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetOrganisationSubscription(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// StartSubscription operation middleware
+func (siw *ServerInterfaceWrapper) StartSubscription(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params StartSubscriptionParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.StartSubscription(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ChangeSubscription operation middleware
+func (siw *ServerInterfaceWrapper) ChangeSubscription(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ChangeSubscriptionParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ChangeSubscription(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CancelSubscription operation middleware
+func (siw *ServerInterfaceWrapper) CancelSubscription(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CancelSubscriptionParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CancelSubscription(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// SuspendOrganisation operation middleware
+func (siw *ServerInterfaceWrapper) SuspendOrganisation(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "organisation_id" -------------
+	var organisationId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "organisation_id", r.PathValue("organisation_id"), &organisationId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "organisation_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params SuspendOrganisationParams
+
+	headers := r.Header
+
+	// ------------- Required header parameter "Hostry-Vendor-Approval" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Hostry-Vendor-Approval")]; found {
+		var HostryVendorApproval VendorApprovalGrant
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Hostry-Vendor-Approval", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Hostry-Vendor-Approval", valueList[0], &HostryVendorApproval, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Hostry-Vendor-Approval", Err: err})
+			return
+		}
+
+		params.HostryVendorApproval = HostryVendorApproval
+
+	} else {
+		err := fmt.Errorf("Header parameter Hostry-Vendor-Approval is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Hostry-Vendor-Approval", Err: err})
+		return
+	}
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.SuspendOrganisation(w, r, organisationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // RejectTaxRegistration operation middleware
 func (siw *ServerInterfaceWrapper) RejectTaxRegistration(w http.ResponseWriter, r *http.Request) {
 
@@ -12603,6 +24379,424 @@ func (siw *ServerInterfaceWrapper) VerifyTaxRegistration(w http.ResponseWriter, 
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.VerifyTaxRegistration(w, r, organisationId, registrationId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListPlans operation middleware
+func (siw *ServerInterfaceWrapper) ListPlans(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListPlansParams
+
+	// ------------- Optional query parameter "cursor" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "cursor", r.URL.Query(), &params.Cursor, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "cursor"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "cursor", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListPlans(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CreatePlan operation middleware
+func (siw *ServerInterfaceWrapper) CreatePlan(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CreatePlanParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CreatePlan(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetPlan operation middleware
+func (siw *ServerInterfaceWrapper) GetPlan(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "plan_key" -------------
+	var planKey string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "plan_key", r.PathValue("plan_key"), &planKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "plan_key", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetPlanParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetPlan(w, r, planKey, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CreatePlanVersion operation middleware
+func (siw *ServerInterfaceWrapper) CreatePlanVersion(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "plan_key" -------------
+	var planKey string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "plan_key", r.PathValue("plan_key"), &planKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "plan_key", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params CreatePlanVersionParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CreatePlanVersion(w, r, planKey, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ActivatePlanVersion operation middleware
+func (siw *ServerInterfaceWrapper) ActivatePlanVersion(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "plan_key" -------------
+	var planKey string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "plan_key", r.PathValue("plan_key"), &planKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "plan_key", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "version" -------------
+	var version int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "version", r.PathValue("version"), &version, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "version", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ActivatePlanVersionParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ActivatePlanVersion(w, r, planKey, version, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RetirePlanVersion operation middleware
+func (siw *ServerInterfaceWrapper) RetirePlanVersion(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "plan_key" -------------
+	var planKey string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "plan_key", r.PathValue("plan_key"), &planKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "plan_key", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "version" -------------
+	var version int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "version", r.PathValue("version"), &version, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "version", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params RetirePlanVersionParams
+
+	headers := r.Header
+
+	// ------------- Optional header parameter "X-Vendor-Client-Address" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("X-Vendor-Client-Address")]; found {
+		var XVendorClientAddress VendorClientAddress
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "X-Vendor-Client-Address", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "X-Vendor-Client-Address", valueList[0], &XVendorClientAddress, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "X-Vendor-Client-Address", Err: err})
+			return
+		}
+
+		params.XVendorClientAddress = &XVendorClientAddress
+
+	}
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RetirePlanVersion(w, r, planKey, version, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -13373,6 +25567,114 @@ func (siw *ServerInterfaceWrapper) RemoveLinkGrant(w http.ResponseWriter, r *htt
 	handler.ServeHTTP(w, r)
 }
 
+// ReissueLinkInvitation operation middleware
+func (siw *ServerInterfaceWrapper) ReissueLinkInvitation(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "link_id" -------------
+	var linkId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "link_id", r.PathValue("link_id"), &linkId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "link_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ReissueLinkInvitationParams
+
+	headers := r.Header
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ReissueLinkInvitation(w, r, linkId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ReacceptLink operation middleware
+func (siw *ServerInterfaceWrapper) ReacceptLink(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "link_id" -------------
+	var linkId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "link_id", r.PathValue("link_id"), &linkId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "link_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ReacceptLinkParams
+
+	headers := r.Header
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ReacceptLink(w, r, linkId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // RevokeLink operation middleware
 func (siw *ServerInterfaceWrapper) RevokeLink(w http.ResponseWriter, r *http.Request) {
 
@@ -13526,6 +25828,97 @@ func (siw *ServerInterfaceWrapper) SuspendLink(w http.ResponseWriter, r *http.Re
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.SuspendLink(w, r, linkId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListManualBookSeries operation middleware
+func (siw *ServerInterfaceWrapper) ListManualBookSeries(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListManualBookSeriesParams
+
+	// ------------- Optional query parameter "cursor" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "cursor", r.URL.Query(), &params.Cursor, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "cursor"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "cursor", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "limit", r.URL.Query(), &params.Limit, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "limit"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		}
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListManualBookSeries(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// RegisterManualBookSeries operation middleware
+func (siw *ServerInterfaceWrapper) RegisterManualBookSeries(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params RegisterManualBookSeriesParams
+
+	headers := r.Header
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.RegisterManualBookSeries(w, r, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -13837,11 +26230,79 @@ func (siw *ServerInterfaceWrapper) UpdateOutlet(w http.ResponseWriter, r *http.R
 	handler.ServeHTTP(w, r)
 }
 
+// ChangeOutletTaxRegistration operation middleware
+func (siw *ServerInterfaceWrapper) ChangeOutletTaxRegistration(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "outlet_id" -------------
+	var outletId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "outlet_id", r.PathValue("outlet_id"), &outletId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "outlet_id", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ChangeOutletTaxRegistrationParams
+
+	headers := r.Header
+
+	// ------------- Required header parameter "Idempotency-Key" -------------
+	if valueList, found := headers[http.CanonicalHeaderKey("Idempotency-Key")]; found {
+		var IdempotencyKey IdempotencyKey
+		n := len(valueList)
+		if n != 1 {
+			siw.ErrorHandlerFunc(w, r, &TooManyValuesForParamError{ParamName: "Idempotency-Key", Count: n})
+			return
+		}
+
+		err = runtime.BindStyledParameterWithOptions("simple", "Idempotency-Key", valueList[0], &IdempotencyKey, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: true, Type: "string", Format: ""})
+		if err != nil {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "Idempotency-Key", Err: err})
+			return
+		}
+
+		params.IdempotencyKey = IdempotencyKey
+
+	} else {
+		err := fmt.Errorf("Header parameter Idempotency-Key is required, but not found")
+		siw.ErrorHandlerFunc(w, r, &RequiredHeaderError{ParamName: "Idempotency-Key", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ChangeOutletTaxRegistration(w, r, outletId, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // ListStates operation middleware
 func (siw *ServerInterfaceWrapper) ListStates(w http.ResponseWriter, r *http.Request) {
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.ListStates(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetMyPlan operation middleware
+func (siw *ServerInterfaceWrapper) GetMyPlan(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetMyPlan(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -14205,6 +26666,7 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/v1/outlets", wrapper.CreateOutlet)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/outlets/{outlet_id}", wrapper.GetOutlet)
 	m.HandleFunc(http.MethodPatch+" "+options.BaseURL+"/v1/outlets/{outlet_id}", wrapper.UpdateOutlet)
+	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/v1/outlets/{outlet_id}/tax-registration", wrapper.ChangeOutletTaxRegistration)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/tax-registrations", wrapper.ListTaxRegistrations)
 	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/v1/tax-registrations", wrapper.CreateTaxRegistration)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/tax-registrations/{registration_id}", wrapper.GetTaxRegistration)
@@ -14218,6 +26680,8 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/links", wrapper.ListLinks)
 	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/v1/links", wrapper.ProposeLink)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/links/{link_id}", wrapper.GetLink)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/v1/links/{link_id}/invitations", wrapper.ReissueLinkInvitation)
+	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/v1/links/{link_id}/re-acceptance", wrapper.ReacceptLink)
 	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/v1/link-acceptances", wrapper.AcceptLink)
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/v1/links/{link_id}/confirmation", wrapper.ConfirmLink)
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/v1/links/{link_id}/declination", wrapper.DeclineLink)
@@ -14228,6 +26692,9 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/v1/links/{link_id}/amendments/{amendment_id}/decision", wrapper.DecideLinkAmendment)
 	m.HandleFunc(http.MethodDelete+" "+options.BaseURL+"/v1/links/{link_id}/grants/{grant_id}", wrapper.RemoveLinkGrant)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/links/{link_id}/activity", wrapper.ListLinkActivity)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/manual-book-series", wrapper.ListManualBookSeries)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/v1/manual-book-series", wrapper.RegisterManualBookSeries)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/subscription", wrapper.GetMyPlan)
 	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/document-series-issuances", wrapper.IssueDocumentSeries)
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/internal/v1/devices/{device_id}/series-closure", wrapper.CloseDeviceSeries)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/link-decisions", wrapper.GetLinkDecision)
@@ -14236,6 +26703,32 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}", wrapper.GetOrganisationDirectoryEntry)
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/verification", wrapper.VerifyTaxRegistration)
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/tax-registrations/{registration_id}/rejection", wrapper.RejectTaxRegistration)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/billing-configurations", wrapper.ListBillingConfigurations)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/billing-configurations", wrapper.CreateBillingConfiguration)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/ledger-exports", wrapper.ExportLedger)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/ledger-lists/{list_kind}", wrapper.ListLedgerEntries)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/charges", wrapper.ListCharges)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/charges", wrapper.RaiseCharge)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}", wrapper.GetCharge)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/cancellation", wrapper.CancelCharge)
+	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/invoice-reference", wrapper.SetChargeInvoiceReference)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments", wrapper.ListChargePayments)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments", wrapper.RecordPayment)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/payments/{payment_id}/reversal", wrapper.ReversePayment)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/charges/{charge_id}/waiver", wrapper.WaiveCharge)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/closure", wrapper.CloseOrganisation)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/reinstatement", wrapper.ReinstateOrganisation)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/subscription", wrapper.GetOrganisationSubscription)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/subscription", wrapper.StartSubscription)
+	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/subscription", wrapper.ChangeSubscription)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/subscription/cancellation", wrapper.CancelSubscription)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations/{organisation_id}/suspension", wrapper.SuspendOrganisation)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/plans", wrapper.ListPlans)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/plans", wrapper.CreatePlan)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/plans/{plan_key}", wrapper.GetPlan)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/plans/{plan_key}/versions", wrapper.CreatePlanVersion)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/plans/{plan_key}/versions/{version}/activation", wrapper.ActivatePlanVersion)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/plans/{plan_key}/versions/{version}/retirement", wrapper.RetirePlanVersion)
 
 	return m
 }
