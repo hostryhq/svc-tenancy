@@ -2945,6 +2945,11 @@ type UpdateOrganisationSettings struct {
 
 // UpdateOutlet Change an outlet.
 type UpdateOutlet struct {
+	// BrandId Accepted only when equal to the outlet's current brand; any other value is refused with 409 `outlet_brand_fixed`. An outlet stays in the brand it was created under (ADR-0014 A3.4 item 4).
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	BrandId *Id `json:"brand_id,omitempty"`
+
 	// Name Outlet name.
 	//
 	// Example: Main Restaurant
@@ -3890,7 +3895,7 @@ type ClientInterface interface {
 
 	// GetStreamOwner Which organisation owns an outlet or brand stream
 	//
-	// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry.
+	// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry. Also the outlet read of identity at device activation (ADR-0014 A3.4 item 1): for an outlet the answer carries its `brand_id`, which identity stores on the device row and signs into the credential. An outlet never changes brand, so the answer never changes.
 	//
 	// Corresponds with GET /internal/v1/stream-owners/{stream_id} (the `GetStreamOwner` operationId).
 	GetStreamOwner(ctx context.Context, streamId Id, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -4545,12 +4550,16 @@ type ClientInterface interface {
 
 	// UpdateOutletWithBody Change an outlet
 	//
+	// An outlet never changes brand (ADR-0014 A3.4 item 4): a `brand_id` other than the current one is refused with 409 `outlet_brand_fixed`. Moving an outlet between brands needs its own ruling.
+	//
 	// Takes any type of body and a specified content type.
 	//
 	// Corresponds with PATCH /v1/outlets/{outlet_id} (the `UpdateOutlet` operationId).
 	UpdateOutletWithBody(ctx context.Context, outletId Id, params *UpdateOutletParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// UpdateOutlet Change an outlet
+	//
+	// An outlet never changes brand (ADR-0014 A3.4 item 4): a `brand_id` other than the current one is refused with 409 `outlet_brand_fixed`. Moving an outlet between brands needs its own ruling.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -4771,7 +4780,7 @@ func (c *Client) ListOutletManualBookSeries(ctx context.Context, outletId Id, re
 
 // GetStreamOwner Which organisation owns an outlet or brand stream
 //
-// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry.
+// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry. Also the outlet read of identity at device activation (ADR-0014 A3.4 item 1): for an outlet the answer carries its `brand_id`, which identity stores on the device row and signs into the credential. An outlet never changes brand, so the answer never changes.
 //
 // Corresponds with GET /internal/v1/stream-owners/{stream_id} (the `GetStreamOwner` operationId).
 func (c *Client) GetStreamOwner(ctx context.Context, streamId Id, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -6356,6 +6365,8 @@ func (c *Client) GetOutlet(ctx context.Context, outletId Id, reqEditors ...Reque
 
 // UpdateOutletWithBody Change an outlet
 //
+// An outlet never changes brand (ADR-0014 A3.4 item 4): a `brand_id` other than the current one is refused with 409 `outlet_brand_fixed`. Moving an outlet between brands needs its own ruling.
+//
 // Takes any type of body and a specified content type.
 //
 // Corresponds with PATCH /v1/outlets/{outlet_id} (the `UpdateOutlet` operationId).
@@ -6372,6 +6383,8 @@ func (c *Client) UpdateOutletWithBody(ctx context.Context, outletId Id, params *
 }
 
 // UpdateOutlet Change an outlet
+//
+// An outlet never changes brand (ADR-0014 A3.4 item 4): a `brand_id` other than the current one is refused with 409 `outlet_brand_fixed`. Moving an outlet between brands needs its own ruling.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -11337,7 +11350,7 @@ type ClientWithResponsesInterface interface {
 
 	// GetStreamOwnerWithResponse Which organisation owns an outlet or brand stream
 	//
-	// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry.
+	// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry. Also the outlet read of identity at device activation (ADR-0014 A3.4 item 1): for an outlet the answer carries its `brand_id`, which identity stores on the device row and signs into the credential. An outlet never changes brand, so the answer never changes.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -12050,12 +12063,16 @@ type ClientWithResponsesInterface interface {
 
 	// UpdateOutletWithBodyWithResponse Change an outlet
 	//
+	// An outlet never changes brand (ADR-0014 A3.4 item 4): a `brand_id` other than the current one is refused with 409 `outlet_brand_fixed`. Moving an outlet between brands needs its own ruling.
+	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with PATCH /v1/outlets/{outlet_id} (the `UpdateOutlet` operationId).
 	UpdateOutletWithBodyWithResponse(ctx context.Context, outletId Id, params *UpdateOutletParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateOutletResponse, error)
 
 	// UpdateOutletWithResponse Change an outlet
+	//
+	// An outlet never changes brand (ADR-0014 A3.4 item 4): a `brand_id` other than the current one is refused with 409 `outlet_brand_fixed`. Moving an outlet between brands needs its own ruling.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -16621,6 +16638,8 @@ type UpdateOutletResponse struct {
 	ApplicationproblemJSON403 *Forbidden
 	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
 	ApplicationproblemJSON404 *NotFound
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
 	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
 	ApplicationproblemJSON422 *ValidationFailed
 }
@@ -16643,6 +16662,11 @@ func (r UpdateOutletResponse) GetApplicationproblemJSON403() *Forbidden {
 // GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
 func (r UpdateOutletResponse) GetApplicationproblemJSON404() *NotFound {
 	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r UpdateOutletResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
 }
 
 // GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
@@ -17297,7 +17321,7 @@ func (c *ClientWithResponses) ListOutletManualBookSeriesWithResponse(ctx context
 
 // GetStreamOwnerWithResponse Which organisation owns an outlet or brand stream
 //
-// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry.
+// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry. Also the outlet read of identity at device activation (ADR-0014 A3.4 item 1): for an outlet the answer carries its `brand_id`, which identity stores on the device row and signs into the credential. An outlet never changes brand, so the answer never changes.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -18568,6 +18592,8 @@ func (c *ClientWithResponses) GetOutletWithResponse(ctx context.Context, outletI
 
 // UpdateOutletWithBodyWithResponse Change an outlet
 //
+// An outlet never changes brand (ADR-0014 A3.4 item 4): a `brand_id` other than the current one is refused with 409 `outlet_brand_fixed`. Moving an outlet between brands needs its own ruling.
+//
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
 // Corresponds with PATCH /v1/outlets/{outlet_id} (the `UpdateOutlet` operationId).
@@ -18580,6 +18606,8 @@ func (c *ClientWithResponses) UpdateOutletWithBodyWithResponse(ctx context.Conte
 }
 
 // UpdateOutletWithResponse Change an outlet
+//
+// An outlet never changes brand (ADR-0014 A3.4 item 4): a `brand_id` other than the current one is refused with 409 `outlet_brand_fixed`. Moving an outlet between brands needs its own ruling.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -22283,6 +22311,13 @@ func ParseUpdateOutletResponse(rsp *http.Response) (*UpdateOutletResponse, error
 			return nil, err
 		}
 		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest ValidationFailed

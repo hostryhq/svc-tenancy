@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/hostryhq/go-auth"
+	"github.com/hostryhq/go-common/apperr"
 	"github.com/hostryhq/go-common/ids"
 
 	tev "github.com/hostryhq/svc-tenancy/events"
@@ -233,9 +234,9 @@ func (s *Service) CreateOutlet(ctx context.Context, in OutletInput) (model.Outle
 	})
 }
 
-// UpdateOutlet renames an outlet or changes its status.
-func (s *Service) UpdateOutlet(ctx context.Context, id ids.ID, name, status *string) (model.Outlet, error) {
-	if name == nil && status == nil {
+// UpdateOutlet renames an outlet or changes its status. A brand_id other than the current one is refused.
+func (s *Service) UpdateOutlet(ctx context.Context, id ids.ID, name, status *string, brandID *ids.ID) (model.Outlet, error) {
+	if name == nil && status == nil && brandID == nil {
 		return model.Outlet{}, model.Invalid("name", "required", "nothing to change")
 	}
 	var newName string
@@ -255,6 +256,10 @@ func (s *Service) UpdateOutlet(ctx context.Context, id ids.ID, name, status *str
 		}
 		if err := requireOutlet(ctx, "outlet.manage", o.ID); err != nil {
 			return o, err
+		}
+		// An outlet stays in the brand it was created under (ADR-0014 A3.4 item 4).
+		if brandID != nil && *brandID != o.BrandID {
+			return o, apperr.New(apperr.Conflict, "outlet_brand_fixed", "an outlet cannot change brand")
 		}
 		changed := false
 		if name != nil && o.Name != newName {

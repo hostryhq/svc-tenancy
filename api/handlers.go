@@ -155,7 +155,12 @@ func (s *Server) UpdateOutlet(w http.ResponseWriter, r *http.Request, outletID g
 		v := string(*in.Status)
 		status = &v
 	}
-	o, err := s.svc.UpdateOutlet(ctx, id, in.Name, status)
+	var brand *ids.ID
+	if in.BrandId != nil {
+		b := ids.ID(*in.BrandId)
+		brand = &b
+	}
+	o, err := s.svc.UpdateOutlet(ctx, id, in.Name, status, brand)
 	s.reply(w, r, http.StatusOK, outletDTO(o), err)
 }
 

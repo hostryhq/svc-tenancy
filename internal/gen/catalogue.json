@@ -109,6 +109,12 @@
     "owner_grant": true
   },
   {
+    "name": "device.recover",
+    "owner": "identity",
+    "strong_only": true,
+    "owner_grant": true
+  },
+  {
     "name": "device.revoke",
     "owner": "identity",
     "sensitive": true,

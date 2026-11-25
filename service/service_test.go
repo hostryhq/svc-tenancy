@@ -2,12 +2,14 @@ package service_test
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"strings"
 	"testing"
 
 	"github.com/hostryhq/go-auth"
 	"github.com/hostryhq/go-auth/scopetest"
+	"github.com/hostryhq/go-common/apperr"
 	"github.com/hostryhq/go-common/idempotency"
 	"github.com/hostryhq/go-common/testkit"
 
@@ -97,6 +99,30 @@ func TestSettingsAndRenamePublishOrganisationUpdatedOnlyOnChange(t *testing.T) {
 }
 
 // ADR-0003 A1.1 item 8: no GSTIN in any event payload; ids only.
+func TestUpdateOutletRefusesBrandChange(t *testing.T) {
+	f := newFixture(t)
+	ctx := f.as(seed.Example.Org)
+	reg, err := f.svc.CreateRegistration(ctx, service.RegistrationInput{ID: f.newID(), LegalName: "New", Regime: "regular", GSTIN: "27AAPFU0939F1ZV", StateCode: "27"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	o, err := f.svc.CreateOutlet(ctx, service.OutletInput{ID: f.newID(), Name: "Mumbai", Kind: "restaurant", StateCode: "27", TaxRegistrationID: reg.ID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	other := f.newID()
+	_, err = f.svc.UpdateOutlet(ctx, o.ID, nil, nil, &other)
+	var pe *apperr.Error
+	if !errors.As(err, &pe) || pe.Code != "outlet_brand_fixed" || pe.Kind != apperr.Conflict {
+		t.Fatalf("want 409 outlet_brand_fixed, got %v", err)
+	}
+	same := o.BrandID
+	name := "Same brand"
+	if _, err := f.svc.UpdateOutlet(ctx, o.ID, &name, nil, &same); err != nil {
+		t.Fatalf("current brand must be accepted: %v", err)
+	}
+}
+
 func TestEventsNeverCarryAGSTIN(t *testing.T) {
 	f := newFixture(t)
 	ctx := f.as(seed.Example.Org)
@@ -109,7 +135,7 @@ func TestEventsNeverCarryAGSTIN(t *testing.T) {
 		t.Fatal(err)
 	}
 	name := "Renamed"
-	if _, err := f.svc.UpdateOutlet(ctx, o.ID, &name, nil); err != nil {
+	if _, err := f.svc.UpdateOutlet(ctx, o.ID, &name, nil, nil); err != nil {
 		t.Fatal(err)
 	}
 	evs := f.store.Events()
