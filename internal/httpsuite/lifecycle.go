@@ -21,6 +21,12 @@ func billingEvent(typ string, tenant, outlet ids.ID, key string, at time.Time, d
 	return events.Envelope{ID: ids.New(), Type: typ, V: 1, Source: "billing", TenantID: tenant, OutletID: outlet, Key: key, KeySeq: 1, OccurredAt: at, Data: b}
 }
 
+// drainedEvent is identity.device.drained for one series, as identity publishes it.
+func drainedEvent(tenant, outlet ids.ID, series string, last int, at time.Time) events.Envelope {
+	b, _ := json.Marshal(obj{"device_id": ids.New().String(), "drained_at": at.Format(time.RFC3339Nano), "series": []obj{{"series_id": series, "last_number": last}}})
+	return events.Envelope{ID: ids.New(), Type: "identity.device.drained", V: 1, Source: "identity", TenantID: tenant, OutletID: outlet, Key: series, KeySeq: 1, OccurredAt: at, Data: b}
+}
+
 // tradingDay delivers billing.trading_day.changed for an outlet; seq orders two changes of one date.
 func tradingDay(t testing.TB, g *Target, tenant, outlet ids.ID, date, state string, seq int) {
 	t.Helper()

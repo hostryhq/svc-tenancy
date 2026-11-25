@@ -225,12 +225,23 @@ type reconciledData struct {
 	LastNumber *int   `json:"last_number"`
 }
 
+type drainedData struct {
+	DrainedAt time.Time `json:"drained_at"`
+	Series    []struct {
+		SeriesID   ids.ID `json:"series_id"`
+		LastNumber int    `json:"last_number"`
+	} `json:"series"`
+}
+
 // ApplyEvent applies one event inside tx (the tenant context is that of the envelope). It is idempotent and
 // tolerates out-of-order delivery: the trading state keeps the latest business date and change, and a series
 // tail is filled once. Events of other types are ignored.
 //
 //	billing.trading_day.changed  -> outlet_trading_state (the open-trading-day guard, ADR-0014 A1.2)
 //	billing.series.reconciled    -> tail_confirmed_at and last_number of a closed series (A2.5 item 2)
+//	identity.device.drained      -> the same from the revoked device's own statement of its last numbers (the
+//	                                spec lists tenancy as subscriber). The first confirmation wins; a series
+//	                                not yet closed here is left alone.
 func (s *Service) ApplyEvent(ctx context.Context, tx repository.Tx, e events.Envelope) error {
 	switch e.Type {
 	case "billing.trading_day.changed":
@@ -254,6 +265,24 @@ func (s *Service) ApplyEvent(ctx context.Context, tx repository.Tx, e events.Env
 		}
 		_, err := tx.ConfirmTail(ctx, d.SeriesID, e.OccurredAt.UTC(), *d.LastNumber)
 		return err
+	case "identity.device.drained":
+		var d drainedData
+		if err := json.Unmarshal(e.Data, &d); err != nil {
+			return fmt.Errorf("device.drained: %w", err)
+		}
+		at := d.DrainedAt
+		if at.IsZero() {
+			at = e.OccurredAt
+		}
+		for _, sr := range d.Series {
+			if sr.SeriesID == "" || sr.LastNumber < 0 {
+				return fmt.Errorf("device.drained: invalid payload")
+			}
+			if _, err := tx.ConfirmTail(ctx, sr.SeriesID, at.UTC(), sr.LastNumber); err != nil {
+				return err
+			}
+		}
+		return nil
 	}
 	return nil
 }

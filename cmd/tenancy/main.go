@@ -161,7 +161,9 @@ func serve(ctx context.Context, cfg config.Config, log *slog.Logger) error {
 		go expireLoop(ctx, a, log)
 	}
 	if cfg.NatsURL != "" {
-		go consume(ctx, cfg, a, appDB, log)
+		for _, publisher := range consumedStreams {
+			go consume(ctx, cfg, publisher, a, appDB, log)
+		}
 	} else {
 		log.Warn("event consumer disabled: NATS_URL not set; the open-trading-day guard sees no trading state and series tails are not confirmed")
 	}
@@ -211,27 +213,34 @@ func relay(ctx context.Context, cfg config.Config, log *slog.Logger) {
 	}
 }
 
-// consume reads billing's events (billing.trading_day.changed, billing.series.reconciled) from the bus. Each is
+// consumedStreams are the publishers tenancy applies events from: billing (trading_day.changed, series.reconciled)
+// and identity (device.drained, the series tail of a revoked device).
+var consumedStreams = []string{"billing", "identity"}
+
+// sweepEvery is the period of the idempotency and inbox sweeps (a variable so the wiring test can shorten it).
+var sweepEvery = time.Hour
+
+// consume reads one publisher's events from the bus. Each is
 // applied in one transaction with its inbox row, acknowledged after commit, redelivered on failure and parked
 // after the last attempt (ADR-0011 B5).
-func consume(ctx context.Context, cfg config.Config, a *app.App, db *sql.DB, log *slog.Logger) {
+func consume(ctx context.Context, cfg config.Config, publisher string, a *app.App, db *sql.DB, log *slog.Logger) {
 	repo, ok := a.Repo.(*pg.Repo)
 	if !ok {
-		log.Error("event consumer: repository is not Postgres")
+		log.Error("event consumer: " + publisher + ": repository is not Postgres")
 		return
 	}
 	nc, err := bus.Connect(cfg.NatsURL, "tenancy", cfg.NatsSeedFile)
 	if err != nil {
-		log.Error("event consumer: connect to the bus", "error", err)
+		log.Error("event consumer: "+publisher+": connect to the bus", "error", err)
 		return
 	}
 	defer nc.Close()
-	c, err := bus.BindConsumer(ctx, nc, "billing", "tenancy")
+	c, err := bus.BindConsumer(ctx, nc, publisher, "tenancy")
 	if err != nil {
-		log.Error("event consumer: bind", "error", err)
+		log.Error("event consumer: "+publisher+": bind", "error", err)
 		return
 	}
-	sub := &inbox.Subscriber{DB: db, Consumer: "billing", Log: log, Handle: func(ctx context.Context, tx *sql.Tx, e events.Envelope) error {
+	sub := &inbox.Subscriber{DB: db, Consumer: publisher, Log: log, Handle: func(ctx context.Context, tx *sql.Tx, e events.Envelope) error {
 		rtx, err := repo.Adopt(ctx, tx, e.TenantID)
 		if err != nil {
 			return err
@@ -262,7 +271,7 @@ func expireLoop(ctx context.Context, a *app.App, log *slog.Logger) {
 
 // idempotencySweepLoop deletes expired idempotency records (24 h retention) once an hour, as the relay role.
 func idempotencySweepLoop(ctx context.Context, db *sql.DB, log *slog.Logger) {
-	t := time.NewTicker(time.Hour)
+	t := time.NewTicker(sweepEvery)
 	defer t.Stop()
 	for {
 		select {
@@ -281,7 +290,7 @@ func idempotencySweepLoop(ctx context.Context, db *sql.DB, log *slog.Logger) {
 // inboxSweepLoop removes inbox rows older than their retention (8 days) once an hour, as the relay role, the
 // only role that may delete them.
 func inboxSweepLoop(ctx context.Context, db *sql.DB, log *slog.Logger) {
-	t := time.NewTicker(time.Hour)
+	t := time.NewTicker(sweepEvery)
 	defer t.Stop()
 	sub := &inbox.Subscriber{DB: db}
 	for {

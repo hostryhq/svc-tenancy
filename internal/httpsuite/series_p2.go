@@ -183,6 +183,17 @@ func SeriesTail(t *testing.T, mk Factory) {
 		}
 	})
 
+	t.Run("identity.device.drained fills the tail of a closed series from the device's statement, once", func(t *testing.T) {
+		id := issued[1]["id"].(string)
+		at := seed.At.Add(3 * time.Hour)
+		g.Deliver(t, drainedEvent(o.Org, o.Outlet, id, 42, at))
+		g.Deliver(t, drainedEvent(o.Org, o.Outlet, id, 99, at.Add(time.Hour))) // a later statement does not overwrite the first
+		s := seriesByID(t, g, g.Owner(o.Org), id)
+		if num(s["last_number"]) != 42 || s["tail_confirmed_at"] == nil {
+			t.Fatalf("the drain record fills the tail once: %v", s)
+		}
+	})
+
 	t.Run("closing a registration publishes series.closed for the series it closes", func(t *testing.T) {
 		o2 := orgIn(t, g, "Closing Registration", "33", 4)
 		series := issue(t, g, o2.Org, o2.Outlet, "tax_invoice", "bill_of_supply")
