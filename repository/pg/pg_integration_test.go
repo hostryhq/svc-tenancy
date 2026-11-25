@@ -525,18 +525,18 @@ func TestRegistryConcurrencyCapAndCollisionJump(t *testing.T) {
 	if len(codes) != 50 {
 		t.Fatalf("50 parallel activations produced %d distinct codes", len(codes))
 	}
-	// 51 codes exist (the seeded one plus 50): 149 more fill the day's 200, the next is refused.
-	for i := 0; i < 149; i++ {
+	// 101 codes exist (the seeded one plus 50 pairs): 49 more pairs make 199, and the next pair would need 201.
+	for i := 0; i < 49; i++ {
 		if r := issue(w.Outlet); r.Status != 201 {
-			t.Fatalf("code %d: %d %s", 51+i, r.Status, r.Body)
+			t.Fatalf("pair %d: %d %s", 51+i, r.Status, r.Body)
 		}
 	}
 	if r := issue(w.Outlet); r.Status != 429 || r.Code() != "series_cap_reached" {
-		t.Fatalf("the 201st code of the day: %d %s", r.Status, r.Body)
+		t.Fatalf("the pair that would be the 200th and 201st codes of the day: %d %s", r.Status, r.Body)
 	}
 	var n int
 	_ = s.DB.Admin.QueryRowContext(ctx, `SELECT count(*) FROM document_series WHERE tenant_id = $1`, w.Org).Scan(&n)
-	if n != 200 {
+	if n != 199 {
 		t.Fatalf("%d series rows", n)
 	}
 	// Collision backstop, on tenant A: plant the next code under the same GSTIN through another tenant's row.
