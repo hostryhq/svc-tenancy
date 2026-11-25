@@ -65,7 +65,7 @@ func Lifecycle(t *testing.T, mk Factory) {
 	approver := g.VendorHeadersAs(double.ExampleApprover, "admin.org.lifecycle.approve", "admin.org.read")
 	// A grant for kind and organisation, minted as identity would at the instant the service judges it at.
 	mint := func(kind string, orgID ids.ID, edit ...func(*double.GrantSpec)) string {
-		gs := double.GrantSpec{Kind: kind, Org: orgID.String(), Now: g.Now()}
+		gs := double.GrantSpec{Kind: kind, Org: orgID.String(), Now: g.Now(), ApprovalID: ids.New().String()} // each action has its own approval (A3.4: one approval executes once)
 		for _, e := range edit {
 			e(&gs)
 		}

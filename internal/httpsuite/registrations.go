@@ -60,7 +60,7 @@ func Registrations(t *testing.T, mk Factory) {
 			t.Fatalf("the tenant sees %v", v)
 		}
 		// A rejected registration can get no series.
-		issue := obj{"outlet_id": c.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"}
+		issue := obj{"outlet_id": c.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"}
 		want(t, g.Call(t, "POST", "/internal/v1/document-series-issuances", g.ServiceHeaders("identity", c.Org), issue), 409, "registration_unverified")
 	})
 

@@ -34,7 +34,8 @@ func tokenType(t auth.TokenType) string {
 	return "vendor"
 }
 
-func (s *AuditSink) event(e auth.VendorAccessEntry, tenant ids.ID) events.Envelope {
+func (s *AuditSink) event(ctx context.Context, e auth.VendorAccessEntry, tenant ids.ID) events.Envelope {
+	ap := auditsink.ApprovalFrom(ctx)
 	outcome := "succeeded"
 	if e.Outcome == auth.OutcomeRefused {
 		outcome = "refused"
@@ -42,7 +43,7 @@ func (s *AuditSink) event(e auth.VendorAccessEntry, tenant ids.ID) events.Envelo
 	tt := tokenType(e.TokenType)
 	env := tev.VendorAccessRecorded(s.Gen.New(), e.Time, tenant, tev.VendorAccess{EntryID: e.ID, VendorUserID: e.VendorUser, TokenType: tt,
 		SupportSessionID: e.SupportSession, ActionKey: auditsink.ActionKey(e.ActionKey, tt), TargetID: e.TargetID, TicketReference: e.Ticket,
-		Outcome: outcome, ResultCount: e.ResultCount, RequestID: e.RequestID})
+		ApprovalID: ap.ApprovalID, GrantJTI: ap.GrantJTI, Outcome: outcome, ResultCount: e.ResultCount, RequestID: e.RequestID})
 	env.KeySeq = 1 // one event per entry id
 	return env
 }
@@ -67,7 +68,7 @@ func (s *AuditSink) RecordInTx(ctx context.Context, x tenancy.Execer, e auth.Ven
 	if err := insertEntry(ctx, tx, tid, e); err != nil {
 		return err
 	}
-	return outbox.Publish(ctx, tx, s.event(e, tid))
+	return outbox.Publish(ctx, tx, s.event(ctx, e, tid))
 }
 
 // RecordRefused implements auth.VendorAuditSink.
@@ -84,7 +85,7 @@ func (s *AuditSink) RecordRefused(ctx context.Context, e auth.VendorAccessEntry)
 		if err := insertEntry(c, tx, tid, e); err != nil {
 			return err
 		}
-		return outbox.Publish(c, tx, s.event(e, tid))
+		return outbox.Publish(c, tx, s.event(c, e, tid))
 	})
 }
 

@@ -80,11 +80,11 @@ func SeriesTail(t *testing.T, mk Factory) {
 			t.Fatalf("no GSTIN in the event: %s", evs[0].Data)
 		}
 		key := http.Header{"Idempotency-Key": []string{ids.New().String()}}
-		body := obj{"outlet_id": o.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"plain_bill"}, "state": "active"}
+		body := obj{"outlet_id": o.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"plain_bill", "credit_note"}, "state": "active"}
 		first := g.Call(t, "POST", "/internal/v1/document-series-issuances", itest.Merge(g.ServiceHeaders("identity", o.Org), key), body)
 		want(t, first, 201, "")
 		again := g.Call(t, "POST", "/internal/v1/document-series-issuances", itest.Merge(g.ServiceHeaders("identity", o.Org), key), body)
-		if string(again.Body) != string(first.Body) || len(eventsOf(t, g, "tenancy.series.issued")) != 3 {
+		if string(again.Body) != string(first.Body) || len(eventsOf(t, g, "tenancy.series.issued")) != 4 {
 			t.Fatalf("a replay returns the same codes and publishes nothing")
 		}
 	})
@@ -127,7 +127,7 @@ func SeriesTail(t *testing.T, mk Factory) {
 				}
 			}
 		}
-		if updated != 1 || closed != 3 {
+		if updated != 1 || closed != 4 {
 			t.Fatalf("one outlet.updated and one series.closed per series: %d %d", updated, closed)
 		}
 		s := seriesByID(t, g, owner, issued[0]["id"].(string))
@@ -140,7 +140,7 @@ func SeriesTail(t *testing.T, mk Factory) {
 			t.Fatalf("a repeat changes nothing")
 		}
 		// New codes come under the new registration at the next issuance.
-		fresh := issue(t, g, o.Org, o.Outlet, "tax_invoice")
+		fresh := issue(t, g, o.Org, o.Outlet, "tax_invoice", "credit_note")
 		if fresh[0]["tax_registration_id"] != spare.String() {
 			t.Fatalf("%v", fresh[0])
 		}
@@ -196,7 +196,7 @@ func SeriesTail(t *testing.T, mk Factory) {
 
 	t.Run("closing a registration publishes series.closed for the series it closes", func(t *testing.T) {
 		o2 := orgIn(t, g, "Closing Registration", "33", 4)
-		series := issue(t, g, o2.Org, o2.Outlet, "tax_invoice", "bill_of_supply")
+		series := issue(t, g, o2.Org, o2.Outlet, "tax_invoice", "credit_note")
 		spare2 := secondRegistration(t, g, o2, 5)
 		owner2 := g.Owner(o2.Org)
 		path := "/v1/tax-registrations/" + o2.Reg.String() + "/closure"
@@ -263,11 +263,11 @@ func Books(t *testing.T, mk Factory) {
 	})
 
 	t.Run("a book's code never meets a device series code under the same GSTIN", func(t *testing.T) {
-		series := issue(t, g, o.Org, o.Outlet, "tax_invoice")
+		series := issue(t, g, o.Org, o.Outlet, "tax_invoice", "credit_note")
 		taken := series[0]["code"].(string)
 		call("POST", "/v1/manual-book-series", owner, book(taken), 409, "series_code_in_use")
 		// The allocator skips a code a book owns: reserve the next one, then issue.
-		next := model.CodeFor(model.IndexOf(taken) + 1)
+		next := model.CodeFor(model.IndexOf(taken) + 2)
 		call("POST", "/v1/manual-book-series", owner, book(next), 201, "")
 		for _, s := range issue(t, g, o.Org, o.Outlet, "tax_invoice", "credit_note") {
 			if s["code"] == next || s["code"] == "BKB" {

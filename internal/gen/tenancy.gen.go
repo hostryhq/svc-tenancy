@@ -656,6 +656,24 @@ func (e RaiseChargeKind) Valid() bool {
 	}
 }
 
+// Defines values for StreamOwnerKind.
+const (
+	StreamOwnerKindBrand  StreamOwnerKind = "brand"
+	StreamOwnerKindOutlet StreamOwnerKind = "outlet"
+)
+
+// Valid indicates whether the value is a known member of the StreamOwnerKind enum.
+func (e StreamOwnerKind) Valid() bool {
+	switch e {
+	case StreamOwnerKindBrand:
+		return true
+	case StreamOwnerKindOutlet:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for SubscriptionState.
 const (
 	SubscriptionStateActive    SubscriptionState = "active"
@@ -863,7 +881,7 @@ type BillingConfiguration struct {
 	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
 	Id Id `json:"id"`
 
-	// PaymentTermsDays Days from the first charge to its due date (default 7).
+	// PaymentTermsDays Days from the start of a charge's period to its due date (default 7).
 	//
 	// Example: 7
 	PaymentTermsDays int `json:"payment_terms_days"`
@@ -1153,7 +1171,7 @@ type CreateBillingConfiguration struct {
 	// Example: 33
 	HostryStateCode StateCode `json:"hostry_state_code"`
 
-	// PaymentTermsDays Days from the first charge to its due date (default 7).
+	// PaymentTermsDays Days from the start of a charge's period to its due date (default 7).
 	//
 	// Example: 7
 	PaymentTermsDays int `json:"payment_terms_days"`
@@ -1549,7 +1567,7 @@ type InvoiceReference struct {
 	Number string `json:"number"`
 }
 
-// IssueSeries Issue series codes for a device under the outlet's registration (identity is the only caller). The registration is read from the stored outlet, never from the request.
+// IssueSeries Issue series codes for a device under the outlet's registration (identity is the only caller). The registration is read from the stored outlet, never from the request. For a billing device `doc_types` holds one invoice type and `credit_note` (the pair, see `issueDocumentSeries`); `manual_book` is not a value, books are registered by the owner.
 type IssueSeries struct {
 	// DeviceId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
 	//
@@ -2724,6 +2742,34 @@ type StateList struct {
 	Items []StateEntry `json:"items"`
 }
 
+// StreamOwner The owner of an outlet or brand stream (ADR-0005 A3.2 row 8).
+type StreamOwner struct {
+	// BrandId The brand of the outlet (equal to stream_id for a brand stream).
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	BrandId *Id `json:"brand_id,omitempty"`
+
+	// Kind Which stream the id names.
+	//
+	// Example: outlet
+	Kind StreamOwnerKind `json:"kind"`
+
+	// OrganisationId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	OrganisationId Id `json:"organisation_id"`
+
+	// StreamId Client-generated, time-sortable UUIDv7 in lower-case canonical form (ADR-0003 policy; ULID is not accepted). The row id of an entity whose entity file declares a deterministic id (id.rule uuidv5, ADR-0014) is a UUIDv5 in the same form, so two devices that write the same natural key converge on one row.
+	//
+	// Example: 0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b
+	StreamId Id `json:"stream_id"`
+}
+
+// StreamOwnerKind Which stream the id names.
+//
+// Example: outlet
+type StreamOwnerKind string
+
 // Subscription A subscription row. One is current per organisation; earlier rows are history. The ledger holds no personal data (BR-A1-27).
 type Subscription struct {
 	// Addons Add-on lines.
@@ -3791,6 +3837,13 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 // The interface specification for the client above.
 type ClientInterface interface {
 
+	// ListDeviceSeries Every series ever issued to a device
+	//
+	// Sync gateway directory question (ADR-0005 A3.2 row 8). By device, not by code: a code is unique per tax registration and an organisation may hold several. Series id, code, document type, state and registration of every series ever issued to the device, closed ones included. The service token names the tenant. The gateway caches it for 60 seconds and drops it on tenancy.series.issued and tenancy.series.closed.
+	//
+	// Corresponds with GET /internal/v1/devices/{device_id}/series (the `ListDeviceSeries` operationId).
+	ListDeviceSeries(ctx context.Context, deviceId Id, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CloseDeviceSeriesWithBody Close a device's series
 	//
 	// Takes any type of body and a specified content type.
@@ -3807,7 +3860,7 @@ type ClientInterface interface {
 
 	// IssueDocumentSeriesWithBody Issue series codes for a device
 	//
-	// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted.
+	// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted. **A billing device (pos, waiter) gets a pair in one transaction: a numbered invoice series (`tax_invoice`, or `bill_of_supply` or `plain_bill` by the registration kind) AND a `credit_note` series under the same registration and in the same state (soak finding F5).** A request with an invoice type and no `credit_note` is 422 `series.credit_note_required` and issues nothing; a `credit_note` alone is accepted (a device that already holds its invoice series). Both rows carry one `issued_at`; `tenancy.series.issued` is published once per series. Codes are issued once per device and registration, so a repeat returns the same pair. **`manual_book` is never issued here:** a paper book belongs to the registration and its outlets, not to a device (`registerManualBookSeries`); every billing device of a listed outlet receives the active books entry-only in its pack, and the sync gateway reads them from `listOutletManualBookSeries` (sync/protocol-v1.md, Manual-book entries).
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -3816,7 +3869,7 @@ type ClientInterface interface {
 
 	// IssueDocumentSeries Issue series codes for a device
 	//
-	// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted.
+	// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted. **A billing device (pos, waiter) gets a pair in one transaction: a numbered invoice series (`tax_invoice`, or `bill_of_supply` or `plain_bill` by the registration kind) AND a `credit_note` series under the same registration and in the same state (soak finding F5).** A request with an invoice type and no `credit_note` is 422 `series.credit_note_required` and issues nothing; a `credit_note` alone is accepted (a device that already holds its invoice series). Both rows carry one `issued_at`; `tenancy.series.issued` is published once per series. Codes are issued once per device and registration, so a repeat returns the same pair. **`manual_book` is never issued here:** a paper book belongs to the registration and its outlets, not to a device (`registerManualBookSeries`); every billing device of a listed outlet receives the active books entry-only in its pack, and the sync gateway reads them from `listOutletManualBookSeries` (sync/protocol-v1.md, Manual-book entries).
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -3827,6 +3880,20 @@ type ClientInterface interface {
 	//
 	// Corresponds with GET /internal/v1/link-decisions (the `GetLinkDecision` operationId).
 	GetLinkDecision(ctx context.Context, params *GetLinkDecisionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListOutletManualBookSeries Registered paper bill books of an outlet
+	//
+	// Directory question of the sync gateway and of identity (offline pack). The books of the outlet's tax registration that list the outlet, active and closed, with their codes. The sync gateway carries each as an entry-only `manual_book` series in its register, so a typed paper-book number of that code is accepted and not held as `foreign_series` (sync/protocol-v1.md, Manual-book entries). Cached 60 seconds and dropped on `tenancy.manual_book.registered`. The service token names the tenant; 404 when the outlet is not the tenant's.
+	//
+	// Corresponds with GET /internal/v1/outlets/{outlet_id}/manual-book-series (the `ListOutletManualBookSeries` operationId).
+	ListOutletManualBookSeries(ctx context.Context, outletId Id, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetStreamOwner Which organisation owns an outlet or brand stream
+	//
+	// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry.
+	//
+	// Corresponds with GET /internal/v1/stream-owners/{stream_id} (the `GetStreamOwner` operationId).
+	GetStreamOwner(ctx context.Context, streamId Id, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListBillingConfigurations List Hostry GST configuration versions
 	//
@@ -3896,7 +3963,7 @@ type ClientInterface interface {
 
 	// RaiseChargeWithBody Raise a charge
 	//
-	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored. The due date is the period start plus payment_terms_days of the billing configuration in effect at the period start (provisional; the plan-seeded examples and the charge-overdue world follow this rule).
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -3905,7 +3972,7 @@ type ClientInterface interface {
 
 	// RaiseCharge Raise a charge
 	//
-	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored. The due date is the period start plus payment_terms_days of the billing configuration in effect at the period start (provisional; the plan-seeded examples and the charge-overdue world follow this rule).
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -4398,7 +4465,7 @@ type ClientInterface interface {
 
 	// RegisterManualBookSeriesWithBody Register a paper bill book as an entry-only series
 	//
-	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -4407,7 +4474,7 @@ type ClientInterface interface {
 
 	// RegisterManualBookSeries Register a paper bill book as an entry-only series
 	//
-	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -4581,6 +4648,23 @@ type ClientInterface interface {
 	CloseTaxRegistration(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, body CloseTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
+// ListDeviceSeries Every series ever issued to a device
+//
+// Sync gateway directory question (ADR-0005 A3.2 row 8). By device, not by code: a code is unique per tax registration and an organisation may hold several. Series id, code, document type, state and registration of every series ever issued to the device, closed ones included. The service token names the tenant. The gateway caches it for 60 seconds and drops it on tenancy.series.issued and tenancy.series.closed.
+//
+// Corresponds with GET /internal/v1/devices/{device_id}/series (the `ListDeviceSeries` operationId).
+func (c *Client) ListDeviceSeries(ctx context.Context, deviceId Id, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListDeviceSeriesRequest(c.Server, deviceId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // CloseDeviceSeriesWithBody Close a device's series
 //
 // Takes any type of body and a specified content type.
@@ -4617,7 +4701,7 @@ func (c *Client) CloseDeviceSeries(ctx context.Context, deviceId Id, params *Clo
 
 // IssueDocumentSeriesWithBody Issue series codes for a device
 //
-// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted.
+// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted. **A billing device (pos, waiter) gets a pair in one transaction: a numbered invoice series (`tax_invoice`, or `bill_of_supply` or `plain_bill` by the registration kind) AND a `credit_note` series under the same registration and in the same state (soak finding F5).** A request with an invoice type and no `credit_note` is 422 `series.credit_note_required` and issues nothing; a `credit_note` alone is accepted (a device that already holds its invoice series). Both rows carry one `issued_at`; `tenancy.series.issued` is published once per series. Codes are issued once per device and registration, so a repeat returns the same pair. **`manual_book` is never issued here:** a paper book belongs to the registration and its outlets, not to a device (`registerManualBookSeries`); every billing device of a listed outlet receives the active books entry-only in its pack, and the sync gateway reads them from `listOutletManualBookSeries` (sync/protocol-v1.md, Manual-book entries).
 //
 // Takes any type of body and a specified content type.
 //
@@ -4636,7 +4720,7 @@ func (c *Client) IssueDocumentSeriesWithBody(ctx context.Context, params *IssueD
 
 // IssueDocumentSeries Issue series codes for a device
 //
-// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted.
+// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted. **A billing device (pos, waiter) gets a pair in one transaction: a numbered invoice series (`tax_invoice`, or `bill_of_supply` or `plain_bill` by the registration kind) AND a `credit_note` series under the same registration and in the same state (soak finding F5).** A request with an invoice type and no `credit_note` is 422 `series.credit_note_required` and issues nothing; a `credit_note` alone is accepted (a device that already holds its invoice series). Both rows carry one `issued_at`; `tenancy.series.issued` is published once per series. Codes are issued once per device and registration, so a repeat returns the same pair. **`manual_book` is never issued here:** a paper book belongs to the registration and its outlets, not to a device (`registerManualBookSeries`); every billing device of a listed outlet receives the active books entry-only in its pack, and the sync gateway reads them from `listOutletManualBookSeries` (sync/protocol-v1.md, Manual-book entries).
 //
 // Takes a body of the `application/json` content type.
 //
@@ -4658,6 +4742,40 @@ func (c *Client) IssueDocumentSeries(ctx context.Context, params *IssueDocumentS
 // Corresponds with GET /internal/v1/link-decisions (the `GetLinkDecision` operationId).
 func (c *Client) GetLinkDecision(ctx context.Context, params *GetLinkDecisionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetLinkDecisionRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListOutletManualBookSeries Registered paper bill books of an outlet
+//
+// Directory question of the sync gateway and of identity (offline pack). The books of the outlet's tax registration that list the outlet, active and closed, with their codes. The sync gateway carries each as an entry-only `manual_book` series in its register, so a typed paper-book number of that code is accepted and not held as `foreign_series` (sync/protocol-v1.md, Manual-book entries). Cached 60 seconds and dropped on `tenancy.manual_book.registered`. The service token names the tenant; 404 when the outlet is not the tenant's.
+//
+// Corresponds with GET /internal/v1/outlets/{outlet_id}/manual-book-series (the `ListOutletManualBookSeries` operationId).
+func (c *Client) ListOutletManualBookSeries(ctx context.Context, outletId Id, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListOutletManualBookSeriesRequest(c.Server, outletId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetStreamOwner Which organisation owns an outlet or brand stream
+//
+// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry.
+//
+// Corresponds with GET /internal/v1/stream-owners/{stream_id} (the `GetStreamOwner` operationId).
+func (c *Client) GetStreamOwner(ctx context.Context, streamId Id, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetStreamOwnerRequest(c.Server, streamId)
 	if err != nil {
 		return nil, err
 	}
@@ -4836,7 +4954,7 @@ func (c *Client) ListCharges(ctx context.Context, organisationId Id, params *Lis
 
 // RaiseChargeWithBody Raise a charge
 //
-// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored. The due date is the period start plus payment_terms_days of the billing configuration in effect at the period start (provisional; the plan-seeded examples and the charge-overdue world follow this rule).
 //
 // Takes any type of body and a specified content type.
 //
@@ -4855,7 +4973,7 @@ func (c *Client) RaiseChargeWithBody(ctx context.Context, organisationId Id, par
 
 // RaiseCharge Raise a charge
 //
-// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored. The due date is the period start plus payment_terms_days of the billing configuration in effect at the period start (provisional; the plan-seeded examples and the charge-overdue world follow this rule).
 //
 // Takes a body of the `application/json` content type.
 //
@@ -6038,7 +6156,7 @@ func (c *Client) ListManualBookSeries(ctx context.Context, params *ListManualBoo
 
 // RegisterManualBookSeriesWithBody Register a paper bill book as an entry-only series
 //
-// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 //
 // Takes any type of body and a specified content type.
 //
@@ -6057,7 +6175,7 @@ func (c *Client) RegisterManualBookSeriesWithBody(ctx context.Context, params *R
 
 // RegisterManualBookSeries Register a paper bill book as an entry-only series
 //
-// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 //
 // Takes a body of the `application/json` content type.
 //
@@ -6480,6 +6598,40 @@ func (c *Client) CloseTaxRegistration(ctx context.Context, registrationId Id, pa
 	return c.Client.Do(req)
 }
 
+// NewListDeviceSeriesRequest constructs an http.Request for the ListDeviceSeries method
+func NewListDeviceSeriesRequest(server string, deviceId Id) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "device_id", deviceId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/devices/" + pathParam0 + "/series"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewCloseDeviceSeriesRequest calls the generic CloseDeviceSeries builder with application/json body
 func NewCloseDeviceSeriesRequest(server string, deviceId Id, params *CloseDeviceSeriesParams, body CloseDeviceSeriesJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -6641,6 +6793,74 @@ func NewGetLinkDecisionRequest(server string, params *GetLinkDecisionParams) (*h
 			rawQueryFragments = append(rawQueryFragments, encoded)
 		}
 		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListOutletManualBookSeriesRequest constructs an http.Request for the ListOutletManualBookSeries method
+func NewListOutletManualBookSeriesRequest(server string, outletId Id) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "outlet_id", outletId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/outlets/" + pathParam0 + "/manual-book-series"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetStreamOwnerRequest constructs an http.Request for the GetStreamOwner method
+func NewGetStreamOwnerRequest(server string, streamId Id) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "stream_id", streamId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/internal/v1/stream-owners/" + pathParam0
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
 	}
 
 	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
@@ -11058,6 +11278,15 @@ func WithBaseURL(baseURL string) ClientOption {
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
 
+	// ListDeviceSeriesWithResponse Every series ever issued to a device
+	//
+	// Sync gateway directory question (ADR-0005 A3.2 row 8). By device, not by code: a code is unique per tax registration and an organisation may hold several. Series id, code, document type, state and registration of every series ever issued to the device, closed ones included. The service token names the tenant. The gateway caches it for 60 seconds and drops it on tenancy.series.issued and tenancy.series.closed.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/devices/{device_id}/series (the `ListDeviceSeries` operationId).
+	ListDeviceSeriesWithResponse(ctx context.Context, deviceId Id, reqEditors ...RequestEditorFn) (*ListDeviceSeriesResponse, error)
+
 	// CloseDeviceSeriesWithBodyWithResponse Close a device's series
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
@@ -11074,7 +11303,7 @@ type ClientWithResponsesInterface interface {
 
 	// IssueDocumentSeriesWithBodyWithResponse Issue series codes for a device
 	//
-	// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted.
+	// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted. **A billing device (pos, waiter) gets a pair in one transaction: a numbered invoice series (`tax_invoice`, or `bill_of_supply` or `plain_bill` by the registration kind) AND a `credit_note` series under the same registration and in the same state (soak finding F5).** A request with an invoice type and no `credit_note` is 422 `series.credit_note_required` and issues nothing; a `credit_note` alone is accepted (a device that already holds its invoice series). Both rows carry one `issued_at`; `tenancy.series.issued` is published once per series. Codes are issued once per device and registration, so a repeat returns the same pair. **`manual_book` is never issued here:** a paper book belongs to the registration and its outlets, not to a device (`registerManualBookSeries`); every billing device of a listed outlet receives the active books entry-only in its pack, and the sync gateway reads them from `listOutletManualBookSeries` (sync/protocol-v1.md, Manual-book entries).
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -11083,7 +11312,7 @@ type ClientWithResponsesInterface interface {
 
 	// IssueDocumentSeriesWithResponse Issue series codes for a device
 	//
-	// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted.
+	// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted. **A billing device (pos, waiter) gets a pair in one transaction: a numbered invoice series (`tax_invoice`, or `bill_of_supply` or `plain_bill` by the registration kind) AND a `credit_note` series under the same registration and in the same state (soak finding F5).** A request with an invoice type and no `credit_note` is 422 `series.credit_note_required` and issues nothing; a `credit_note` alone is accepted (a device that already holds its invoice series). Both rows carry one `issued_at`; `tenancy.series.issued` is published once per series. Codes are issued once per device and registration, so a repeat returns the same pair. **`manual_book` is never issued here:** a paper book belongs to the registration and its outlets, not to a device (`registerManualBookSeries`); every billing device of a listed outlet receives the active books entry-only in its pack, and the sync gateway reads them from `listOutletManualBookSeries` (sync/protocol-v1.md, Manual-book entries).
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -11096,6 +11325,24 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with GET /internal/v1/link-decisions (the `GetLinkDecision` operationId).
 	GetLinkDecisionWithResponse(ctx context.Context, params *GetLinkDecisionParams, reqEditors ...RequestEditorFn) (*GetLinkDecisionResponse, error)
+
+	// ListOutletManualBookSeriesWithResponse Registered paper bill books of an outlet
+	//
+	// Directory question of the sync gateway and of identity (offline pack). The books of the outlet's tax registration that list the outlet, active and closed, with their codes. The sync gateway carries each as an entry-only `manual_book` series in its register, so a typed paper-book number of that code is accepted and not held as `foreign_series` (sync/protocol-v1.md, Manual-book entries). Cached 60 seconds and dropped on `tenancy.manual_book.registered`. The service token names the tenant; 404 when the outlet is not the tenant's.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/outlets/{outlet_id}/manual-book-series (the `ListOutletManualBookSeries` operationId).
+	ListOutletManualBookSeriesWithResponse(ctx context.Context, outletId Id, reqEditors ...RequestEditorFn) (*ListOutletManualBookSeriesResponse, error)
+
+	// GetStreamOwnerWithResponse Which organisation owns an outlet or brand stream
+	//
+	// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /internal/v1/stream-owners/{stream_id} (the `GetStreamOwner` operationId).
+	GetStreamOwnerWithResponse(ctx context.Context, streamId Id, reqEditors ...RequestEditorFn) (*GetStreamOwnerResponse, error)
 
 	// ListBillingConfigurationsWithResponse List Hostry GST configuration versions
 	//
@@ -11177,7 +11424,7 @@ type ClientWithResponsesInterface interface {
 
 	// RaiseChargeWithBodyWithResponse Raise a charge
 	//
-	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored. The due date is the period start plus payment_terms_days of the billing configuration in effect at the period start (provisional; the plan-seeded examples and the charge-overdue world follow this rule).
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -11186,7 +11433,7 @@ type ClientWithResponsesInterface interface {
 
 	// RaiseChargeWithResponse Raise a charge
 	//
-	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+	// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored. The due date is the period start plus payment_terms_days of the billing configuration in effect at the period start (provisional; the plan-seeded examples and the charge-overdue world follow this rule).
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -11715,7 +11962,7 @@ type ClientWithResponsesInterface interface {
 
 	// RegisterManualBookSeriesWithBodyWithResponse Register a paper bill book as an entry-only series
 	//
-	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -11724,7 +11971,7 @@ type ClientWithResponsesInterface interface {
 
 	// RegisterManualBookSeriesWithResponse Register a paper bill book as an entry-only series
 	//
-	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+	// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -11912,6 +12159,68 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with PUT /v1/tax-registrations/{registration_id}/closure (the `CloseTaxRegistration` operationId).
 	CloseTaxRegistrationWithResponse(ctx context.Context, registrationId Id, params *CloseTaxRegistrationParams, body CloseTaxRegistrationJSONRequestBody, reqEditors ...RequestEditorFn) (*CloseTaxRegistrationResponse, error)
+}
+
+type ListDeviceSeriesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SeriesIssuance
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListDeviceSeriesResponse) GetJSON200() *SeriesIssuance {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListDeviceSeriesResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListDeviceSeriesResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ListDeviceSeriesResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetBody returns the raw response body bytes
+func (r ListDeviceSeriesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListDeviceSeriesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListDeviceSeriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListDeviceSeriesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
 }
 
 type CloseDeviceSeriesResponse struct {
@@ -12115,6 +12424,130 @@ func (r GetLinkDecisionResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetLinkDecisionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListOutletManualBookSeriesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ManualBookSeriesPage
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListOutletManualBookSeriesResponse) GetJSON200() *ManualBookSeriesPage {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListOutletManualBookSeriesResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListOutletManualBookSeriesResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ListOutletManualBookSeriesResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetBody returns the raw response body bytes
+func (r ListOutletManualBookSeriesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListOutletManualBookSeriesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListOutletManualBookSeriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListOutletManualBookSeriesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetStreamOwnerResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *StreamOwner
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Unauthorized
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Forbidden
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *NotFound
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetStreamOwnerResponse) GetJSON200() *StreamOwner {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetStreamOwnerResponse) GetApplicationproblemJSON401() *Unauthorized {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetStreamOwnerResponse) GetApplicationproblemJSON403() *Forbidden {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r GetStreamOwnerResponse) GetApplicationproblemJSON404() *NotFound {
+	return r.ApplicationproblemJSON404
+}
+
+// GetBody returns the raw response body bytes
+func (r GetStreamOwnerResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetStreamOwnerResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetStreamOwnerResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetStreamOwnerResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -16763,6 +17196,21 @@ func (r CloseTaxRegistrationResponse) ContentType() string {
 	return ""
 }
 
+// ListDeviceSeriesWithResponse Every series ever issued to a device
+//
+// Sync gateway directory question (ADR-0005 A3.2 row 8). By device, not by code: a code is unique per tax registration and an organisation may hold several. Series id, code, document type, state and registration of every series ever issued to the device, closed ones included. The service token names the tenant. The gateway caches it for 60 seconds and drops it on tenancy.series.issued and tenancy.series.closed.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/devices/{device_id}/series (the `ListDeviceSeries` operationId).
+func (c *ClientWithResponses) ListDeviceSeriesWithResponse(ctx context.Context, deviceId Id, reqEditors ...RequestEditorFn) (*ListDeviceSeriesResponse, error) {
+	rsp, err := c.ListDeviceSeries(ctx, deviceId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListDeviceSeriesResponse(rsp)
+}
+
 // CloseDeviceSeriesWithBodyWithResponse Close a device's series
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
@@ -16791,7 +17239,7 @@ func (c *ClientWithResponses) CloseDeviceSeriesWithResponse(ctx context.Context,
 
 // IssueDocumentSeriesWithBodyWithResponse Issue series codes for a device
 //
-// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted.
+// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted. **A billing device (pos, waiter) gets a pair in one transaction: a numbered invoice series (`tax_invoice`, or `bill_of_supply` or `plain_bill` by the registration kind) AND a `credit_note` series under the same registration and in the same state (soak finding F5).** A request with an invoice type and no `credit_note` is 422 `series.credit_note_required` and issues nothing; a `credit_note` alone is accepted (a device that already holds its invoice series). Both rows carry one `issued_at`; `tenancy.series.issued` is published once per series. Codes are issued once per device and registration, so a repeat returns the same pair. **`manual_book` is never issued here:** a paper book belongs to the registration and its outlets, not to a device (`registerManualBookSeries`); every billing device of a listed outlet receives the active books entry-only in its pack, and the sync gateway reads them from `listOutletManualBookSeries` (sync/protocol-v1.md, Manual-book entries).
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -16806,7 +17254,7 @@ func (c *ClientWithResponses) IssueDocumentSeriesWithBodyWithResponse(ctx contex
 
 // IssueDocumentSeriesWithResponse Issue series codes for a device
 //
-// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted.
+// The service token names the tenant it acts for; it must equal the outlet's tenant. Identity is the only caller, at device activation or when billing is granted. **A billing device (pos, waiter) gets a pair in one transaction: a numbered invoice series (`tax_invoice`, or `bill_of_supply` or `plain_bill` by the registration kind) AND a `credit_note` series under the same registration and in the same state (soak finding F5).** A request with an invoice type and no `credit_note` is 422 `series.credit_note_required` and issues nothing; a `credit_note` alone is accepted (a device that already holds its invoice series). Both rows carry one `issued_at`; `tenancy.series.issued` is published once per series. Codes are issued once per device and registration, so a repeat returns the same pair. **`manual_book` is never issued here:** a paper book belongs to the registration and its outlets, not to a device (`registerManualBookSeries`); every billing device of a listed outlet receives the active books entry-only in its pack, and the sync gateway reads them from `listOutletManualBookSeries` (sync/protocol-v1.md, Manual-book entries).
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -16830,6 +17278,36 @@ func (c *ClientWithResponses) GetLinkDecisionWithResponse(ctx context.Context, p
 		return nil, err
 	}
 	return ParseGetLinkDecisionResponse(rsp)
+}
+
+// ListOutletManualBookSeriesWithResponse Registered paper bill books of an outlet
+//
+// Directory question of the sync gateway and of identity (offline pack). The books of the outlet's tax registration that list the outlet, active and closed, with their codes. The sync gateway carries each as an entry-only `manual_book` series in its register, so a typed paper-book number of that code is accepted and not held as `foreign_series` (sync/protocol-v1.md, Manual-book entries). Cached 60 seconds and dropped on `tenancy.manual_book.registered`. The service token names the tenant; 404 when the outlet is not the tenant's.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/outlets/{outlet_id}/manual-book-series (the `ListOutletManualBookSeries` operationId).
+func (c *ClientWithResponses) ListOutletManualBookSeriesWithResponse(ctx context.Context, outletId Id, reqEditors ...RequestEditorFn) (*ListOutletManualBookSeriesResponse, error) {
+	rsp, err := c.ListOutletManualBookSeries(ctx, outletId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListOutletManualBookSeriesResponse(rsp)
+}
+
+// GetStreamOwnerWithResponse Which organisation owns an outlet or brand stream
+//
+// Sync gateway directory question (ADR-0005 A3.2 row 8): whether an outlet or brand id belongs to the token's tenant. 404 when it does not exist or belongs to another tenant. Found answers are cached without expiry.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /internal/v1/stream-owners/{stream_id} (the `GetStreamOwner` operationId).
+func (c *ClientWithResponses) GetStreamOwnerWithResponse(ctx context.Context, streamId Id, reqEditors ...RequestEditorFn) (*GetStreamOwnerResponse, error) {
+	rsp, err := c.GetStreamOwner(ctx, streamId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetStreamOwnerResponse(rsp)
 }
 
 // ListBillingConfigurationsWithResponse List Hostry GST configuration versions
@@ -16972,7 +17450,7 @@ func (c *ClientWithResponses) ListChargesWithResponse(ctx context.Context, organ
 
 // RaiseChargeWithBodyWithResponse Raise a charge
 //
-// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored. The due date is the period start plus payment_terms_days of the billing configuration in effect at the period start (provisional; the plan-seeded examples and the charge-overdue world follow this rule).
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -16987,7 +17465,7 @@ func (c *ClientWithResponses) RaiseChargeWithBodyWithResponse(ctx context.Contex
 
 // RaiseChargeWithResponse Raise a charge
 //
-// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored.
+// A second charge for a period that already has an open or paid charge is refused 409 duplicate_period unless it is an extra charge with a reason (BR-A1-31). GST is taken from the billing configuration at this moment and stored. The due date is the period start plus payment_terms_days of the billing configuration in effect at the period start (provisional; the plan-seeded examples and the charge-overdue world follow this rule).
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -17930,7 +18408,7 @@ func (c *ClientWithResponses) ListManualBookSeriesWithResponse(ctx context.Conte
 
 // RegisterManualBookSeriesWithBodyWithResponse Register a paper bill book as an entry-only series
 //
-// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -17945,7 +18423,7 @@ func (c *ClientWithResponses) RegisterManualBookSeriesWithBodyWithResponse(ctx c
 
 // RegisterManualBookSeriesWithResponse Register a paper bill book as an entry-only series
 //
-// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged; billing devices of the named outlets receive it entry-only in the offline pack. The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
+// strong_only (owner). The series is issued, so the foreign-series rule of ADR-0003 A1.5 holds unchanged for any other code; billing devices of the named outlets receive the book entry-only in the offline pack (doc type manual_book), and the sync gateway's register knows it through `listOutletManualBookSeries` and `tenancy.manual_book.registered`, so a typed paper-book number of this code is a known entry, not a `foreign_series` hold (sync/protocol-v1.md, Manual-book entries). The code must be unique per GSTIN against device series codes; the control stays off until a book is registered. x-provisional pending the CA answer on a parallel series (P2B-6).
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -18284,6 +18762,53 @@ func (c *ClientWithResponses) CloseTaxRegistrationWithResponse(ctx context.Conte
 	return ParseCloseTaxRegistrationResponse(rsp)
 }
 
+// ParseListDeviceSeriesResponse parses an HTTP response from a ListDeviceSeriesWithResponse call
+func ParseListDeviceSeriesResponse(rsp *http.Response) (*ListDeviceSeriesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListDeviceSeriesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SeriesIssuance
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseCloseDeviceSeriesResponse parses an HTTP response from a CloseDeviceSeriesWithResponse call
 func ParseCloseDeviceSeriesResponse(rsp *http.Response) (*CloseDeviceSeriesResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -18415,6 +18940,100 @@ func ParseGetLinkDecisionResponse(rsp *http.Response) (*GetLinkDecisionResponse,
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest LinkDecision
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListOutletManualBookSeriesResponse parses an HTTP response from a ListOutletManualBookSeriesWithResponse call
+func ParseListOutletManualBookSeriesResponse(rsp *http.Response) (*ListOutletManualBookSeriesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListOutletManualBookSeriesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManualBookSeriesPage
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetStreamOwnerResponse parses an HTTP response from a GetStreamOwnerWithResponse call
+func ParseGetStreamOwnerResponse(rsp *http.Response) (*GetStreamOwnerResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetStreamOwnerResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest StreamOwner
 		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -22076,6 +22695,9 @@ func ParseCloseTaxRegistrationResponse(rsp *http.Response) (*CloseTaxRegistratio
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+	// ListDeviceSeries Every series ever issued to a device
+	// (GET /internal/v1/devices/{device_id}/series)
+	ListDeviceSeries(w http.ResponseWriter, r *http.Request, deviceId Id)
 	// CloseDeviceSeries Close a device's series
 	// (PUT /internal/v1/devices/{device_id}/series-closure)
 	CloseDeviceSeries(w http.ResponseWriter, r *http.Request, deviceId Id, params CloseDeviceSeriesParams)
@@ -22085,6 +22707,12 @@ type ServerInterface interface {
 	// GetLinkDecision Link decision for go-auth
 	// (GET /internal/v1/link-decisions)
 	GetLinkDecision(w http.ResponseWriter, r *http.Request, params GetLinkDecisionParams)
+	// ListOutletManualBookSeries Registered paper bill books of an outlet
+	// (GET /internal/v1/outlets/{outlet_id}/manual-book-series)
+	ListOutletManualBookSeries(w http.ResponseWriter, r *http.Request, outletId Id)
+	// GetStreamOwner Which organisation owns an outlet or brand stream
+	// (GET /internal/v1/stream-owners/{stream_id})
+	GetStreamOwner(w http.ResponseWriter, r *http.Request, streamId Id)
 	// ListBillingConfigurations List Hostry GST configuration versions
 	// (GET /internal/v1/vendor/billing-configurations)
 	ListBillingConfigurations(w http.ResponseWriter, r *http.Request, params ListBillingConfigurationsParams)
@@ -22303,6 +22931,32 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(http.Handler) http.Handler
 
+// ListDeviceSeries operation middleware
+func (siw *ServerInterfaceWrapper) ListDeviceSeries(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "device_id" -------------
+	var deviceId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "device_id", r.PathValue("device_id"), &deviceId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "device_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListDeviceSeries(w, r, deviceId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // CloseDeviceSeries operation middleware
 func (siw *ServerInterfaceWrapper) CloseDeviceSeries(w http.ResponseWriter, r *http.Request) {
 
@@ -22439,6 +23093,58 @@ func (siw *ServerInterfaceWrapper) GetLinkDecision(w http.ResponseWriter, r *htt
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetLinkDecision(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListOutletManualBookSeries operation middleware
+func (siw *ServerInterfaceWrapper) ListOutletManualBookSeries(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "outlet_id" -------------
+	var outletId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "outlet_id", r.PathValue("outlet_id"), &outletId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "outlet_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListOutletManualBookSeries(w, r, outletId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetStreamOwner operation middleware
+func (siw *ServerInterfaceWrapper) GetStreamOwner(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "stream_id" -------------
+	var streamId Id
+
+	err = runtime.BindStyledParameterWithOptions("simple", "stream_id", r.PathValue("stream_id"), &streamId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "stream_id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetStreamOwner(w, r, streamId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -26697,6 +27403,9 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/v1/subscription", wrapper.GetMyPlan)
 	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/document-series-issuances", wrapper.IssueDocumentSeries)
 	m.HandleFunc(http.MethodPut+" "+options.BaseURL+"/internal/v1/devices/{device_id}/series-closure", wrapper.CloseDeviceSeries)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/devices/{device_id}/series", wrapper.ListDeviceSeries)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/outlets/{outlet_id}/manual-book-series", wrapper.ListOutletManualBookSeries)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/stream-owners/{stream_id}", wrapper.GetStreamOwner)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/link-decisions", wrapper.GetLinkDecision)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/internal/v1/vendor/organisations", wrapper.ListOrganisationDirectory)
 	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/internal/v1/vendor/organisations", wrapper.CreateOrganisation)

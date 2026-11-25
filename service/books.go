@@ -7,6 +7,7 @@ import (
 	"github.com/hostryhq/go-auth"
 	"github.com/hostryhq/go-common/ids"
 
+	tev "github.com/hostryhq/svc-tenancy/events"
 	"github.com/hostryhq/svc-tenancy/internal/model"
 	"github.com/hostryhq/svc-tenancy/repository"
 )
@@ -75,6 +76,14 @@ func (s *Service) RegisterManualBook(ctx context.Context, in RegisterBookInput) 
 		if err := tx.InsertManualBook(ctx, b); err != nil {
 			return model.ManualBook{}, err
 		}
+		tid, err := tenantOf(ctx)
+		if err != nil {
+			return model.ManualBook{}, err
+		}
+		if err := s.publish(ctx, tx, tev.ManualBookRegistered(s.newID(), s.clock.Now(), actor(ctx), tid, tev.ManualBookData{SeriesID: b.ID, Code: b.Code,
+			TaxRegistrationID: b.TaxRegistrationID, OutletIDs: b.OutletIDs, Status: b.Status})); err != nil {
+			return model.ManualBook{}, err
+		}
 		return b, nil
 	})
 }
@@ -114,4 +123,42 @@ func anyInScope(scope auth.OutletScope, outlets []ids.ID) bool {
 		}
 	}
 	return false
+}
+
+// ListOutletManualBooks answers the sync gateway's and identity's directory question: the books of the
+// outlet's tax registration that list the outlet, active and closed (sync/protocol-v1.md, Manual-book entries).
+// An outlet that is not the tenant's is 404.
+func (s *Service) ListOutletManualBooks(ctx context.Context, outletID ids.ID) ([]model.ManualBook, error) {
+	if err := validID("outlet_id", outletID); err != nil {
+		return nil, err
+	}
+	return run(ctx, s, func(ctx context.Context, tx repository.Tx) ([]model.ManualBook, error) {
+		o, err := tx.GetOutlet(ctx, outletID)
+		if err != nil {
+			return nil, err
+		}
+		var out []model.ManualBook
+		var cursor ids.ID
+		for {
+			rows, err := tx.ListManualBooks(ctx, cursor, 100)
+			if err != nil {
+				return nil, err
+			}
+			for _, b := range rows {
+				if b.TaxRegistrationID != o.TaxRegistrationID {
+					continue
+				}
+				for _, id := range b.OutletIDs {
+					if id == outletID {
+						out = append(out, b)
+						break
+					}
+				}
+			}
+			if len(rows) < 100 {
+				return out, nil
+			}
+			cursor = rows[len(rows)-1].ID
+		}
+	})
 }

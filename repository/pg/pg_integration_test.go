@@ -498,7 +498,7 @@ func TestRegistryConcurrencyCapAndCollisionJump(t *testing.T) {
 	w := seed.Other
 	issue := func(outlet ids.ID) itest.Response {
 		return itest.Do(t, s.Srv.URL, "POST", "/internal/v1/document-series-issuances", s.ServiceHeaders("identity", w.Org),
-			obj{"outlet_id": outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"})
+			obj{"outlet_id": outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"})
 	}
 	var wg sync.WaitGroup
 	var mu sync.Mutex
@@ -546,7 +546,7 @@ func TestRegistryConcurrencyCapAndCollisionJump(t *testing.T) {
 		t.Fatal(err)
 	}
 	r := itest.Do(t, s.Srv.URL, "POST", "/internal/v1/document-series-issuances", s.ServiceHeaders("identity", a.Org),
-		obj{"outlet_id": a.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"})
+		obj{"outlet_id": a.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"})
 	if r.Status != 201 {
 		t.Fatalf("%d %s", r.Status, r.Body)
 	}

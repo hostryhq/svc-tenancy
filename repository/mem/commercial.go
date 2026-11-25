@@ -123,6 +123,11 @@ func (x *tx) MarkGrantUsed(_ context.Context, jti, approvalID, _ string, _ time.
 	if _, dup := x.st.com.grants[k]; dup {
 		return false, nil
 	}
+	for gk, a := range x.st.com.grants {
+		if gk.t == x.t && a == approvalID {
+			return false, nil
+		}
+	}
 	x.st.com.grants[k] = approvalID
 	return true, nil
 }

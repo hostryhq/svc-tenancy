@@ -496,6 +496,11 @@ func (x *pgTx) SeriesForDevice(ctx context.Context, outletID, deviceID ids.ID) (
 	return scanSeriesRows(x.tx.QueryContext(ctx, `SELECT `+seriesCols+` FROM document_series WHERE tenant_id = $1 AND outlet_id = $2 AND device_id = $3 ORDER BY id`, x.t, outletID, deviceID))
 }
 
+func (x *pgTx) SeriesByDevice(ctx context.Context, deviceID ids.ID) ([]model.Series, error) {
+	//scopelint:internal the gateway directory is addressed by device id; the device belongs to the tenant of the service token
+	return scanSeriesRows(x.tx.QueryContext(ctx, `SELECT `+seriesCols+` FROM document_series WHERE tenant_id = $1 AND device_id = $2 ORDER BY issued_at, id`, x.t, deviceID))
+}
+
 func (x *pgTx) ListSeries(ctx context.Context, scope auth.OutletScope, status string, after ids.ID, limit int) ([]model.Series, error) {
 	return scanSeriesRows(x.tx.QueryContext(ctx, `SELECT `+seriesCols+` FROM document_series
 		WHERE tenant_id = $1 AND id > $2::uuid AND ($3::text = '' OR status = $3)

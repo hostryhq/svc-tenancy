@@ -77,15 +77,13 @@ func Run(t *testing.T, base string, tk *double.Tokens, seedWorld func(ctx contex
 			if path == "/internal/v1/link-decisions" { // any registered service, acting for the invited party
 				return tk.ServiceHeaders("orders", seed.Restaurants)
 			}
+			if strings.HasPrefix(path, "/internal/v1/stream-owners/") || (strings.HasPrefix(path, "/internal/v1/outlets/") && strings.HasSuffix(path, "/manual-book-series")) || (strings.HasPrefix(path, "/internal/v1/devices/") && strings.HasSuffix(path, "/series")) {
+				return tk.ServiceHeaders("sync", seed.Org) // the gateway's directory questions (ADR-0005 A3.2 row 8)
+			}
 			return tk.ServiceHeaders("identity", seed.Org)
 		},
 	}}
 	contracttest.Run(t, contracttest.Options{SpecPath: SpecPath(t), BaseURL: base, Client: client,
-		// Spec problem (reported in docs/operations-status.md): raiseCharge declares world plan-active, which has
-		// no subscription, yet its example response names subscription 8011; the world subscribed already holds
-		// a charge for the example period (409 duplicate_period). No declared world fits, so the example cannot
-		// be true. The operation is covered by TestRaiseChargeScenarios in internal/httpsuite instead.
-		Skip: map[string]string{"raiseCharge": "no declared example world satisfies the example (plan-active has no subscription; subscribed already has the charge)"},
 		SeedWorld: func(ctx context.Context, w string) error {
 			mu.Lock()
 			current = w

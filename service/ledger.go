@@ -136,17 +136,11 @@ func (s *Service) RaiseCharge(ctx context.Context, orgID ids.ID, in RaiseChargeI
 			return ChargeView{}, err
 		}
 		cgst, sgst, igst := GST(taxable, cfg.GSTRateBP, cfg.GSTRegistered, state != "" && state == cfg.HostryStateCode)
-		first, err := tx.ListCharges(ctx, "", "", 1)
-		if err != nil {
-			return ChargeView{}, err
-		}
-		today := s.today()
-		due := in.PeriodStart
-		switch {
-		case in.Kind == model.ChargeExtra:
-			due = addDaysStr(today, cfg.PaymentTermsDays)
-		case len(first) == 0:
-			due = addDaysStr(maxStr(today, in.PeriodStart), cfg.PaymentTermsDays)
+		// A period charge is due payment_terms_days after its period starts, under the configuration in effect at
+		// that date (provisional contract rule, api-specs round 4); an extra charge is due that long after today.
+		due := addDaysStr(in.PeriodStart, cfg.PaymentTermsDays)
+		if in.Kind == model.ChargeExtra {
+			due = addDaysStr(s.today(), cfg.PaymentTermsDays)
 		}
 		c := model.Charge{ID: s.newID(), SubscriptionID: sub.ID, Kind: in.Kind, PeriodStart: in.PeriodStart, PeriodEnd: in.PeriodEnd, TaxableP: taxable,
 			CGSTP: cgst, SGSTP: sgst, IGSTP: igst, TotalP: taxable + cgst + sgst + igst, TolerancePaise: cfg.PaymentToleranceP, DueDate: due,
@@ -181,13 +175,6 @@ func customerState(ctx context.Context, tx repository.Tx) (string, error) {
 }
 
 func addDaysStr(date string, n int) string { return mustDate(date).AddDate(0, 0, n).Format(dateLayout) }
-
-func maxStr(a, b string) string {
-	if a > b {
-		return a
-	}
-	return b
-}
 
 // ChargePage is one page of charges.
 type ChargePage struct {

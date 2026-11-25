@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/hostryhq/svc-tenancy/internal/auditsink"
 	"io"
 	"log/slog"
 	"net"
@@ -133,7 +134,7 @@ const maxBody = 1 << 20
 // begin prepares a mutating request: it decodes the body strictly into body (an unknown field, such as a
 // tenant id, is a 422), validates the Idempotency-Key and puts the idempotency identity on the context.
 func (s *Server) begin(w http.ResponseWriter, r *http.Request, op string, body any) (context.Context, bool) {
-	ctx := service.WithClientAddr(r.Context(), clientHost(r))
+	ctx := auditsink.WithApprovalNote(service.WithClientAddr(r.Context(), clientHost(r)))
 	var canonical []byte
 	if body != nil {
 		raw, err := io.ReadAll(http.MaxBytesReader(w, r.Body, maxBody))

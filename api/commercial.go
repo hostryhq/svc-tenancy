@@ -651,3 +651,16 @@ func proposalDTO(p service.Proposal, viewer ids.ID, now time.Time) gen.LinkPropo
 	}
 	return out
 }
+
+func (s *Server) ListOutletManualBookSeries(w http.ResponseWriter, r *http.Request, outletID gen.Id) {
+	id, ok := s.pathID(w, r, outletID)
+	if !ok {
+		return
+	}
+	rows, err := s.svc.ListOutletManualBooks(r.Context(), id)
+	out := gen.ManualBookSeriesPage{Items: []gen.ManualBookSeries{}}
+	for _, x := range rows {
+		out.Items = append(out.Items, bookDTO(x))
+	}
+	s.reply(w, r, http.StatusOK, out, err)
+}

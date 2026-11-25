@@ -210,13 +210,13 @@ func (s *Store) FailAuditWrites(fail bool) {
 }
 
 // RecordInTx writes the log row and its outbox event into the running transaction.
-func (s *Store) RecordInTx(_ context.Context, _ tenancy.Execer, e auth.VendorAccessEntry) error {
+func (s *Store) RecordInTx(ctx context.Context, _ tenancy.Execer, e auth.VendorAccessEntry) error {
 	if s.failAudit {
 		return errAuditDown
 	}
 	tid := ids.ID(e.TenantID)
 	s.pending.vlog = append(s.pending.vlog, VendorLogEntry{keyed(e)})
-	return s.pending.publish(tid, tev.VendorAccessRecorded(e.ID, e.Time, tid, vendorData(e)))
+	return s.pending.publish(tid, tev.VendorAccessRecorded(e.ID, e.Time, tid, withApproval(ctx, vendorData(e))))
 }
 
 // RecordRefused records a refused request in a transaction of its own.
@@ -239,6 +239,12 @@ func keyed(e auth.VendorAccessEntry) auth.VendorAccessEntry {
 	}
 	e.ActionKey = auditsink.ActionKey(e.ActionKey, tt)
 	return e
+}
+
+func withApproval(ctx context.Context, d tev.VendorAccess) tev.VendorAccess {
+	ap := auditsink.ApprovalFrom(ctx)
+	d.ApprovalID, d.GrantJTI = ap.ApprovalID, ap.GrantJTI
+	return d
 }
 
 func vendorData(e auth.VendorAccessEntry) tev.VendorAccess {
@@ -600,6 +606,17 @@ func (x *tx) SeriesForDevice(_ context.Context, outletID, deviceID ids.ID) ([]mo
 	var out []model.Series
 	for k, s := range x.st.series {
 		if k.t == x.t && s.OutletID == outletID && s.DeviceID == deviceID {
+			out = append(out, s)
+		}
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].ID < out[j].ID })
+	return out, nil
+}
+
+func (x *tx) SeriesByDevice(_ context.Context, deviceID ids.ID) ([]model.Series, error) {
+	var out []model.Series
+	for k, s := range x.st.series {
+		if k.t == x.t && s.DeviceID == deviceID {
 			out = append(out, s)
 		}
 	}

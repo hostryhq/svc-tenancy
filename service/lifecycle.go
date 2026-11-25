@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/hostryhq/svc-tenancy/internal/auditsink"
 	"regexp"
 	"strings"
 	"time"
@@ -183,6 +184,7 @@ func (s *Service) ChangeOrganisationStatus(ctx context.Context, in LifecycleInpu
 		if !first {
 			return LifecycleResult{}, model.ErrGrantUsed
 		}
+		auditsink.NoteApproval(ctx, claims.ApprovalID, claims.JTI) // the vendor-access event carries it (ADR-0005 A3.4 item 2)
 		allowed := false
 		for _, f := range tr.from {
 			allowed = allowed || f == org.Status

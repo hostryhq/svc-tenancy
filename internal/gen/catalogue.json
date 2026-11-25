@@ -454,6 +454,14 @@
     "owner": "identity"
   },
   {
+    "name": "device.directory.read",
+    "owner": "identity"
+  },
+  {
+    "name": "series.directory.read",
+    "owner": "tenancy"
+  },
+  {
     "name": "series.issue",
     "owner": "tenancy"
   },
@@ -614,6 +622,10 @@
   },
   {
     "name": "sync.emit",
+    "owner": "sync"
+  },
+  {
+    "name": "sync.pii.erase",
     "owner": "sync"
   }
 ]

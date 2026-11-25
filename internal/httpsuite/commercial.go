@@ -241,8 +241,8 @@ func Commercial(t *testing.T, mk Factory) {
 			t.Fatalf("extra charge: %v", x)
 		}
 		next := call("POST", org(in.Org)+"/charges", billing, obj{"kind": "period", "period_start": "2027-01-01", "period_end": "2027-01-31"}, 201).JSON(t)
-		if next["due_date"] != "2027-01-01" {
-			t.Fatalf("a later charge is due on its first day: %v", next)
+		if next["due_date"] != "2027-01-08" {
+			t.Fatalf("a period charge is due payment_terms_days after its period starts: %v", next)
 		}
 		out := orgIn(t, g, "Other State", "29", 7)
 		startMonthly(t, g, out, "2026-12-01")

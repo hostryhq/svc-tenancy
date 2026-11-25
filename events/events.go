@@ -80,6 +80,24 @@ func SeriesClosed(id ids.ID, at time.Time, actor string, tenant ids.ID, d Series
 	return e
 }
 
+// ManualBookData is the payload of tenancy.manual_book.registered: ids and codes only.
+type ManualBookData struct {
+	SeriesID          ids.ID   `json:"series_id"`
+	Code              string   `json:"code"`
+	TaxRegistrationID ids.ID   `json:"tax_registration_id"`
+	OutletIDs         []ids.ID `json:"outlet_ids"`
+	Status            string   `json:"status"`
+}
+
+// ManualBookRegistered builds tenancy.manual_book.registered; the envelope names the first listed outlet.
+func ManualBookRegistered(id ids.ID, at time.Time, actor string, tenant ids.ID, d ManualBookData) cevents.Envelope {
+	e := base(id, "tenancy.manual_book.registered", tenant, d.SeriesID.String(), at, actor, d)
+	if len(d.OutletIDs) > 0 {
+		e.OutletID = d.OutletIDs[0]
+	}
+	return e
+}
+
 // SubscriptionChanged builds tenancy.subscription.changed: plan key, version, cycle and state only (no amounts).
 func SubscriptionChanged(id ids.ID, at time.Time, actor string, tenant ids.ID, subscription ids.ID, planKey string, version int, cycle, state string) cevents.Envelope {
 	return base(id, "tenancy.subscription.changed", tenant, subscription.String(), at, actor,
@@ -110,6 +128,8 @@ type VendorAccess struct {
 	SupportSessionID string `json:"support_session_id,omitempty"`
 	ActionKey        string `json:"action_key"`
 	TargetID         string `json:"target_id,omitempty"`
+	ApprovalID       string `json:"approval_id,omitempty"`
+	GrantJTI         string `json:"grant_jti,omitempty"`
 	TicketReference  string `json:"ticket_reference,omitempty"`
 	Outcome          string `json:"outcome"`
 	ResultCount      int    `json:"result_count,omitempty"`

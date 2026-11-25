@@ -77,7 +77,7 @@ func Vendor(t *testing.T, mk Factory) {
 			t.Fatalf("default settings: %v", s)
 		}
 		// No series without verification (TST-16, AC-TEN-6).
-		issue := obj{"outlet_id": c.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"}
+		issue := obj{"outlet_id": c.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"}
 		want(t, g.Call(t, "POST", "/internal/v1/document-series-issuances", g.ServiceHeaders("identity", c.Org), issue), 409, "registration_unverified")
 	})
 
@@ -216,7 +216,7 @@ func Vendor(t *testing.T, mk Factory) {
 		owner := g.Owner(c.Org)
 		fix := g.Call(t, "PATCH", "/v1/tax-registrations/"+c.Reg.String(), owner, obj{"gstin": MakeGSTIN("33", 8)})
 		want(t, fix, 409, "registration_fixed")
-		issue := obj{"outlet_id": c.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"}
+		issue := obj{"outlet_id": c.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"}
 		want(t, g.Call(t, "POST", "/internal/v1/document-series-issuances", g.ServiceHeaders("identity", c.Org), issue), 201, "")
 	})
 
@@ -244,7 +244,7 @@ func Vendor(t *testing.T, mk Factory) {
 		}
 		for i := 0; i < 6; i++ {
 			r := g.Call(t, "POST", "/internal/v1/document-series-issuances", g.ServiceHeaders("identity", x.Org),
-				obj{"outlet_id": x.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"})
+				obj{"outlet_id": x.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"})
 			want(t, r, 201, "")
 			maxIdx = max(maxIdx, code(r))
 		}
@@ -252,7 +252,7 @@ func Vendor(t *testing.T, mk Factory) {
 		y := parseCreated(t, create(g.Vendor(), orgBody("Second Holder", gs)))
 		want(t, g.Call(t, "PUT", "/internal/v1/vendor/organisations/"+y.Org.String()+"/tax-registrations/"+y.Reg.String()+"/verification", g.Vendor(), obj{"method": "certificate_seen"}), 200, "")
 		r := g.Call(t, "POST", "/internal/v1/document-series-issuances", g.ServiceHeaders("identity", y.Org),
-			obj{"outlet_id": y.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice"}, "state": "active"})
+			obj{"outlet_id": y.Outlet.String(), "device_id": ids.New().String(), "doc_types": []string{"tax_invoice", "credit_note"}, "state": "active"})
 		want(t, r, 201, "")
 		if got := code(r); got <= maxIdx {
 			t.Fatalf("the returning GSTIN's first code index %d is not beyond the earlier holder's %d", got, maxIdx)

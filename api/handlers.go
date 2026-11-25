@@ -578,3 +578,30 @@ func otherSide(side string) string {
 	}
 	return model.SideProposer
 }
+
+func (s *Server) ListDeviceSeries(w http.ResponseWriter, r *http.Request, deviceID gen.Id) {
+	id, ok := s.pathID(w, r, deviceID)
+	if !ok {
+		return
+	}
+	rows, err := s.svc.ListDeviceSeries(r.Context(), id)
+	out := gen.SeriesIssuance{Items: []gen.DocumentSeries{}}
+	for _, x := range rows {
+		out.Items = append(out.Items, seriesDTO(x))
+	}
+	s.reply(w, r, http.StatusOK, out, err)
+}
+
+func (s *Server) GetStreamOwner(w http.ResponseWriter, r *http.Request, streamID gen.Id) {
+	id, ok := s.pathID(w, r, streamID)
+	if !ok {
+		return
+	}
+	o, err := s.svc.GetStreamOwner(r.Context(), id)
+	out := gen.StreamOwner{StreamId: o.StreamID.String(), Kind: gen.StreamOwnerKind(o.Kind), OrganisationId: o.OrganisationID.String()}
+	if o.BrandID != "" {
+		b := o.BrandID.String()
+		out.BrandId = &b
+	}
+	s.reply(w, r, http.StatusOK, out, err)
+}

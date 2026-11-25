@@ -17,45 +17,47 @@ import (
 // asks the target to be put into an operation's world before the call (contracttest Options.SeedWorld);
 // ApplyWorld does that for the double and for the real service over the same repository interface.
 const (
-	WorldBase                        = "base"
-	WorldEmpty                       = "empty"
-	WorldRegistrationVerified        = "registration-verified"
-	WorldSeriesIssued                = "series-issued"
-	WorldRegistrationSpare           = "registration-spare-verified"
-	WorldLinkNone                    = "link-none"
-	WorldLinkProposedToCaller        = "link-proposed-to-caller"
-	WorldLinkAccepted                = "link-accepted"
-	WorldLinkActive                  = "link-active"
-	WorldLinkSuspended               = "link-suspended"
-	WorldLinkAmendmentPending        = "link-amendment-pending"
-	WorldLinkAcceptedChanged         = "link-accepted-changed"
-	WorldLinkProposed                = "link-proposed"
-	WorldPlanSeeded                  = "plan-seeded"
-	WorldPlanActive                  = "plan-active"
-	WorldSubscribed                  = "subscribed"
-	WorldChargeOverdue               = "charge-overdue"
-	WorldPaymentRecorded             = "payment-recorded"
-	WorldOrgActive                   = "org-active"
-	WorldOrgSuspended                = "org-suspended"
-	WorldBookRegistered              = "book-registered"
-	invitationCode                   = "7QK3M9XD7QK3M9XD"
-	spareRegistration         ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a93"
-	CreditNoteSeries          ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a95"
-	LinkID                    ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a62"
-	GrantID                   ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a72"
-	AmendmentID               ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a73"
-	Restaurants               ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a63" // the second organisation of the link worlds
-	RestaurantsOutlet         ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a94"
-	restaurantsBrand          ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4aa0"
-	restaurantsReg            ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4aa1"
-	activityProposed          ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a96"
-	activityAccepted          ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a97"
-	activityConfirmed         ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a98"
-	activitySuspended         ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a99"
-	amendmentGrantID          ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4aa2"
-	exampleOrgName                   = "Example Hospitality"
-	restaurantsGSTIN                 = "33AAAAA0000A1Z9"
-	karnatakaGSTIN                   = "29ABCDE1234F1ZW"
+	WorldBase                          = "base"
+	WorldEmpty                         = "empty"
+	WorldRegistrationVerified          = "registration-verified"
+	WorldSeriesIssued                  = "series-issued"
+	WorldRegistrationSpare             = "registration-spare-verified"
+	WorldLinkNone                      = "link-none"
+	WorldLinkProposedToCaller          = "link-proposed-to-caller"
+	WorldLinkAccepted                  = "link-accepted"
+	WorldLinkActive                    = "link-active"
+	WorldLinkSuspended                 = "link-suspended"
+	WorldLinkAmendmentPending          = "link-amendment-pending"
+	WorldLinkAcceptedChanged           = "link-accepted-changed"
+	WorldLinkProposed                  = "link-proposed"
+	WorldPlanSeeded                    = "plan-seeded"
+	WorldPlanActive                    = "plan-active"
+	WorldSubscribed                    = "subscribed"
+	WorldSubscribedUncharged           = "subscribed-uncharged"
+	WorldSubscribedAnnualListed        = "subscribed-annual-listed"
+	WorldChargeOverdue                 = "charge-overdue"
+	WorldPaymentRecorded               = "payment-recorded"
+	WorldOrgActive                     = "org-active"
+	WorldOrgSuspended                  = "org-suspended"
+	WorldBookRegistered                = "book-registered"
+	invitationCode                     = "7QK3M9XD7QK3M9XD"
+	spareRegistration           ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a93"
+	CreditNoteSeries            ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a95"
+	LinkID                      ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a62"
+	GrantID                     ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a72"
+	AmendmentID                 ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a73"
+	Restaurants                 ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a63" // the second organisation of the link worlds
+	RestaurantsOutlet           ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a94"
+	restaurantsBrand            ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4aa0"
+	restaurantsReg              ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4aa1"
+	activityProposed            ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a96"
+	activityAccepted            ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a97"
+	activityConfirmed           ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a98"
+	activitySuspended           ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a99"
+	amendmentGrantID            ids.ID = "0190a1b2-c3d4-7e5f-8a9b-0c1d2e3f4aa2"
+	exampleOrgName                     = "Example Hospitality"
+	restaurantsGSTIN                   = "33AAAAA0000A1Z9"
+	karnatakaGSTIN                     = "29ABCDE1234F1ZW"
 )
 
 // WorldCaller is the organisation a tenant-realm caller acts as in the world. Only the link world in which
@@ -73,7 +75,7 @@ func KnownWorld(world string) bool {
 	switch world {
 	case WorldBase, WorldEmpty, WorldRegistrationVerified, WorldSeriesIssued, WorldRegistrationSpare, WorldLinkNone,
 		WorldLinkProposedToCaller, WorldLinkAccepted, WorldLinkActive, WorldLinkSuspended, WorldLinkAmendmentPending, WorldLinkAcceptedChanged, WorldLinkProposed,
-		WorldPlanSeeded, WorldPlanActive, WorldSubscribed, WorldChargeOverdue, WorldPaymentRecorded, WorldOrgActive, WorldOrgSuspended, WorldBookRegistered:
+		WorldPlanSeeded, WorldPlanActive, WorldSubscribed, WorldSubscribedUncharged, WorldSubscribedAnnualListed, WorldChargeOverdue, WorldPaymentRecorded, WorldOrgActive, WorldOrgSuspended, WorldBookRegistered:
 		return true
 	}
 	return false
@@ -89,27 +91,29 @@ type worldSpec struct {
 }
 
 var worldSpecs = map[string]worldSpec{
-	WorldBase:                 {},
-	WorldEmpty:                {},
-	WorldRegistrationVerified: {verified: true},
-	WorldSeriesIssued:         {verified: true, series: true},
-	WorldRegistrationSpare:    {spare: true},
-	WorldLinkNone:             {others: true},
-	WorldLinkProposedToCaller: {verified: true, others: true, link: "proposed"},
-	WorldLinkAccepted:         {verified: true, others: true, link: "accepted"},
-	WorldLinkActive:           {verified: true, others: true, link: "active"},
-	WorldLinkSuspended:        {verified: true, others: true, link: "suspended"},
-	WorldLinkAmendmentPending: {verified: true, others: true, link: "amendment"},
-	WorldLinkAcceptedChanged:  {verified: true, others: true, link: "accepted-changed"},
-	WorldLinkProposed:         {verified: true, others: true, link: "proposed"},
-	WorldPlanSeeded:           {phase2: p2Spec{plans: true}},
-	WorldPlanActive:           {phase2: p2Spec{plans: true, activePlan: true}},
-	WorldSubscribed:           {phase2: p2Spec{plans: true, activePlan: true, subscribed: true}},
-	WorldChargeOverdue:        {phase2: p2Spec{plans: true, activePlan: true, subscribed: true}},
-	WorldPaymentRecorded:      {phase2: p2Spec{plans: true, activePlan: true, subscribed: true, payment: true}},
-	WorldOrgActive:            {phase2: p2Spec{status: model.OrgActive}},
-	WorldOrgSuspended:         {phase2: p2Spec{status: model.OrgSuspended}},
-	WorldBookRegistered:       {verified: true, phase2: p2Spec{book: true}},
+	WorldBase:                   {},
+	WorldEmpty:                  {},
+	WorldRegistrationVerified:   {verified: true},
+	WorldSeriesIssued:           {verified: true, series: true},
+	WorldRegistrationSpare:      {spare: true},
+	WorldLinkNone:               {others: true},
+	WorldLinkProposedToCaller:   {verified: true, others: true, link: "proposed"},
+	WorldLinkAccepted:           {verified: true, others: true, link: "accepted"},
+	WorldLinkActive:             {verified: true, others: true, link: "active"},
+	WorldLinkSuspended:          {verified: true, others: true, link: "suspended"},
+	WorldLinkAmendmentPending:   {verified: true, others: true, link: "amendment"},
+	WorldLinkAcceptedChanged:    {verified: true, others: true, link: "accepted-changed"},
+	WorldLinkProposed:           {verified: true, others: true, link: "proposed"},
+	WorldPlanSeeded:             {phase2: p2Spec{plans: true}},
+	WorldPlanActive:             {phase2: p2Spec{plans: true, activePlan: true}},
+	WorldSubscribed:             {phase2: p2Spec{plans: true, activePlan: true, subscribed: true, charged: true}},
+	WorldSubscribedUncharged:    {phase2: p2Spec{plans: true, activePlan: true, subscribed: true}},
+	WorldSubscribedAnnualListed: {phase2: p2Spec{plans: true, activePlan: true, subscribed: true, charged: true, annualListed: true}},
+	WorldChargeOverdue:          {phase2: p2Spec{plans: true, activePlan: true, subscribed: true, charged: true}},
+	WorldPaymentRecorded:        {phase2: p2Spec{plans: true, activePlan: true, subscribed: true, charged: true, payment: true}},
+	WorldOrgActive:              {phase2: p2Spec{status: model.OrgActive}},
+	WorldOrgSuspended:           {phase2: p2Spec{status: model.OrgSuspended}},
+	WorldBookRegistered:         {verified: true, phase2: p2Spec{book: true}},
 }
 
 func asTenant(ctx context.Context, t ids.ID) context.Context {

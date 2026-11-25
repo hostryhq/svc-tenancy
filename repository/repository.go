@@ -100,6 +100,9 @@ type Tx interface {
 	// ---- document-series registry ----
 	// SeriesForDevice returns the series of one device at one outlet (all statuses).
 	SeriesForDevice(ctx context.Context, outletID, deviceID ids.ID) ([]model.Series, error)
+	// SeriesByDevice returns every series ever issued to the device, in any outlet and any status (the sync
+	// gateway's directory question, ADR-0005 A3.2 row 8).
+	SeriesByDevice(ctx context.Context, deviceID ids.ID) ([]model.Series, error)
 	// ListSeries returns the series inside scope (outlet filter and status "" mean any).
 	ListSeries(ctx context.Context, scope auth.OutletScope, status string, after ids.ID, limit int) ([]model.Series, error)
 	GetSeries(ctx context.Context, id ids.ID) (model.Series, error)
@@ -131,8 +134,8 @@ type Tx interface {
 	// SetOrgStatus changes the organisation status and its directory row.
 	SetOrgStatus(ctx context.Context, status string, now time.Time) error
 	AppendLifecycle(ctx context.Context, e model.LifecycleEntry) error
-	// MarkGrantUsed records the vendor approval grant id as used in this transaction; false when it was
-	// used before (ADR-0014 A2.6 item 4).
+	// MarkGrantUsed records the vendor approval grant id as used in this transaction; false when the jti or the
+	// approval was used before (ADR-0014 A2.6 item 4; an approval executes once, ADR-0005 A3.4 item 1).
 	MarkGrantUsed(ctx context.Context, jti, approvalID, kind string, now time.Time) (first bool, err error)
 
 	// ---- trading state (fed by billing.trading_day.changed, ADR-0014 A1.2) ----
